@@ -1,4 +1,4 @@
-// Grid.h
+// grid.h
 #pragma once
 
 #include <LibSL/Math/Vertex.h>

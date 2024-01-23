@@ -2,7 +2,7 @@
 #pragma once
 
 #include <LibSL/Math/Vertex.h>
-#include "Grid/grid.h"
+#include "grid.h"
 
 // Function to calculate endpoints along a specified edge in the grid
 // edge_ndindex: index of the edge in each dimension
