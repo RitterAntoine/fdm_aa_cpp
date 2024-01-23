@@ -1,5 +1,4 @@
 #include <iostream>
-#include <vector>
 #include <LibSL/Math/Vertex.h>
 
 using namespace std;
@@ -8,18 +7,18 @@ using namespace std;
 class Grid {
 public:
     // Constructor initializes the grid with specified parameters
-    Grid(vector<int> cell_ndcount, vector<int> origin, float cell_sides_length)
+    Grid(LibSL::Math::v2i cell_ndcount, LibSL::Math::v2i origin, float cell_sides_length)
         : cell_ndcount_(cell_ndcount), origin_(origin), cell_sides_length_(cell_sides_length) {}
 
     // Getter methods to access private members of the Grid class
-    vector<int> getCellNdcount() const { return cell_ndcount_; }
-    vector<int> getOrigin() const { return origin_; }
+    LibSL::Math::v2i getCellNdcount() const { return cell_ndcount_; }
+    LibSL::Math::v2i getOrigin() const { return origin_; }
     float getCellSidesLength() const { return cell_sides_length_; }
 
 private:
     // Private members to store grid information
-    vector<int> cell_ndcount_;
-    vector<int> origin_;
+    LibSL::Math::v2i cell_ndcount_;
+    LibSL::Math::v2i origin_;
     float cell_sides_length_;
 };
 
@@ -27,38 +26,46 @@ private:
 // edge_ndindex: index of the edge in each dimension
 // edge_axis: the axis along which the edge lies
 // grid: the grid object
-std::vector<std::vector<float>> endpoints(std::vector<int> edge_ndindex, int edge_axis, const Grid& grid) {
+std::pair<LibSL::Math::v2f, LibSL::Math::v2f> endpoints(LibSL::Math::v2i edge_ndindex, int edge_axis, const Grid& grid) {
     // Dimension of the grid
-    int n = grid.getCellNdcount().size();
+    int n = 2; // Since LibSL::Math::v2i is a 2D vector, its size is always 2
 
     // Increment of cell sides length along the specified edge axis
-    std::vector<float> increment(n, 0.0);
+    LibSL::Math::v2f increment(0.0);
     increment[edge_axis] = grid.getCellSidesLength();
 
     // Calculate endpoints for the specified edge
-    std::vector<float> v0, v1;
+    LibSL::Math::v2f v0, v1;
     for (int i = 0; i < n; ++i) {
         // Calculate the starting point of the edge along each dimension
-        v0.push_back(edge_ndindex[i] * grid.getCellSidesLength() + grid.getOrigin()[i]);
+        v0[i] = edge_ndindex[i] * grid.getCellSidesLength() + grid.getOrigin()[i];
         // Calculate the ending point of the edge by adding the increment
-        v1.push_back(v0[i] + increment[i]);
+        v1[i] = v0[i] + increment[i];
     }
 
-    // Return the calculated endpoints as a vector of vectors
-    return {v0, v1};
+    // Return the calculated endpoints as a pair of vectors
+    return std::make_pair(v0, v1);
 }
 
 int main() {
-    
-    // Create a 2D double vector using the v2d type
-    LibSL::Math::v2d myVertex = LibSL::Math::V2D(1.9, 2.7);
+    // Create a Grid object
+    LibSL::Math::v2i cell_ndcount(10, 10); // 10x10 grid
+    LibSL::Math::v2i origin(0, 0); // Origin at (0,0)
+    float cell_sides_length = 1.0f; // Each cell is 1 unit long
+    Grid grid(cell_ndcount, origin, cell_sides_length);
 
-    // Access the components of the vector
-    double x = myVertex[0];
-    double y = myVertex[1];
+    // Specify an edge in the grid
+    LibSL::Math::v2i edge_ndindex(5, 5); // Edge at the center of the grid
+    int edge_axis = 0; // Edge lies along the x-axis
 
-    // Print the components of the vector
-    std::cout << "x: " << x << ", y: " << y << std::endl;
+    // Calculate the endpoints of the specified edge
+    std::pair<LibSL::Math::v2f, LibSL::Math::v2f> edge_endpoints = endpoints(edge_ndindex, edge_axis, grid);
+
+    // Print the calculated endpoints
+    std::cout << "Edge endpoints: (" 
+              << edge_endpoints.first[0] << ", " << edge_endpoints.first[1] << "), (" 
+              << edge_endpoints.second[0] << ", " << edge_endpoints.second[1] << ")" 
+              << std::endl;
 
     return 0;
 }
