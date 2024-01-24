@@ -1,31 +1,82 @@
 cmake_minimum_required(VERSION "3.11")
 
+set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
+
 project("FDM_AA_CPP")
 
-include(FetchContent)
-include(CTest)
+OPTION(FDM_AA_CPP_FLOAT_AS_DOUBLE "Use 64-bit floats" OFF)
 
-FetchContent_Declare(
-  libsl
-  GIT_REPOSITORY https://github.com/sylefeb/LibSL.git
-  GIT_TAG        master
+if(FDM_AA_CPP_FLOAT_AS_DOUBLE)
+    add_definitions(-D FDM_AA_CPP_FLOAT_AS_DOUBLE)
+endif()
+
+find_package(Sanitizers)
+
+###########################################################################
+# LibSL
+
+set(LIBSL_BUILD_STATIC_LIBS ON CACHE BOOL " " FORCE)
+set(LIBSL_BUILD_SHARED_LIBS OFF CACHE BOOL " " FORCE)
+add_subdirectory(src/ext/LibSL)
+
+set(LIBSL_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src/ext/LibSL")
+set(LIBSL_LIBRARY "LibSL")
+set_property(TARGET LibSL PROPERTY FOLDER "ext")
+include_directories(src/ext/LibSL/src/LibSL)
+
+
+###########################################################################
+# On to the project
+
+set(FDM_AA_CPP_CORE_SOURCE
+  src/core/grid/edge.cpp
+  src/core/grid/grid.cpp
 )
 
-FetchContent_MakeAvailable(libsl)
+set(FDM_AA_CPP_CORE_HEADERS
+  src/core/grid/edge.h
+  src/core/grid/grid.h
+)
 
-add_definitions(-DSRC_PATH=\"${CMAKE_CURRENT_SOURCE_DIR}/\")
+include_directories(src)
+include_directories(src/core)
 
-add_executable("${PROJECT_NAME}" "main.cpp")
-TARGET_LINK_LIBRARIES("${PROJECT_NAME}" LibSL LibSL_gl)
+# Visual Studio source forlders
 
-add_executable(GridTest "tests/GridTest.cpp")
-TARGET_LINK_LIBRARIES(GridTest LibSL LibSL_gl)
+source_group(core REGULAR_EXPRESSION src/core/.*)
+source_group(ext REGULAR_EXPRESSION src/ext/.*)
 
-add_executable(EndpointsTest "tests/EndpointsTest.cpp")
-TARGET_LINK_LIBRARIES(EndpointsTest LibSL LibSL_gl)
+###########################################################################
+# fdm_aa_cpp libraries and executables
 
-add_test(NAME GridTest COMMAND GridTest)
-add_test(NAME EndpointsTest COMMAND EndpointsTest)
+add_library(fdm_aa_cpp_core STATIC ${FDM_AA_CPP_CORE_SOURCE} ${FDM_AA_CPP_CORE_HEADERS})
 
-install(TARGETS "${PROJECT_NAME}" DESTINATION bin)
-install(FILES "main.cpp" DESTINATION src)
+if(WIN32)
+  set_target_properties(fdm_aa_cpp_core PROPERTIES OUTPUT_NAME "lib_fdm_aa_cpp")
+endif()
+
+set(ALL_FDM_AA_CPP_LIBS
+  fdm_aa_cpp_core
+  LibSL
+)
+
+
+###########################################################################
+# Main executable
+
+add_executable(fdm_aa_cpp_exe src/main/fdm_aa_cpp.cpp)
+
+set_target_properties(fdm_aa_cpp_exe PROPERTIES OUTPUT_NAME "fdm_aa_cpp")
+target_link_libraries(fdm_aa_cpp_exe ${ALL_FDM_AA_CPP_LIBS})
+
+###########################################################################
+# Tests
+
+#TO DO
+
+###########################################################################
+# Install
+
+install(TARGETS fdm_aa_cpp_exe DESTINATION bin)
+
+install(TARGETS fdm_aa_cpp_core DESTINATION lib)
