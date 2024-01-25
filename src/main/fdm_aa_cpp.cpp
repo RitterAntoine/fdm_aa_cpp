@@ -1,6 +1,6 @@
 #include <iostream>
-#include "add.h"
-#include "subtract.h"
+#include "lib/add.h"
+#include "lib/subtract.h"
 
 int main() {
     int a = 5;
