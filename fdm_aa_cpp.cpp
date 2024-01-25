@@ -1,36 +1,24 @@
 #include <iostream>
 #include <Eigen/Dense>
 #include <grid/grid.h>
+#include <grid/edge.h>
 
-using Eigen::MatrixXd;
+int main() {
+    Eigen::ArrayXi cell_ndcount(2);
+    cell_ndcount << 1, 2;
+    Eigen::ArrayXi origin(2);
+    origin << 0, 0;
+    float cell_sides_length = 1.0f;
 
-void eigen_test()
-{
-	MatrixXd m(2, 2);
-	m(0, 0) = 3;
-	m(1, 0) = 2.5;
-	m(0, 1) = -1;
-	m(1, 1) = m(1, 0) + m(0, 1);
-	std::cout << m << std::endl;
-}
+    Grid grid(cell_ndcount, origin, cell_sides_length);
 
-void cglib_test()
-{
-	std::vector<int> cell_ndcount = { 1, 2, 3 };
-	std::vector<int> origin = { 4, 5, 6 };
-	double cell_sides_length = 7.0;
-	Grid grid(cell_ndcount, origin, cell_sides_length);
-	std::cout << "cell_ndcount: " << grid.getCellNdCount()[0] << ", " << grid.getCellNdCount()[1] << ", " << grid.getCellNdCount()[2] << std::endl;
-	std::cout << "origin: " << grid.getOrigin()[0] << ", " << grid.getOrigin()[1] << ", " << grid.getOrigin()[2] << std::endl;
-	std::cout << "cell_sides_length: " << grid.getCellSidesLength() << std::endl;
+    Eigen::ArrayXi edge_ndindex(2);
+    edge_ndindex << 0, 1;
+    int edge_axis = 1;
 
-}
+    Eigen::ArrayXXf result = endpoints(edge_ndindex, edge_axis, grid);
 
-int main()
-{
-	eigen_test();
-	cglib_test();
+    std::cout << "Endpoints: \n" << result << std::endl;
 
-
-	return 0;
+    return 0;
 }
