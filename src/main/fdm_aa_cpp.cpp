@@ -1,13 +1,14 @@
 #include <iostream>
-#include "lib/add.h"
-#include "lib/subtract.h"
+#include "grid/grid.h"
 
 int main() {
-    int a = 5;
-    int b = 3;
-
-    std::cout << "Sum: " << add(a, b) << std::endl;
-    std::cout << "Difference: " << subtract(a, b) << std::endl;
+    std::vector<int> cell_ndcount = {1, 2, 3};
+    std::vector<int> origin = {4, 5, 6};
+    double cell_sides_length = 7.0;
+    Grid grid(cell_ndcount, origin, cell_sides_length);
+    std::cout << "cell_ndcount: " << grid.getCellNdCount()[0] << ", " << grid.getCellNdCount()[1] << ", " << grid.getCellNdCount()[2] << std::endl;
+    std::cout << "origin: " << grid.getOrigin()[0] << ", " << grid.getOrigin()[1] << ", " << grid.getOrigin()[2] << std::endl;
+    std::cout << "cell_sides_length: " << grid.getCellSidesLength() << std::endl;
 
     return 0;
 }

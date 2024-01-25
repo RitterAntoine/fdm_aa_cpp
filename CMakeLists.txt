@@ -4,6 +4,6 @@ project(FDM_AA_CPP)
 
 add_executable(FDM_AA_CPP src/main/fdm_aa_cpp.cpp)
 
-add_subdirectory(src/library)
+add_subdirectory(src/cglib)
 
-target_link_libraries(FDM_AA_CPP MyLocalLibrary)
+target_link_libraries(FDM_AA_CPP cglib)
