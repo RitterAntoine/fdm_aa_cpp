@@ -1,8 +1,9 @@
 // Include necessary libraries and header files
 #include <iostream> // for standard I/O operations
 #include <Eigen/Dense> // for matrix and array operations
-#include <grid/grid.h> // for the Grid class
-#include <grid/edge.h> // for the endpoints function
+#include "grid/grid.h" // for the Grid class
+#include "grid/edge.h" // for the endpoints function
+#include "scalar.h" // for the grid_edge_point_scalars function
 
 // Define the main function
 int main() {
@@ -29,6 +30,16 @@ int main() {
 
     // Print the endpoints to the console
     std::cout << "Endpoints: \n" << result << std::endl;
+
+    // Define the flattened scalar grid
+    Eigen::ArrayXf grid_scalars_flattened(4);
+    grid_scalars_flattened << 1.0, 2.0, 3.0, 4.0;
+
+    // Calculate the scalars at the endpoints of the edge
+    Eigen::ArrayXf edge_scalars = grid_edge_point_scalars(edge_ndindex, edge_axis, grid_scalars_flattened, cell_ndcount);
+
+    // Print the scalars to the console
+    std::cout << "Edge scalars: \n" << edge_scalars << std::endl;
 
     // Return 0 to indicate successful execution
     return 0;

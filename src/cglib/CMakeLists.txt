@@ -3,8 +3,10 @@ cmake_minimum_required(VERSION 3.28.1)
 project(cglib)
 
 set(CGLIB_SOURCES 
-    grid/grid.cpp
+    grid/cell.cpp
     grid/edge.cpp
+    grid/grid.cpp
+    scalar.cpp
 )
 
 add_library(cglib ${CGLIB_SOURCES})
