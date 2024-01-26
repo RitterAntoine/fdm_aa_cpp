@@ -3,16 +3,39 @@ cmake_minimum_required(VERSION 3.28.1)
 project(cglib)
 
 set(CGLIB_SOURCES 
-    grid/cell.cpp
-    grid/edge.cpp
-    grid/grid.cpp
-    scalar.cpp
+    src/grid/cell.cpp
+    src/grid/edge.cpp
+    src/grid/grid.cpp
+    src/scalar.cpp
+)
+
+set(CGLIB_HEADERS 
+    src/grid/cell.h
+    src/grid/edge.h
+    src/grid/grid.h
+    src/scalar.h
 )
 
 add_library(cglib ${CGLIB_SOURCES})
+
+target_sources(cglib PRIVATE ${CGLIB_HEADERS})
 
 set(Eigen3_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../ext/eigen-3.4.0")
 
 target_include_directories(cglib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} ${Eigen3_INCLUDE_DIR})
 
 target_include_directories(cglib INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
+
+# Add Google Test
+include(FetchContent)
+FetchContent_Declare(
+  googletest
+  URL https://github.com/google/googletest/archive/refs/tags/release-1.10.0.tar.gz
+)
+FetchContent_MakeAvailable(googletest)
+
+# Enable testing functionality
+enable_testing()
+
+# Add test subdirectory
+add_subdirectory(tests)
