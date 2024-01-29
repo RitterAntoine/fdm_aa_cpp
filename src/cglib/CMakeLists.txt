@@ -25,17 +25,3 @@ set(Eigen3_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../ext/eigen-3.4.0")
 target_include_directories(cglib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} ${Eigen3_INCLUDE_DIR})
 
 target_include_directories(cglib INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
-
-# Add Google Test
-include(FetchContent)
-FetchContent_Declare(
-  googletest
-  URL https://github.com/google/googletest/archive/refs/tags/release-1.10.0.tar.gz
-)
-FetchContent_MakeAvailable(googletest)
-
-# Enable testing functionality
-enable_testing()
-
-# Add test subdirectory
-add_subdirectory(tests)

@@ -13,3 +13,17 @@ add_executable(FDM_AA_CPP fdm_aa_cpp.cpp)
 
 target_link_libraries(FDM_AA_CPP Eigen3::Eigen)
 target_link_libraries(FDM_AA_CPP cglib)
+
+# Add Google Test
+include(FetchContent)
+FetchContent_Declare(
+  googletest
+  URL https://github.com/google/googletest/archive/refs/tags/release-1.10.0.tar.gz
+)
+FetchContent_MakeAvailable(googletest)
+
+# Enable testing functionality
+enable_testing()
+
+# Add test subdirectory
+add_subdirectory(tests)
