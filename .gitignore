@@ -399,3 +399,6 @@ FodyWeavers.xsd
 
 # Exclude Build directory
 Build/
+
+# Exclude VSCode directory
+.vscode/
