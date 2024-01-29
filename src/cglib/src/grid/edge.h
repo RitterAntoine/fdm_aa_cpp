@@ -1,7 +1,13 @@
-// Include the header file for the Grid class
-#include "grid.h"
+#include <Eigen/Dense>
 
-// Declare the endpoints function
-// This function takes an edge index, an edge axis, and a grid
-// It returns a 2D array containing the starting and ending points of the edge
+class Grid {
+public:
+    Eigen::ArrayXi cell_ndcount;
+    Eigen::ArrayXf origin;
+    float cell_sides_length;
+
+    Grid(const Eigen::ArrayXi& cell_ndcount, const Eigen::ArrayXf& origin, float cell_sides_length)
+        : cell_ndcount(cell_ndcount), origin(origin), cell_sides_length(cell_sides_length) {}
+};
+
 Eigen::ArrayXXf endpoints(const Eigen::ArrayXi& edge_ndindex, int edge_axis, const Grid& grid);
