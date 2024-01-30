@@ -18,12 +18,12 @@ TEST(PointAdjacencyTest, Constructor) {
     ASSERT_EQ(point_adjacency.getPoint().cols(), 2);
     ASSERT_EQ(point_adjacency.getAdjacency().rows(), 2);
     ASSERT_EQ(point_adjacency.getAdjacency().cols(), 2);
-    ASSERT_FLOAT_EQ(point_adjacency.getPoint()(0, 0), 1.0);
-    ASSERT_FLOAT_EQ(point_adjacency.getPoint()(0, 1), 0.5);
-    ASSERT_FLOAT_EQ(point_adjacency.getPoint()(1, 0), 0.75);
-    ASSERT_FLOAT_EQ(point_adjacency.getPoint()(1, 1), 1.5);
-    ASSERT_EQ(point_adjacency.getAdjacency()(0, 0), 0);
-    ASSERT_EQ(point_adjacency.getAdjacency()(0, 1), 1);
-    ASSERT_EQ(point_adjacency.getAdjacency()(1, 0), 1);
-    ASSERT_EQ(point_adjacency.getAdjacency()(1, 1), 0);
+    ASSERT_FLOAT_EQ(point_adjacency.getPoint().coeff(0, 0), 1.0);
+    ASSERT_FLOAT_EQ(point_adjacency.getPoint().coeff(0, 1), 0.5);
+    ASSERT_FLOAT_EQ(point_adjacency.getPoint().coeff(1, 0), 0.75);
+    ASSERT_FLOAT_EQ(point_adjacency.getPoint().coeff(1, 1), 1.5);
+    ASSERT_EQ(point_adjacency.getAdjacency().coeff(0, 0), 0);
+    ASSERT_EQ(point_adjacency.getAdjacency().coeff(0, 1), 1);
+    ASSERT_EQ(point_adjacency.getAdjacency().coeff(1, 0), 1);
+    ASSERT_EQ(point_adjacency.getAdjacency().coeff(1, 1), 0);
 }
