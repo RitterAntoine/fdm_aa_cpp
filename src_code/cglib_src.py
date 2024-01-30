@@ -41,12 +41,12 @@ if x64:
     complex_np = np.complex128
 
 
-class Grid(NamedTuple): # grid/grid.py
+class Grid(NamedTuple): # grid/grid.py DONE
     cell_ndcount: tuple[int, ...] | np.ndarray | jnp.ndarray
     origin: tuple[int, ...] | np.ndarray | jnp.ndarray
     cell_sides_length: float | np.ndarray | jnp.ndarray
 
-class PointData(NamedTuple): # point_data.py
+class PointData(NamedTuple): # point_data.py DONE
     point: jnp.ndarray
     data: jnp.ndarray
 
