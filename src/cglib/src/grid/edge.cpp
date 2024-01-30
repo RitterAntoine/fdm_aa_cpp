@@ -7,6 +7,15 @@ Eigen::ArrayXXi count2_per_axis(const Eigen::ArrayXi& grid_cell_2dcount) {
     return edge_2dcount;
 }
 
+int index1_from_2dindex(const Eigen::ArrayXi& edge_2dindex, int edge_axis, const Eigen::ArrayXXi& edge_2dcount) {
+    int edge_flattened_index = index1_from_ndindex(edge_2dindex, edge_2dcount.col(edge_axis));
+    int hedge_flattened_cell_count = edge_2dcount(0, 0) * edge_2dcount(0, 1);
+    edge_flattened_index += edge_axis * hedge_flattened_cell_count;
+    return edge_flattened_index;
+}
+
+
+
 Eigen::ArrayXXf endpoints(const Eigen::ArrayXi& edge_ndindex, int edge_axis, const Grid& grid) {
     int n = grid.cell_ndcount.size();
     Eigen::ArrayXf increment = Eigen::ArrayXf::Zero(n);

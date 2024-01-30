@@ -14,6 +14,7 @@ set(CGLIB_HEADERS
     src/grid/cell.h
     src/grid/edge.h
     src/grid/grid.h
+    src/array.h
     src/point_adjacency.h
     src/scalar.h
 )

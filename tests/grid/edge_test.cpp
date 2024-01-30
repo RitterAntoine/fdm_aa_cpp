@@ -32,6 +32,47 @@ TEST(EdgeTest, Count2PerAxis) {
     ASSERT_TRUE((res == expected_res).all());
 }
 
+// This test checks the functionality of the 'index1_from_2dindex' function.
+// The 'index1_from_2dindex' function is expected to return the 1D index of an edge given its 2D index, axis, and the grid it belongs to.
+// The grid is a 2D grid with cell count (2, 3), origin (-1, 2), and cell side length 0.5.
+// The edge is defined by its 2D index (1, 2) and axis 0.
+// The expected result is the 1D index of the edge.
+// The edge indexing in the grid is as follows:
+//  ________ ________
+// | (0, 3) | (1, 3) |
+// |(0, 2)  |(1, 2)  |(2, 2)
+// |________|________|
+// | (0, 2) | (1, 2) |
+// |(0, 1)  |(1, 1)  |(2, 1)
+// |________|________|
+// | (0, 1) | (1, 1) |
+
+TEST(EdgeTest, Index1From2DIndex) {
+    Eigen::ArrayXi edge_2dindex(2);
+    edge_2dindex << 1, 2;
+    int edge_axis = 0;
+    Eigen::ArrayXi cell_2dcount(2);
+    cell_2dcount << 2, 3;
+
+    int res = index1_from_2dindex(edge_2dindex, edge_axis, count2_per_axis(cell_2dcount));
+
+    int expected_res = 5;
+
+    ASSERT_TRUE((res == expected_res));
+}
+
+
+
+// This test checks the values of the Neighboring2Type enum class.
+// The Neighboring2Type enum class is expected to have two values: VISIBLE and WITHIN_CELL_SIDE_LENDTH.
+// VISIBLE is expected to have a value of 0 and WITHIN_CELL_SIDE_LENDTH is expected to have a value of 1.
+TEST(EdgeTest, Neighboring2TypeValues) {
+    // Check that the VISIBLE enum value is 0
+    EXPECT_EQ(static_cast<int>(Neighboring2Type::VISIBLE), 0);
+    // Check that the WITHIN_CELL_SIDE_LENDTH enum value is 1
+    EXPECT_EQ(static_cast<int>(Neighboring2Type::WITHIN_CELL_SIDE_LENDTH), 1);
+}
+
 // This test checks the functionality of the 'endpoints' function.
 // The 'endpoints' function is expected to return the endpoints of an edge given its index, axis, and the grid it belongs to.
 // The grid is a 2D grid with cell count (2, 3), origin (-1, 2), and cell side length 0.5.

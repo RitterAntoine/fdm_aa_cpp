@@ -174,7 +174,7 @@ def grid_edge_root_point( # scalar.py
     root_point = (1. - u) * edge_endpoints_val[0] + u * edge_endpoints_val[1]
     return jnp.where(mask, jnp.full_like(root_point, jnp.nan), root_point)
 
-def index1_from_2dindex( # grid/edge.py
+def index1_from_2dindex( # grid/edge.py DONE
         edge_2dindex: jnp.ndarray,
         edge_axis: int,
         edge_2dcount: jnp.ndarray) -> uint:
@@ -188,7 +188,7 @@ class MaskedArray(NamedTuple): # array.py
     array: jnp.ndarray
     mask: jnp.ndarray
 
-class Neighboring2Type(IntEnum): # grid/edge.py
+class Neighboring2Type(IntEnum): # grid/edge.py DONE
     VISIBLE = 0
     WITHIN_CELL_SIDE_LENDTH = 1
 
