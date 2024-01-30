@@ -58,7 +58,7 @@ def count2_per_axis( # grid/edge.py DONE
                                grid_cell_2dcount[1]]])
     return edge_2dcount
 
-def ndindex_from_1dindex( # grid/cell.py 
+def ndindex_from_1dindex( # grid/cell.py DONE
         cell_1dindex: int | uint,
         cell_ndcount: jnp.ndarray) -> jnp.ndarray:
 
@@ -110,7 +110,7 @@ def endpoints( # grid/edge.py
     v1 = v0 + increment
     return jnp.array([v0, v1])
 
-def index1_from_ndindex( # grid/cell.py
+def index1_from_ndindex( # grid/cell.py DONE
         cell_ndindex: jnp.ndarray,
         cell_ndcount: jnp.ndarray) -> int:
     n = cell_ndcount.shape[0]
@@ -252,14 +252,14 @@ def grid_edge_root_existence( # scalar.py
         float_same_sign(edge_point_scalars_val[0], edge_point_scalars_val[1]))
     return solution_exists
 
-def ndindex_is_valid( # grid/cell.py
+def ndindex_is_valid( # grid/cell.py DONE
         grid_cell_ndindex: jnp.ndarray,
         grid_cell_ndcount: jnp.ndarray) -> bool:
     valid_cell_ndindex = jnp.logical_and(
         grid_cell_ndindex >= 0, grid_cell_ndindex < grid_cell_ndcount)
     return jnp.all(valid_cell_ndindex)
 
-def corner_vertex_ndindices( # grid/cell.py
+def corner_vertex_ndindices( # grid/cell.py DONE
         cell_ndindex: jnp.ndarray) -> jnp.ndarray:
     n = cell_ndindex.shape[0]
     corner_count = 2**n
