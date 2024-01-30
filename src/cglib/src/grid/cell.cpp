@@ -16,3 +16,15 @@ int index1_from_ndindex(const Eigen::ArrayXi& cell_ndindex, const Eigen::ArrayXi
     // Return the flattened index
     return flattened_index;
 }
+
+// Define the ndindex_from_1dindex function
+Eigen::ArrayXi ndindex_from_1dindex(int cell_1dindex, const Eigen::ArrayXi& cell_ndcount) {
+    int n = cell_ndcount.size();
+    Eigen::ArrayXi cell_ndindex = Eigen::ArrayXi::Zero(n);
+    cell_ndindex[0] = cell_1dindex % cell_ndcount[0];
+    for (int i = 1; i < n; ++i) {
+        int shift = cell_ndcount.head(i).prod();
+        cell_ndindex[i] = (cell_1dindex / shift) % cell_ndcount[i];
+    }
+    return cell_ndindex;
+}

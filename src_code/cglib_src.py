@@ -58,7 +58,7 @@ def count2_per_axis( # grid/edge.py DONE
                                grid_cell_2dcount[1]]])
     return edge_2dcount
 
-def ndindex_from_1dindex( # grid/cell.py
+def ndindex_from_1dindex( # grid/cell.py 
         cell_1dindex: int | uint,
         cell_ndcount: jnp.ndarray) -> jnp.ndarray:
 
