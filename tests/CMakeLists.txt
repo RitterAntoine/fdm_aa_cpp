@@ -3,7 +3,7 @@ set(TEST_SOURCES
     grid/cell_test.cpp
     grid/edge_test.cpp
     grid/grid_test.cpp
-    point_data_test.cpp
+    point_adjacency_test.cpp
     scalar_test.cpp
 )
 

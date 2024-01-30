@@ -50,7 +50,7 @@ class PointData(NamedTuple): # point_data.py DONE
     point: jnp.ndarray
     data: jnp.ndarray
 
-def count2_per_axis( # grid/edge.py
+def count2_per_axis( # grid/edge.py DONE
     grid_cell_2dcount: jnp.ndarray) -> jnp.ndarray:
     edge_2dcount = jnp.array([[grid_cell_2dcount[0],
                                grid_cell_2dcount[1] + 1],
