@@ -41,16 +41,16 @@ if x64:
     complex_np = np.complex128
 
 
-class Grid(NamedTuple):
+class Grid(NamedTuple): # grid/grid.py
     cell_ndcount: tuple[int, ...] | np.ndarray | jnp.ndarray
     origin: tuple[int, ...] | np.ndarray | jnp.ndarray
     cell_sides_length: float | np.ndarray | jnp.ndarray
 
-class PointData(NamedTuple):
+class PointData(NamedTuple): # point_data.py
     point: jnp.ndarray
     data: jnp.ndarray
 
-def count2_per_axis(
+def count2_per_axis( # grid/edge.py
     grid_cell_2dcount: jnp.ndarray) -> jnp.ndarray:
     edge_2dcount = jnp.array([[grid_cell_2dcount[0],
                                grid_cell_2dcount[1] + 1],
@@ -58,7 +58,7 @@ def count2_per_axis(
                                grid_cell_2dcount[1]]])
     return edge_2dcount
 
-def ndindex_from_1dindex(
+def ndindex_from_1dindex( # grid/cell.py
         cell_1dindex: int | uint,
         cell_ndcount: jnp.ndarray) -> jnp.ndarray:
 
@@ -76,7 +76,7 @@ def ndindex_from_1dindex(
                 cell_ndcount[i]))
     return cell_ndindex
 
-def indices2_from_grid(
+def indices2_from_grid( # grid/edge.py
         grid_cell_2dcount: jnp.ndarray) -> tuple[jnp.ndarray, jnp.ndarray]:
     with jax.ensure_compile_time_eval():
         edge_ndcount_per_axis = count2_per_axis(grid_cell_2dcount)
@@ -97,23 +97,20 @@ def indices2_from_grid(
             edge_flattened_indices_per_axis[1],
             edge_ndcount_per_axis[1])
     )
-    # shape: (edge axis, edge 2dindex)
     return edge_ndindices_per_axis
 
-def endpoints(
+def endpoints( # grid/edge.py
         edge_ndindex: jnp.ndarray,
         edge_axis: int,
         grid: Grid) -> jnp.ndarray:
-    # Dimension
     n = grid.cell_ndcount.shape[0]
-    # Increment of cell sides length along edge_axis
     increment = jnp.zeros((n,), int_).at[edge_axis].set(
         1) * grid.cell_sides_length
     v0 = edge_ndindex * grid.cell_sides_length + grid.origin
     v1 = v0 + increment
     return jnp.array([v0, v1])
 
-def index1_from_ndindex(
+def index1_from_ndindex( # grid/cell.py
         cell_ndindex: jnp.ndarray,
         cell_ndcount: jnp.ndarray) -> int:
     n = cell_ndcount.shape[0]
@@ -123,7 +120,7 @@ def index1_from_ndindex(
         flattened_index += cell_ndindex[i] * shift
     return flattened_index
 
-def grid_edge_point_scalars(
+def grid_edge_point_scalars( # scalar.py
         edge_ndindex: jnp.ndarray,
         edge_axis: int,
         grid_scalars_flattened: jnp.ndarray,
@@ -136,7 +133,7 @@ def grid_edge_point_scalars(
     edge_scalars = grid_scalars_flattened[edge_vertex_flattened_indices]
     return edge_scalars
 
-def float_same_sign(a: float_, b: float_) -> bool:
+def float_same_sign(a: float_, b: float_) -> bool: # math.py
     a_is_neg = jnp.signbit(a)
     b_is_neg = jnp.signbit(b)
     a_is_pos = jnp.logical_not(a_is_neg)
@@ -145,11 +142,11 @@ def float_same_sign(a: float_, b: float_) -> bool:
     both_pos = jnp.logical_and(a_is_pos, b_is_pos)
     return jnp.logical_or(both_neg, both_pos)
 
-def solve_linear_interpolation_equation(v1: float, v2: float) -> float:
+def solve_linear_interpolation_equation(v1: float, v2: float) -> float: # math.py
     deno = (v2 - v1)
     return jnp.where(jnp.abs(deno) < 0.0001, 0.5, -v1 / deno)
 
-def clamp(val: float | jnp.ndarray,
+def clamp(val: float | jnp.ndarray, # math.py
           low: float | jnp.ndarray,
           high: float | jnp.ndarray) -> float | jnp.ndarray:
 
@@ -157,7 +154,7 @@ def clamp(val: float | jnp.ndarray,
     val = jnp.where(jnp.greater(val, high), high, val)
     return val
 
-def grid_edge_root_point(
+def grid_edge_root_point( # scalar.py
         edge_ndindex: jnp.ndarray,
         edge_axis: int,
         flattened_scalar_field: jnp.ndarray,
@@ -177,7 +174,7 @@ def grid_edge_root_point(
     root_point = (1. - u) * edge_endpoints_val[0] + u * edge_endpoints_val[1]
     return jnp.where(mask, jnp.full_like(root_point, jnp.nan), root_point)
 
-def index1_from_2dindex(
+def index1_from_2dindex( # grid/edge.py
         edge_2dindex: jnp.ndarray,
         edge_axis: int,
         edge_2dcount: jnp.ndarray) -> uint:
@@ -187,15 +184,15 @@ def index1_from_2dindex(
     edge_flattened_index += edge_axis * hedge_flattened_cell_count
     return uint(edge_flattened_index)
 
-class MaskedArray(NamedTuple):
+class MaskedArray(NamedTuple): # array.py
     array: jnp.ndarray
     mask: jnp.ndarray
 
-class Neighboring2Type(IntEnum):
+class Neighboring2Type(IntEnum): # grid/edge.py
     VISIBLE = 0
     WITHIN_CELL_SIDE_LENDTH = 1
 
-def neighboring_2dindices_direct(
+def neighboring_2dindices_direct( # grid/edge.py
         edge_2dindex: jnp.ndarray,
         edge_axis: int,
         grid_cell_2dcount: jnp.ndarray,
@@ -239,7 +236,7 @@ def neighboring_2dindices_direct(
     neighbors_mask = jnp.any(neighbors_mask, axis=2)
     return MaskedArray(neighbors_ndindices, neighbors_mask)
 
-def grid_edge_root_existence(
+def grid_edge_root_existence( # scalar.py
         edge_ndindex: jnp.ndarray,
         edge_axis: int,
         flattened_scalar_field: jnp.ndarray,
@@ -255,14 +252,14 @@ def grid_edge_root_existence(
         float_same_sign(edge_point_scalars_val[0], edge_point_scalars_val[1]))
     return solution_exists
 
-def ndindex_is_valid(
+def ndindex_is_valid( # grid/cell.py
         grid_cell_ndindex: jnp.ndarray,
         grid_cell_ndcount: jnp.ndarray) -> bool:
     valid_cell_ndindex = jnp.logical_and(
         grid_cell_ndindex >= 0, grid_cell_ndindex < grid_cell_ndcount)
     return jnp.all(valid_cell_ndindex)
 
-def corner_vertex_ndindices(
+def corner_vertex_ndindices( # grid/cell.py
         cell_ndindex: jnp.ndarray) -> jnp.ndarray:
     n = cell_ndindex.shape[0]
     corner_count = 2**n
@@ -273,7 +270,7 @@ def corner_vertex_ndindices(
         corner_flattened_indices, corner_cell_ndcount)
     return corner_ndindices + cell_ndindex
 
-def concatenate(pytrees: tuple) -> tuple:
+def concatenate(pytrees: tuple) -> tuple: # tree_util.py
     tree_count = len(pytrees)
     treedef = tree_util.tree_structure(pytrees[0])
     leaf_list = []
@@ -290,7 +287,7 @@ def concatenate(pytrees: tuple) -> tuple:
         leaves_concatenated.append(jnp.concatenate(leaf_i_all_trees))
     return treedef.unflatten(leaves_concatenated)
 
-def grid2_contour(
+def grid2_contour( # scalar.py
         scalar_field_flattened: jnp.ndarray,
         scalar_field_cell_2dcount: tuple[int, int],
         scalar_field_grid: Grid) -> PointData:
@@ -500,7 +497,7 @@ def grid2_contour(
     res = concatenate((v_h, v_v))
     return res
 
-def all_isclose_masked(a: PointData, b: PointData) -> bool:
+def all_isclose_masked(a: PointData, b: PointData) -> bool: # tree_util.py
     mask_a = jnp.logical_not(jnp.isnan(a.point))
     mask_b = jnp.logical_not(jnp.isnan(b.point))
     return jnp.all(jnp.isclose(a.point[mask_a], b.point[mask_b]))
