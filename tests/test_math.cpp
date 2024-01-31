@@ -22,3 +22,8 @@ TEST(MathTest, Clamp) {
 
     ASSERT_TRUE(res.isApprox(exp_res));
 }
+
+TEST(MathTest, FloatSameSign) {
+    ASSERT_FALSE(float_same_sign(-0., 0.));
+    ASSERT_TRUE(float_same_sign(0., 0.));
+}

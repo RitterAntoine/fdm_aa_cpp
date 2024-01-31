@@ -133,7 +133,7 @@ def grid_edge_point_scalars( # scalar.py
     edge_scalars = grid_scalars_flattened[edge_vertex_flattened_indices]
     return edge_scalars
 
-def float_same_sign(a: float_, b: float_) -> bool: # math.py
+def float_same_sign(a: float_, b: float_) -> bool: # math.py DONE
     a_is_neg = jnp.signbit(a)
     b_is_neg = jnp.signbit(b)
     a_is_pos = jnp.logical_not(a_is_neg)
@@ -146,7 +146,7 @@ def solve_linear_interpolation_equation(v1: float, v2: float) -> float: # math.p
     deno = (v2 - v1)
     return jnp.where(jnp.abs(deno) < 0.0001, 0.5, -v1 / deno)
 
-def clamp(val: float | jnp.ndarray, # math.py
+def clamp(val: float | jnp.ndarray, # math.py DONE
           low: float | jnp.ndarray,
           high: float | jnp.ndarray) -> float | jnp.ndarray:
 
