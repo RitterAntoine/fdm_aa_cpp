@@ -6,6 +6,7 @@ set(TEST_SOURCES
     test_math.cpp
     test_point_adjacency.cpp
     test_scalar.cpp
+    test_tree_util.cpp
 )
 
 # Add the test executable

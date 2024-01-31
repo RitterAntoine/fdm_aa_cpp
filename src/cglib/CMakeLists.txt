@@ -9,6 +9,7 @@ set(CGLIB_SOURCES
     src/math.cpp
     src/point_adjacency.cpp
     src/scalar.cpp
+    src/tree_util.cpp
 )
 
 set(CGLIB_HEADERS 
@@ -19,6 +20,7 @@ set(CGLIB_HEADERS
     src/math.h
     src/point_adjacency.h
     src/scalar.h
+    src/tree_util.h
 )
 
 add_library(cglib ${CGLIB_SOURCES})
