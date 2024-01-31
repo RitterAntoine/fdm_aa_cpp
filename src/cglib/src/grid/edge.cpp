@@ -14,7 +14,13 @@ int index1_from_2dindex(const Eigen::ArrayXi& edge_2dindex, int edge_axis, const
     return edge_flattened_index;
 }
 
-
+Eigen::VectorXi indices1_from_2dgrid(const Eigen::ArrayXi& grid_cell_2dcount) {
+    Eigen::ArrayXXi edge_ndcount_per_axis = count2_per_axis(grid_cell_2dcount);
+    int edge_1dcount = edge_ndcount_per_axis(0, 0) * edge_ndcount_per_axis(0, 1) +
+                       edge_ndcount_per_axis(1, 0) * edge_ndcount_per_axis(1, 1);
+    Eigen::VectorXi edge_1dindices = Eigen::VectorXi::LinSpaced(edge_1dcount, 0, edge_1dcount - 1);
+    return edge_1dindices;
+}
 
 Eigen::ArrayXXf endpoints(const Eigen::ArrayXi& edge_ndindex, int edge_axis, const Grid& grid) {
     int n = grid.cell_ndcount.size();

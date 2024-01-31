@@ -1,6 +1,16 @@
 #include <gtest/gtest.h>
 #include "src/grid/edge.h"
 
+// This test checks the values of the Neighboring2Type enum class.
+// The Neighboring2Type enum class is expected to have two values: VISIBLE and WITHIN_CELL_SIDE_LENDTH.
+// VISIBLE is expected to have a value of 0 and WITHIN_CELL_SIDE_LENDTH is expected to have a value of 1.
+TEST(EdgeTest, Neighboring2TypeValues) {
+    // Check that the VISIBLE enum value is 0
+    EXPECT_EQ(static_cast<int>(Neighboring2Type::VISIBLE), 0);
+    // Check that the WITHIN_CELL_SIDE_LENDTH enum value is 1
+    EXPECT_EQ(static_cast<int>(Neighboring2Type::WITHIN_CELL_SIDE_LENDTH), 1);
+}
+
 // This test checks the functionality of the 'count2_per_axis' function.
 // The 'count2_per_axis' function is expected to return the number of edges along each axis for a given 2D grid cell count.
 // The grid is defined by its cell count (2, 3).
@@ -61,16 +71,21 @@ TEST(EdgeTest, Index1From2DIndex) {
     ASSERT_TRUE((res == expected_res));
 }
 
+// This test checks the functionality of the 'indices1_from_2dgrid' function.
+// The 'indices1_from_2dgrid' function is expected to return the 1D indices of the edges of a prescribed grid.
+// The grid is defined by its cell count (2, 3).
+// The expected result is a sequence of integers from 0 to 16.
+TEST(EdgeTest, Indices1From2DGrid) {
+    Eigen::ArrayXi cell_ndcount(2);
+    cell_ndcount << 2, 3;
 
+    Eigen::VectorXi res = indices1_from_2dgrid(cell_ndcount);
 
-// This test checks the values of the Neighboring2Type enum class.
-// The Neighboring2Type enum class is expected to have two values: VISIBLE and WITHIN_CELL_SIDE_LENDTH.
-// VISIBLE is expected to have a value of 0 and WITHIN_CELL_SIDE_LENDTH is expected to have a value of 1.
-TEST(EdgeTest, Neighboring2TypeValues) {
-    // Check that the VISIBLE enum value is 0
-    EXPECT_EQ(static_cast<int>(Neighboring2Type::VISIBLE), 0);
-    // Check that the WITHIN_CELL_SIDE_LENDTH enum value is 1
-    EXPECT_EQ(static_cast<int>(Neighboring2Type::WITHIN_CELL_SIDE_LENDTH), 1);
+    Eigen::VectorXi exp_res(17);
+    exp_res << 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16;
+
+    // Use isApprox to compare the two vectors
+    ASSERT_TRUE(res.isApprox(exp_res));
 }
 
 // This test checks the functionality of the 'endpoints' function.
