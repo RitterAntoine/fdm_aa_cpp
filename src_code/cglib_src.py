@@ -142,7 +142,7 @@ def float_same_sign(a: float_, b: float_) -> bool: # math.py DONE
     both_pos = jnp.logical_and(a_is_pos, b_is_pos)
     return jnp.logical_or(both_neg, both_pos)
 
-def solve_linear_interpolation_equation(v1: float, v2: float) -> float: # math.py
+def solve_linear_interpolation_equation(v1: float, v2: float) -> float: # math.py DONE
     deno = (v2 - v1)
     return jnp.where(jnp.abs(deno) < 0.0001, 0.5, -v1 / deno)
 

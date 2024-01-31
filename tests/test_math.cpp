@@ -27,3 +27,8 @@ TEST(MathTest, FloatSameSign) {
     ASSERT_FALSE(float_same_sign(-0., 0.));
     ASSERT_TRUE(float_same_sign(0., 0.));
 }
+
+TEST(MathTest, SolveLinearInterpolationEquation) {
+    ASSERT_FLOAT_EQ(solve_linear_interpolation_equation(1.0, 2.0), -1.0);
+    ASSERT_FLOAT_EQ(solve_linear_interpolation_equation(1.0, 1.0), 0.5);
+}
