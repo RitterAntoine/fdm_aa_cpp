@@ -6,6 +6,7 @@ set(CGLIB_SOURCES
     src/grid/cell.cpp
     src/grid/edge.cpp
     src/grid/grid.cpp
+    src/math.cpp
     src/point_adjacency.cpp
     src/scalar.cpp
 )
@@ -15,6 +16,7 @@ set(CGLIB_HEADERS
     src/grid/edge.h
     src/grid/grid.h
     src/array.h
+    src/math.h
     src/point_adjacency.h
     src/scalar.h
 )

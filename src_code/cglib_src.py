@@ -76,7 +76,7 @@ def ndindex_from_1dindex( # grid/cell.py DONE
                 cell_ndcount[i]))
     return cell_ndindex
 
-def indices2_from_grid( # grid/edge.py
+def indices2_from_grid( # grid/edge.py DONE
         grid_cell_2dcount: jnp.ndarray) -> tuple[jnp.ndarray, jnp.ndarray]:
     with jax.ensure_compile_time_eval():
         edge_ndcount_per_axis = count2_per_axis(grid_cell_2dcount)
@@ -99,7 +99,7 @@ def indices2_from_grid( # grid/edge.py
     )
     return edge_ndindices_per_axis
 
-def endpoints( # grid/edge.py
+def endpoints( # grid/edge.py DONE
         edge_ndindex: jnp.ndarray,
         edge_axis: int,
         grid: Grid) -> jnp.ndarray:

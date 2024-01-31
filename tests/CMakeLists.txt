@@ -1,10 +1,11 @@
 # Define the test sources
 set(TEST_SOURCES
-    grid/cell_test.cpp
-    grid/edge_test.cpp
-    grid/grid_test.cpp
-    point_adjacency_test.cpp
-    scalar_test.cpp
+    grid/test_cell.cpp
+    grid/test_edge.cpp
+    grid/test_grid.cpp
+    test_math.cpp
+    test_point_adjacency.cpp
+    test_scalar.cpp
 )
 
 # Add the test executable
