@@ -184,7 +184,7 @@ def index1_from_2dindex( # grid/edge.py DONE
     edge_flattened_index += edge_axis * hedge_flattened_cell_count
     return uint(edge_flattened_index)
 
-class MaskedArray(NamedTuple): # array.py
+class MaskedArray(NamedTuple): # array.py DONE
     array: jnp.ndarray
     mask: jnp.ndarray
 

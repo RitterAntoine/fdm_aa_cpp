@@ -1,4 +1,5 @@
 #include "edge.h"
+#include <iostream>
 
 Eigen::ArrayXXi count2_per_axis(const Eigen::ArrayXi& grid_cell_2dcount) {
     Eigen::ArrayXXi edge_2dcount(2, 2);
