@@ -1,6 +1,21 @@
 #include <gtest/gtest.h>
 #include "src/tree_util.h"
 
+// This test checks the functionality of the 'concatenate' function.
+// The 'concatenate' function is expected to concatenate the input trees into a single tree.
+// The input trees are defined by their values and bools.
+// The expected result is a Tree object with the concatenated values and bools.
+// The input trees are:
+// Tree 1:
+// values: [0, 1]
+// bools: [1, 0]
+// Tree 2:
+// values: [2, 3]
+// bools: [0, 1]
+// The expected result is a Tree object with the following values and bools:
+// values: [0, 1, 2, 3]
+// bools: [1, 0, 0, 1]
+
 TEST(TreeUtilTest, Concatenate) {
     std::vector<Tree> trees;
     trees.push_back(Tree{Eigen::VectorXf(2), Eigen::VectorXf(2)});
