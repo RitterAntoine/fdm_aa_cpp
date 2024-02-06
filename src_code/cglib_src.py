@@ -120,7 +120,7 @@ def index1_from_ndindex( # grid/cell.py DONE
         flattened_index += cell_ndindex[i] * shift
     return flattened_index
 
-def grid_edge_point_scalars( # scalar.py
+def grid_edge_point_scalars( # scalar.py DONE
         edge_ndindex: jnp.ndarray,
         edge_axis: int,
         grid_scalars_flattened: jnp.ndarray,
@@ -154,7 +154,7 @@ def clamp(val: float | jnp.ndarray, # math.py DONE
     val = jnp.where(jnp.greater(val, high), high, val)
     return val
 
-def grid_edge_root_point( # scalar.py
+def grid_edge_root_point( # scalar.py DONE
         edge_ndindex: jnp.ndarray,
         edge_axis: int,
         flattened_scalar_field: jnp.ndarray,

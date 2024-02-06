@@ -25,3 +25,24 @@ Eigen::ArrayXd grid_edge_point_scalars(
     
     return edge_scalars;
 }
+
+Eigen::ArrayXf grid_edge_root_point(
+    const Eigen::ArrayXi& edge_ndindex,
+    int edge_axis,
+    const Eigen::ArrayXd& flattened_scalar_field,
+    const Grid& grid) {
+    
+    Eigen::ArrayXXf edge_endpoints_val = endpoints(edge_ndindex, edge_axis, grid);
+    Eigen::ArrayXd edge_point_scalars_val = grid_edge_point_scalars(
+        edge_ndindex,
+        edge_axis,
+        flattened_scalar_field,
+        grid.cell_ndcount);
+    bool mask = float_same_sign(edge_point_scalars_val[0], edge_point_scalars_val[1]);
+    float u = solve_linear_interpolation_equation(
+        edge_point_scalars_val[0], edge_point_scalars_val[1]);
+    float epsilon = 0.01;
+    u = clamp(u, epsilon, 1. - epsilon);
+    Eigen::ArrayXf root_point = (1. - u) * edge_endpoints_val.row(0) + u * edge_endpoints_val.row(1);
+    return mask ? Eigen::ArrayXf::Constant(root_point.size(), std::nan("")) : root_point;
+}
