@@ -26,6 +26,20 @@ Eigen::ArrayXd grid_edge_point_scalars(
     return edge_scalars;
 }
 
+bool grid_edge_root_existence(
+    const Eigen::ArrayXi& edge_ndindex,
+    int edge_axis,
+    const Eigen::ArrayXd& flattened_scalar_field,
+    const Grid& grid) {
+    
+    Eigen::ArrayXd edge_point_scalars_val = grid_edge_point_scalars(
+        edge_ndindex,
+        edge_axis,
+        flattened_scalar_field,
+        grid.cell_ndcount);
+    return !float_same_sign(edge_point_scalars_val[0], edge_point_scalars_val[1]);
+}
+
 Eigen::ArrayXf grid_edge_root_point(
     const Eigen::ArrayXi& edge_ndindex,
     int edge_axis,
