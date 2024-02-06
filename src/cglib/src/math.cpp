@@ -1,6 +1,10 @@
 #include "math.h"
 
-Eigen::ArrayXf clamp(const Eigen::ArrayXf& val, const Eigen::ArrayXf& low, const Eigen::ArrayXf& high) {
+float clamp(float val, float low, float high) {
+    return std::max(low, std::min(val, high));
+}
+
+Eigen::ArrayXf clamp_array(const Eigen::ArrayXf& val, const Eigen::ArrayXf& low, const Eigen::ArrayXf& high) {
     return val.cwiseMax(low).cwiseMin(high);
 }
 

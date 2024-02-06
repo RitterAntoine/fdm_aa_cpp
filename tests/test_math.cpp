@@ -2,17 +2,43 @@
 #include "src/math.h"
 
 // This test checks the functionality of the 'clamp' function.
-// The 'clamp' function is expected to clamp each element of the input array within the specified interval.
-// The input array is [-10., 10.], the lower bound array is [-5., 2.], and the upper bound array is [10., 3.].
-// The expected result is [-5., 3.].
-TEST(MathTest, Clamp) {
+// The 'clamp' function is expected to clamp the input float within the specified interval.
+// The input float is 5.0, the lower bound is 0.0, and the upper bound is 10.0.
+// The expected result is 5.0.
+// The input float is -5.0, the lower bound is 0.0, and the upper bound is 10.0.
+// The expected result is 0.0.
+// The input float is 15.0, the lower bound is 0.0, and the upper bound is 10.0.
+// The expected result is 10.0.
+
+TEST(MathTest, Clamp_Float) {
+    float val = 5.0;
+    float low = 0.0;
+    float high = 10.0;
+    float res = clamp(val, low, high);
+    ASSERT_FLOAT_EQ(res, 5.0);
+
+    val = -5.0;
+    res = clamp(val, low, high);
+    ASSERT_FLOAT_EQ(res, 0.0);
+
+    val = 15.0;
+    res = clamp(val, low, high);
+    ASSERT_FLOAT_EQ(res, 10.0);
+}
+
+// This test checks the functionality of the 'clamp_array' function.
+// The 'clamp_array' function is expected to clamp the input array within the specified interval.
+// The input array is (-10.0, 10.0), the lower bound is (-5.0, 2.0), and the upper bound is (10.0, 3.0).
+// The expected result is (-5.0, 3.0).
+
+TEST(MathTest, Clamp_Array) {
     Eigen::ArrayXf val(2);
     val << -10., 10.;
     Eigen::ArrayXf low(2);
     low << -5., 2.;
     Eigen::ArrayXf high(2);
     high << 10., 3.;
-    Eigen::ArrayXf res = clamp(val, low, high);
+    Eigen::ArrayXf res = clamp_array(val, low, high);
     Eigen::ArrayXf exp_res(2);
     exp_res << -5., 3.;
     ASSERT_TRUE(res.isApprox(exp_res));
