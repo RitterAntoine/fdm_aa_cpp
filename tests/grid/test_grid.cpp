@@ -10,9 +10,9 @@
 // The expected result is a Grid object with the specified attributes.
 
 TEST(GridTest, Constructor) {
-    Eigen::ArrayXi cell_ndcount(2);
+    Eigen::Array<int, 2 ,1> cell_ndcount(2);
     cell_ndcount << 2, 3;
-    Eigen::ArrayXi origin(2);
+    Eigen::Array<int, 2 ,1> origin(2);
     origin << 0, 0;
     float cell_sides_length = 1.0f;
     Grid grid(cell_ndcount, origin, cell_sides_length);

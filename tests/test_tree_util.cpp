@@ -18,10 +18,10 @@
 
 TEST(TreeUtilTest, Concatenate) {
     std::vector<Tree> trees;
-    trees.push_back(Tree{Eigen::VectorXf(2), Eigen::VectorXf(2)});
+    trees.push_back(Tree{Eigen::Vector<float, 2>(), Eigen::Vector<float, 2>()});
     trees[0].values << 0, 1;
     trees[0].bools << 1, 0;
-    trees.push_back(Tree{Eigen::VectorXf(2), Eigen::VectorXf(2)});
+    trees.push_back(Tree{Eigen::Vector<float, 2>(), Eigen::Vector<float, 2>()});
     trees[1].values << 2, 3;
     trees[1].bools << 0, 1;
 

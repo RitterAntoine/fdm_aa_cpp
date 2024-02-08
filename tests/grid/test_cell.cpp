@@ -19,7 +19,7 @@
 //   (0, 0)   (1, 0)
 
 TEST(CellTest, CornerVertexNdIndices) {
-    Eigen::ArrayXi cell_ndindex(2);
+    Eigen::Array<int, 2, 1> cell_ndindex(2);
     cell_ndindex << 2, 3;
     Eigen::MatrixXi res = corner_vertex_ndindices(cell_ndindex);
     Eigen::MatrixXi exp_res(4, 2);
@@ -49,9 +49,9 @@ TEST(CellTest, CornerVertexNdIndices) {
 //   (0, 0)   (1, 0)   (2, 0)   (3, 0)   (4, 0)
 
 TEST(CellTest, Index1FromNdindex) {
-    Eigen::ArrayXi cell_ndcount(2);
+    Eigen::Array<int, 2, 1> cell_ndcount(2);
     cell_ndcount << 4, 5;
-    Eigen::ArrayXi cell_ndindex(2);
+    Eigen::Array<int, 2, 1> cell_ndindex(2);
     cell_ndindex << 2, 1;
     int res = index1_from_ndindex(cell_ndindex, cell_ndcount);
     EXPECT_EQ(res, 6);
@@ -76,12 +76,12 @@ TEST(CellTest, Index1FromNdindex) {
 //   (0, 0)   (1, 0)   (2, 0)   (3, 0)   (4, 0)
 
 TEST(CellTest, NdIndexFrom1DIndex) {
-    Eigen::ArrayXi cell_ndcount(2);
+    Eigen::Array<int, 2, 1> cell_ndcount(2);
     cell_ndcount << 4, 5;
-    Eigen::ArrayXi cell_ndindex(2);
+    Eigen::Array<int, 2, 1> cell_ndindex(2);
     cell_ndindex << 2, 1;
     int cell_1dindex = index1_from_ndindex(cell_ndindex, cell_ndcount);
-    Eigen::ArrayXi res = ndindex_from_1dindex(cell_1dindex, cell_ndcount);
+    Eigen::Array<int, 2, 1> res = ndindex_from_1dindex(cell_1dindex, cell_ndcount);
     EXPECT_TRUE((res == cell_ndindex).all());
 }
 
@@ -104,9 +104,9 @@ TEST(CellTest, NdIndexFrom1DIndex) {
 //   (0, 0)   (1, 0)   (2, 0)   (3, 0)   (4, 0)
 
 TEST(CellTest, NdIndexIsValid) {
-    Eigen::ArrayXi cell_nd_count(2);
+    Eigen::Array<int, 2, 1> cell_nd_count(2);
     cell_nd_count << 2, 3;
-    Eigen::ArrayXi cell_ndindex(2);
+    Eigen::Array<int, 2, 1> cell_ndindex(2);
     cell_ndindex << 2, 3;
     bool res = ndindex_is_valid(cell_ndindex, cell_nd_count);
     EXPECT_FALSE(res);

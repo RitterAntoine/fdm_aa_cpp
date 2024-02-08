@@ -9,14 +9,14 @@
 class Grid {
 public:
     // The number of cells along each axis
-    Eigen::ArrayXi cell_ndcount;
+    Eigen::Array<int, 2 ,1> cell_ndcount;
     // The grid's origin is the point in the bottom left corner
-    Eigen::ArrayXi origin;
+    Eigen::Array<int, 2 ,1> origin;
     // The cell sides length
     float cell_sides_length;
 
     // Constructor for the Grid class
-    Grid(Eigen::ArrayXi cell_ndcount, Eigen::ArrayXi origin, float cell_sides_length);
+    Grid(Eigen::Array<int, 2 ,1> cell_ndcount, Eigen::Array<int, 2 ,1> origin, float cell_sides_length);
 };
 
 // End of the inclusion guard

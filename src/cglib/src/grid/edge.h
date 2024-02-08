@@ -13,10 +13,18 @@ enum class Neighboring2Type {
     WITHIN_CELL_SIDE_LENDTH = 1
 };
 
-Eigen::ArrayXXi count2_per_axis(const Eigen::ArrayXi& grid_cell_2dcount);
+Eigen::Array<int, 2, 2> count2_per_axis(const Eigen::Array<int, 2, 1> grid_cell_2dcount);
 
-int index1_from_2dindex(const Eigen::ArrayXi& edge_2dindex, int edge_axis, const Eigen::ArrayXXi& edge_2dcount);
+int index1_from_2dindex(const Eigen::Array<int, 2 ,1> edge_2dindex, int edge_axis, const Eigen::Array<int, 2 ,2> edge_2dcount);
 
-Eigen::VectorXi indices1_from_2dgrid(const Eigen::ArrayXi& grid_cell_2dcount);
-    
-Eigen::ArrayXXf endpoints(const Eigen::ArrayXi& edge_ndindex, int edge_axis, const Grid& grid);
+Eigen::VectorXi indices1_from_2dgrid(const Eigen::Array<int, 2 ,1> grid_cell_2dcount);
+
+/*
+MaskedArray neighboring_2dindices_direct(
+    const Eigen::Array<int, 2, 1> edge_2dindex,
+    int edge_axis,
+    const Eigen::Array<int, 2, 1> grid_cell_2dcount,
+    Neighboring2Type neighboring_type);
+*/
+
+Eigen::ArrayXXf endpoints(const Eigen::Array<int, 2 ,1> edge_ndindex, int edge_axis, const Grid& grid);

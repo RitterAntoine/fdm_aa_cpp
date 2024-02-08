@@ -236,7 +236,7 @@ def neighboring_2dindices_direct( # grid/edge.py
     neighbors_mask = jnp.any(neighbors_mask, axis=2)
     return MaskedArray(neighbors_ndindices, neighbors_mask)
 
-def grid_edge_root_existence( # scalar.py
+def grid_edge_root_existence( # scalar.py DONE
         edge_ndindex: jnp.ndarray,
         edge_axis: int,
         flattened_scalar_field: jnp.ndarray,

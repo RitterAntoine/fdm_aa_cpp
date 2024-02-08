@@ -20,16 +20,16 @@
 //   (0, 0)   (1, 0)
 
 TEST(ScalarTest, GridEdgePointScalars) {
-    Eigen::ArrayXi edge_ndindex(2);
+    Eigen::Array<int, 2, 1> edge_ndindex(2);
     edge_ndindex << 1, 0;
     int edge_axis = 1;
-    Eigen::ArrayXi cell_ndcount(2);
+    Eigen::Array<int, 2, 1> cell_ndcount(2);
     cell_ndcount << 2, 3;
     Eigen::ArrayXd grid_scalars_flattened = Eigen::ArrayXd::LinSpaced(6, 0, 5);
 
-    Eigen::ArrayXd res = grid_edge_point_scalars(edge_ndindex, edge_axis, grid_scalars_flattened, cell_ndcount);
+    Eigen::Array<double, 2, 1> res = grid_edge_point_scalars(edge_ndindex, edge_axis, grid_scalars_flattened, cell_ndcount);
 
-    Eigen::ArrayXd exp_res(2);
+    Eigen::Array<double, 2, 1> exp_res(2);
     exp_res << 1, 3;
 
     ASSERT_TRUE((res.isApprox(exp_res)));
@@ -44,9 +44,9 @@ TEST(ScalarTest, GridEdgePointScalars) {
 // The expected result is False.
 
 TEST(ScalarTest, GridEdgeRootExistence) {
-    Eigen::ArrayXi cell_ndcount(2);
+    Eigen::Array<int, 2, 1> cell_ndcount(2);
     cell_ndcount << 2, 3;
-    Eigen::ArrayXi origin(2);
+    Eigen::Array<int, 2, 1> origin(2);
     origin << 0, 0;
     float cell_sides_length = 1;
     Grid grid(cell_ndcount, origin, cell_sides_length);
@@ -66,7 +66,7 @@ TEST(ScalarTest, GridEdgeRootExistence) {
     // Include the values from the helper function : [-0.5, 0.5, -0.25, 0.75, -0.1, 0.9]
     const Eigen::ArrayXd flattened_scalar_field = Eigen::Map<const Eigen::ArrayXd>(new double[6]{-0.5, 0.5, -0.25, 0.75, -0.1, 0.9}, 6);
     int edge_axis = 0;
-    Eigen::ArrayXi edge_ndindex(2);
+    Eigen::Array<int, 2, 1> edge_ndindex(2);
     edge_ndindex << 0, 0;
     bool res0 = grid_edge_root_existence(edge_ndindex, edge_axis, flattened_scalar_field, grid);
     ASSERT_TRUE(res0);
@@ -85,9 +85,9 @@ TEST(ScalarTest, GridEdgeRootExistence) {
 // The expected result is a 2x1 array with the root point of the edge.
 
 TEST(calarTest, GridEdgeRootPoint) {
-    Eigen::ArrayXi cell_ndcount(2);
+    Eigen::Array<int, 2, 1> cell_ndcount(2);
     cell_ndcount << 2, 3;
-    Eigen::ArrayXi origin(2);
+    Eigen::Array<int, 2, 1> origin(2);
     origin << 0, 0;
     float cell_sides_length = 1;
     Grid grid(cell_ndcount, origin, cell_sides_length);
@@ -107,7 +107,7 @@ TEST(calarTest, GridEdgeRootPoint) {
     // Include the values from the helper function : [-0.5, 0.5, -0.25, 0.75, -0.1, 0.9]
     const Eigen::ArrayXd flattened_scalar_field = Eigen::Map<const Eigen::ArrayXd>(new double[6]{-0.5, 0.5, -0.25, 0.75, -0.1, 0.9}, 6);
     int edge_axis = 0;
-    Eigen::ArrayXi edge_ndindex(2);
+    Eigen::Array<int, 2, 1> edge_ndindex(2);
     edge_ndindex << 0, 0;
     Eigen::ArrayXf res = grid_edge_root_point(edge_ndindex, edge_axis, flattened_scalar_field, grid);
     Eigen::ArrayXf res_exp(2);

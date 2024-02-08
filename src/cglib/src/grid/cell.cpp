@@ -1,9 +1,9 @@
 #include "cell.h"
 
-Eigen::MatrixXi corner_vertex_ndindices(const Eigen::ArrayXi& cell_ndindex) {
+Eigen::MatrixXi corner_vertex_ndindices(const Eigen::Array<int, 2, 1> cell_ndindex) {
     int n = cell_ndindex.size();
     int corner_count = 1 << n;
-    Eigen::ArrayXi corner_cell_ndcount = Eigen::ArrayXi::Constant(n, 2);
+    Eigen::Array<int, 2, 1> corner_cell_ndcount = Eigen::Array<int, 2, 1>::Constant(n, 2);
     Eigen::MatrixXi corner_ndindices(n, corner_count);
     for (int i = 0; i < corner_count; ++i) {
         corner_ndindices.col(i) = ndindex_from_1dindex(i, corner_cell_ndcount) + cell_ndindex;
@@ -11,7 +11,7 @@ Eigen::MatrixXi corner_vertex_ndindices(const Eigen::ArrayXi& cell_ndindex) {
     return corner_ndindices.transpose();
 }
 
-int index1_from_ndindex(const Eigen::ArrayXi& cell_ndindex, const Eigen::ArrayXi& cell_ndcount) {
+int index1_from_ndindex(const Eigen::Array<int, 2, 1> cell_ndindex, const Eigen::Array<int, 2, 1> cell_ndcount) {
     // Get the size of the cell_ndcount array
     int n = cell_ndcount.size();
     // Initialize the flattened index with the first element of cell_ndindex
@@ -27,9 +27,9 @@ int index1_from_ndindex(const Eigen::ArrayXi& cell_ndindex, const Eigen::ArrayXi
     return flattened_index;
 }
 
-Eigen::ArrayXi ndindex_from_1dindex(int cell_1dindex, const Eigen::ArrayXi& cell_ndcount) {
+Eigen::Array<int, 2, 1> ndindex_from_1dindex(int cell_1dindex, const Eigen::Array<int, 2, 1> cell_ndcount) {
     int n = cell_ndcount.size();
-    Eigen::ArrayXi cell_ndindex = Eigen::ArrayXi::Zero(n);
+    Eigen::Array<int, 2, 1> cell_ndindex = Eigen::Array<int, 2, 1>::Zero();
     cell_ndindex[0] = cell_1dindex % cell_ndcount[0];
     for (int i = 1; i < n; ++i) {
         int shift = cell_ndcount.head(i).prod();
@@ -38,6 +38,6 @@ Eigen::ArrayXi ndindex_from_1dindex(int cell_1dindex, const Eigen::ArrayXi& cell
     return cell_ndindex;
 }
 
-bool ndindex_is_valid(const Eigen::ArrayXi& grid_cell_ndindex, const Eigen::ArrayXi& grid_cell_ndcount) {
+bool ndindex_is_valid(const Eigen::Array<int, 2, 1> grid_cell_ndindex, const Eigen::Array<int, 2, 1> grid_cell_ndcount) {
     return ((grid_cell_ndindex >= 0).all() && (grid_cell_ndindex < grid_cell_ndcount).all());
 }

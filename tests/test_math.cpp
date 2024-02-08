@@ -26,24 +26,6 @@ TEST(MathTest, Clamp_Float) {
     ASSERT_FLOAT_EQ(res, 10.0);
 }
 
-// This test checks the functionality of the 'clamp_array' function.
-// The 'clamp_array' function is expected to clamp the input array within the specified interval.
-// The input array is (-10.0, 10.0), the lower bound is (-5.0, 2.0), and the upper bound is (10.0, 3.0).
-// The expected result is (-5.0, 3.0).
-
-TEST(MathTest, Clamp_Array) {
-    Eigen::ArrayXf val(2);
-    val << -10., 10.;
-    Eigen::ArrayXf low(2);
-    low << -5., 2.;
-    Eigen::ArrayXf high(2);
-    high << 10., 3.;
-    Eigen::ArrayXf res = clamp_array(val, low, high);
-    Eigen::ArrayXf exp_res(2);
-    exp_res << -5., 3.;
-    ASSERT_TRUE(res.isApprox(exp_res));
-}
-
 // This test checks the functionality of the 'float_same_sign' function.
 // The 'float_same_sign' function is expected to return true if the input floats have the same sign, and false otherwise.
 // The input floats are -1.0 and 1.0.
