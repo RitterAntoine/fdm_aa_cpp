@@ -7,5 +7,5 @@
 class MaskedArray {
     public:
         Eigen::ArrayXi array;
-        Eigen::ArrayXi mask;
+        Eigen::Array<bool, Eigen::Dynamic, 1> mask;
 };
