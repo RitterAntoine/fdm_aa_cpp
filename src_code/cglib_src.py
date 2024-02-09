@@ -192,7 +192,7 @@ class Neighboring2Type(IntEnum): # grid/edge.py DONE
     VISIBLE = 0
     WITHIN_CELL_SIDE_LENDTH = 1
 
-def neighboring_2dindices_direct( # grid/edge.py
+def neighboring_2dindices_direct( # grid/edge.py DONE
         edge_2dindex: jnp.ndarray,
         edge_axis: int,
         grid_cell_2dcount: jnp.ndarray,

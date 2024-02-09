@@ -88,6 +88,45 @@ TEST(EdgeTest, Indices1From2DGrid) {
     ASSERT_TRUE(res.isApprox(exp_res));
 }
 
+TEST(EdgeTest, Neighboring2DIndicesDirect) {
+    Eigen::Array<int, 2, 1> edge_2dindex(2);
+    edge_2dindex << 3, 2;
+    int edge_axis = 0;
+    Eigen::Array<int, 2, 1> cell_2dcount(2);
+    cell_2dcount << 4, 4;
+
+    MaskedArray res_visible = neighboring_2dindices_direct(edge_2dindex, edge_axis, cell_2dcount, Neighboring2Type::VISIBLE);
+
+    Eigen::Array<int, 8, 2> exp_res_visible;
+    exp_res_visible << 3, 1,
+                       3, 3,
+                       INT_MAX, INT_MAX,
+                       INT_MAX, INT_MAX,
+                       3, 1,
+                       4, 1,
+                       3, 2,
+                       4, 2;
+    
+    Eigen::Array<bool, 8, 1> exp_mask_visible;
+    exp_mask_visible << false, false, true, true, false, false, false, false;
+
+    // Display the result and the expected result as so:
+    // Res: x, y | Exp: x, y
+
+    for (int i = 0; i < res_visible.array.rows(); i++) {
+        std::cout << "Res: " << res_visible.array(i, 0) << ", " << res_visible.array(i, 1) << " | ";
+        std::cout << "Exp: " << exp_res_visible(i, 0) << ", " << exp_res_visible(i, 1) << std::endl;
+    }
+
+    for (int i = 0; i < res_visible.mask.rows(); i++) {
+        std::cout << "Res: " << res_visible.mask(i) << " | ";
+        std::cout << "Exp: " << exp_mask_visible(i) << std::endl;
+    }
+
+    ASSERT_TRUE((res_visible.array == exp_res_visible).all());
+    ASSERT_TRUE((res_visible.mask == exp_mask_visible).all());
+}
+
 // This test checks the functionality of the 'endpoints' function.
 // The 'endpoints' function is expected to return the endpoints of an edge given its index, axis, and the grid it belongs to.
 // The grid is a 2D grid with cell count (2, 3), origin (-1, 2), and cell side length 0.5.
@@ -125,21 +164,3 @@ TEST(EdgeTest, Endpoints) {
 
     ASSERT_TRUE((res.isApprox(exp_res)));
 }
-
-// This test checks the functionality of the 'neighboring_2dindices_direct' function.
-// The 'neighboring_2dindices_direct' function is expected to return the neighboring 2D indices of an edge given its 2D index, axis, and the grid it belongs to.
-// The grid is a 2D grid with cell count (2, 3).
-// The edge is defined by its 2D index (2, 1) and axis 1.
-// The expected result is a tuple of two arrays: the first array contains the neighboring 2D indices and the second array contains the mask of the neighboring 2D indices.
-// The edge indexing in the grid is as follows:
-//  ________ ________
-// | (0, 3) | (1, 3) |
-// |(0, 2)  |(1, 2)  |(2, 2)
-// |________|________|
-// | (0, 2) | (1, 2) |
-// |(0, 1)  |(1, 1)  |(2, 1)
-// |________|________|
-// | (0, 1) | (1, 1) |
-// |(0, 0)  |(1, 0)  |(2, 0)
-// |________|________|
-//   (0, 0)   (1, 0)

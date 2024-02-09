@@ -23,61 +23,108 @@ Eigen::VectorXi indices1_from_2dgrid(const Eigen::Array<int, 2 ,1> grid_cell_2dc
     return edge_1dindices;
 }
 
-/*
-MaskedArray neighboring_2dindices_direct(   const Eigen::Array<int, 2, 1> edge_2dindex, //2D index of the edge
-                                            int edge_axis, //Axis specifies which domain axis is parallel to the edge
-                                            const Eigen::Array<int, 2, 1> grid_cell_2dcount, //Number of grid's cells for each axis
-                                            Neighboring2Type neighboring_type) { //Specify the type of neighboring
-    // First, we define the edge_2dcount, which is a 2D array with the number of edges along each axis.
-    Eigen::ArrayXi edge_2dcount = count2_per_axis(grid_cell_2dcount);
+MaskedArray neighboring_2dindices_direct(const Eigen::Array<int, 2,1> edge_2dindex,
+                                         int edge_axis,
+                                         const Eigen::Array<int, 2,1> grid_cell_2dcount,
+                                         Neighboring2Type neighboring_type) {
+    // The goal of this function is to return the neighboring indices of the specified edge.
+    // The neighboring indices are the indices of the edges that are neighboring to the specified edge.
+    // For example this case, we have an edge with 2D index (x, y) and axis 0.
+    // The neighboring indices of the edge are the indices of the edges that are neighboring to the edge.
+    // The order of the neighboring indices is as follows
+    //           
+    //          ________
+    //         |    b   |
+    //         |3       |4
+    // ________|________|________
+    //     c   |  (x,y) |    d
+    //         |1       |2
+    //         |________|
+    //             a
+    //
+    // It gives us this order of neighboring indices:
+    // [(a, b, c, d), (1, 2, 3, 4)] if the neighboring type is VISIBLE
+    // c and d are not considered as neighbored to the edge if the neighboring so we will make them masked.
 
-    // Then, we define the edge_ndindex_shifts, it is an array with the relative shifts of the neighboring edges.
-    // which is can be represented as so:
-    // For axis 0:
-    // [[0, -1], [0, 1], [INT_MAX, INT_MAX], [INT_MAX, INT_MAX]],
-    // [[0, -1], [1, -1], [0, 0], [1, 0]]
-    // For axis 1:
-    // [[-1, 0], [1, 0], [INT_MAX, INT_MAX], [INT_MAX, INT_MAX]],
-    // [[0, -1], [1, -1], [0, 0], [1, 0]]
+    // If the axis is 0, neighboring_2dindices will take the following values:
+    // [0, -1], [0, 1], [INT_MAX, INT_MAX], [INT_MAX, INT_MAX], [0, -1], [1, -1], [0, 0], [1, 0]
+    // If the axis is 1, neighboring_2dindices will take the following values:
+    // [-1, 0], [-1, 1], [0, 0], [0, 1], [-1, 0], [1, 0], [INT_MAX, INT_MAX], [INT_MAX, INT_MAX]
 
-    // Store and use it x and y at the same time
-    Eigen::ArrayXXi edge_ndindex_shifts(2, 4);
+    // Eigen::Array<int, 2, 2> edge_2dcount = count2_per_axis(grid_cell_2dcount);
+
+    Eigen::Array<int, 8, 2> neighboring_2dindices;
+    Eigen::Array<bool, 8, 1> mask;
+
     if (neighboring_type == Neighboring2Type::VISIBLE) {
-        edge_ndindex_shifts << 0, -1, 0, 1, INT_MAX, INT_MAX, INT_MAX, INT_MAX,
-                               0, -1, 1, -1, 0, 0, 1, 0;
-    } else {
-        edge_ndindex_shifts << -1, 0, 1, 0, INT_MAX, INT_MAX, INT_MAX, INT_MAX,
-                               0, -1, 1, -1, 0, 0, 1, 0;
+        if (edge_axis == 0) {
+            neighboring_2dindices << 0 + edge_2dindex[0], -1 + edge_2dindex[1],
+                                     0 + edge_2dindex[0], 1 + edge_2dindex[1],
+                                     INT_MAX, INT_MAX,
+                                     INT_MAX, INT_MAX,
+                                     0 + edge_2dindex[0], -1 + edge_2dindex[1],
+                                     1 + edge_2dindex[0], -1 + edge_2dindex[1],
+                                     0 + edge_2dindex[0], 0 + edge_2dindex[1],
+                                     1 + edge_2dindex[0],0 + edge_2dindex[1];
+            
+            mask << false, false, true, true, false, false, false, false;
+        }
+
+        else {
+            neighboring_2dindices << -1 + edge_2dindex[0], 0 + edge_2dindex[1],
+                                     -1 + edge_2dindex[0], 1 + edge_2dindex[1],
+                                     0 + edge_2dindex[0], 0 + edge_2dindex[1],
+                                     0 + edge_2dindex[0], 1 + edge_2dindex[1],
+                                     -1 + edge_2dindex[0], 0 + edge_2dindex[1],
+                                     1 + edge_2dindex[0], 0 + edge_2dindex[1],
+                                     INT_MAX, INT_MAX,
+                                     INT_MAX, INT_MAX;
+
+            mask << false, false, false, false, false, false, true, true;
+        }
+    }
+    else {
+        if (edge_axis == 0) {
+            neighboring_2dindices << -1 + edge_2dindex[0], 0 + edge_2dindex[1],
+                                     1 + edge_2dindex[0], 0 + edge_2dindex[1],
+                                     INT_MAX, INT_MAX,
+                                     INT_MAX, INT_MAX,
+                                     0 + edge_2dindex[0], -1 + edge_2dindex[1],
+                                     1 + edge_2dindex[0], -1 + edge_2dindex[1],
+                                     0 + edge_2dindex[0], 0 + edge_2dindex[1],
+                                     1 + edge_2dindex[0], 0 + edge_2dindex[1];
+
+            mask << false, false, true, true, false, false, false, false;
+        }
+
+        else {
+            neighboring_2dindices << 0 + edge_2dindex[0], -1 + edge_2dindex[1],
+                                     1 + edge_2dindex[0], -1 + edge_2dindex[1],
+                                     0 + edge_2dindex[0], 0 + edge_2dindex[1],
+                                     1 + edge_2dindex[0], 0 + edge_2dindex[1],
+                                     -1 + edge_2dindex[0], 0 + edge_2dindex[1],
+                                     1 + edge_2dindex[0], 0 + edge_2dindex[1],
+                                     INT_MAX, INT_MAX,
+                                     INT_MAX, INT_MAX;
+
+            mask << false, false, false, false, false, false, true, true;
+        }
     }
 
-    // Flip list if the edge is vertical
-    if (edge_axis == 1) {
-        edge_ndindex_shifts.col(0).reverseInPlace();
-        edge_ndindex_shifts.col(1).reverseInPlace();
-        edge_ndindex_shifts.col(2).reverseInPlace();
-        edge_ndindex_shifts.col(3).reverseInPlace();
+    // Check if the neighboring_2dindices is within the grid, if not, make them masked.
+    for (int i = 0; i < neighboring_2dindices.rows(); i++) {
+        if (neighboring_2dindices(i, 0) < 0 || neighboring_2dindices(i, 0) > grid_cell_2dcount[0] ||
+            neighboring_2dindices(i, 1) < 0 || neighboring_2dindices(i, 1) > grid_cell_2dcount[1]) {
+            mask[i] = true;
+        }
     }
 
-    // Reshape for broadcast then shift the indices
-    Eigen::ArrayXi neighbors_ndindices = edge_2dindex.replicate(1, 4) + edge_ndindex_shifts;
-
-    // Mask invalid indices
-    Eigen::ArrayXi neighbors_mask(neighbors_ndindices.size());
-    for (int i = 0; i < neighbors_ndindices.cols(); ++i) {
-        Eigen::ArrayXi comparison_result = ((neighbors_ndindices.col(i).array() >= edge_2dcount) || (neighbors_ndindices.col(i).array() < 0)).cast<int>();
-        neighbors_mask.segment(i * neighbors_ndindices.rows(), neighbors_ndindices.rows()) = comparison_result;
-    }
-
-    // Put valid indices where indices are not masked
-    neighbors_ndindices = (neighbors_ndindices * (1 - neighbors_mask)).eval();
-
-    // Put the result in a MaskedArray
     MaskedArray result;
-    result.array = neighbors_ndindices;
-    result.mask = neighbors_mask;
+    result.array = neighboring_2dindices;
+    result.mask = mask;
 
     return result;
-}*/
+}
 
 Eigen::ArrayXXf endpoints(const Eigen::Array<int, 2 ,1> edge_ndindex, int edge_axis, const Grid& grid) {
     int n = grid.cell_ndcount.size();
