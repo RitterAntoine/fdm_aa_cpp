@@ -88,7 +88,7 @@ TEST(EdgeTest, Indices1From2DGrid) {
     ASSERT_TRUE(res.isApprox(exp_res));
 }
 
-TEST(EdgeTest, Neighboring2DIndicesDirect) {
+TEST(EdgeTest, Neighboring2DIndicesDirect_1) {
     Eigen::Array<int, 2, 1> edge_2dindex(2);
     edge_2dindex << 3, 2;
     int edge_axis = 0;
@@ -110,18 +110,31 @@ TEST(EdgeTest, Neighboring2DIndicesDirect) {
     Eigen::Array<bool, 8, 1> exp_mask_visible;
     exp_mask_visible << false, false, true, true, false, false, false, false;
 
-    // Display the result and the expected result as so:
-    // Res: x, y | Exp: x, y
+    ASSERT_TRUE((res_visible.array == exp_res_visible).all());
+    ASSERT_TRUE((res_visible.mask == exp_mask_visible).all());
+}
 
-    for (int i = 0; i < res_visible.array.rows(); i++) {
-        std::cout << "Res: " << res_visible.array(i, 0) << ", " << res_visible.array(i, 1) << " | ";
-        std::cout << "Exp: " << exp_res_visible(i, 0) << ", " << exp_res_visible(i, 1) << std::endl;
-    }
+TEST(EdgeTest, Neighboring2DIndicesDirect_2) {
+    Eigen::Array<int, 2, 1> edge_2dindex(2);
+    edge_2dindex << 0, 0;
+    int edge_axis = 1;
+    Eigen::Array<int, 2, 1> cell_2dcount(2);
+    cell_2dcount << 2, 2;
 
-    for (int i = 0; i < res_visible.mask.rows(); i++) {
-        std::cout << "Res: " << res_visible.mask(i) << " | ";
-        std::cout << "Exp: " << exp_mask_visible(i) << std::endl;
-    }
+    MaskedArray res_visible = neighboring_2dindices_direct(edge_2dindex, edge_axis, cell_2dcount, Neighboring2Type::VISIBLE);
+
+    Eigen::Array<int, 8, 2> exp_res_visible;
+    exp_res_visible << -1, 0,
+                       -1, 1,
+                       0, 0,
+                       0, 1,
+                       -1, 0,
+                       1, 0,
+                       INT_MAX, INT_MAX,
+                       INT_MAX, INT_MAX;
+    
+    Eigen::Array<bool, 8, 1> exp_mask_visible;
+    exp_mask_visible << true, true, false, false, true, false, true, true;
 
     ASSERT_TRUE((res_visible.array == exp_res_visible).all());
     ASSERT_TRUE((res_visible.mask == exp_mask_visible).all());
