@@ -1,21 +1,26 @@
 #include "edge.h"
 #include <iostream>
 
-Eigen::Array<int, 2, 2> count2_per_axis(const Eigen::Array<int, 2, 1> grid_cell_2dcount) {
+Eigen::Array<int, 2, 2> count2_per_axis(const Eigen::Array<int, 2, 1> grid_cell_2dcount)
+{
     Eigen::Array<int, 2 ,2> edge_2dcount(2, 2);
     edge_2dcount << grid_cell_2dcount[0], grid_cell_2dcount[1] + 1,
                     grid_cell_2dcount[0] + 1, grid_cell_2dcount[1];
     return edge_2dcount;
 }
 
-int index1_from_2dindex(const Eigen::Array<int, 2 ,1> edge_2dindex, int edge_axis, const Eigen::Array<int, 2 ,2> edge_2dcount) {
+int index1_from_2dindex(const Eigen::Array<int, 2 ,1> edge_2dindex,
+                        int edge_axis,
+                        const Eigen::Array<int, 2 ,2> edge_2dcount)
+{
     int edge_flattened_index = index1_from_ndindex(edge_2dindex, edge_2dcount.col(edge_axis));
     int hedge_flattened_cell_count = edge_2dcount(0, 0) * edge_2dcount(0, 1);
     edge_flattened_index += edge_axis * hedge_flattened_cell_count;
     return edge_flattened_index;
 }
 
-Eigen::VectorXi indices1_from_2dgrid(const Eigen::Array<int, 2 ,1> grid_cell_2dcount) {
+Eigen::VectorXi indices1_from_2dgrid(const Eigen::Array<int, 2 ,1> grid_cell_2dcount)
+{
     Eigen::Array<int, 2 ,2> edge_ndcount_per_axis = count2_per_axis(grid_cell_2dcount);
     int edge_1dcount = edge_ndcount_per_axis(0, 0) * edge_ndcount_per_axis(0, 1) +
                        edge_ndcount_per_axis(1, 0) * edge_ndcount_per_axis(1, 1);
@@ -26,7 +31,8 @@ Eigen::VectorXi indices1_from_2dgrid(const Eigen::Array<int, 2 ,1> grid_cell_2dc
 MaskedArray neighboring_2dindices_direct(const Eigen::Array<int, 2,1> edge_2dindex,
                                          int edge_axis,
                                          const Eigen::Array<int, 2,1> grid_cell_2dcount,
-                                         Neighboring2Type neighboring_type) {
+                                         Neighboring2Type neighboring_type)
+{
     // The goal of this function is to return the neighboring indices of the specified edge.
     // The neighboring indices are the indices of the edges that are neighboring to the specified edge.
     // For example this case, we have an edge with 2D index (x, y) and axis 0.
@@ -56,8 +62,10 @@ MaskedArray neighboring_2dindices_direct(const Eigen::Array<int, 2,1> edge_2dind
     Eigen::Array<int, 8, 2> neighboring_2dindices;
     Eigen::Array<bool, 8, 1> mask;
 
-    if (neighboring_type == Neighboring2Type::VISIBLE) {
-        if (edge_axis == 0) {
+    if (neighboring_type == Neighboring2Type::VISIBLE)
+    {
+        if (edge_axis == 0)
+        {
             neighboring_2dindices << 0 + edge_2dindex[0], -1 + edge_2dindex[1],
                                      0 + edge_2dindex[0], 1 + edge_2dindex[1],
                                      INT_MAX, INT_MAX,
@@ -70,7 +78,8 @@ MaskedArray neighboring_2dindices_direct(const Eigen::Array<int, 2,1> edge_2dind
             mask << false, false, true, true, false, false, false, false;
         }
 
-        else {
+        else
+        {
             neighboring_2dindices << -1 + edge_2dindex[0], 0 + edge_2dindex[1],
                                      -1 + edge_2dindex[0], 1 + edge_2dindex[1],
                                      0 + edge_2dindex[0], 0 + edge_2dindex[1],
@@ -83,8 +92,10 @@ MaskedArray neighboring_2dindices_direct(const Eigen::Array<int, 2,1> edge_2dind
             mask << false, false, false, false, false, false, true, true;
         }
     }
-    else {
-        if (edge_axis == 0) {
+    else
+    {
+        if (edge_axis == 0)
+        {
             neighboring_2dindices << -1 + edge_2dindex[0], 0 + edge_2dindex[1],
                                      1 + edge_2dindex[0], 0 + edge_2dindex[1],
                                      INT_MAX, INT_MAX,
@@ -97,7 +108,8 @@ MaskedArray neighboring_2dindices_direct(const Eigen::Array<int, 2,1> edge_2dind
             mask << false, false, true, true, false, false, false, false;
         }
 
-        else {
+        else
+        {
             neighboring_2dindices << 0 + edge_2dindex[0], -1 + edge_2dindex[1],
                                      1 + edge_2dindex[0], -1 + edge_2dindex[1],
                                      0 + edge_2dindex[0], 0 + edge_2dindex[1],
@@ -112,9 +124,11 @@ MaskedArray neighboring_2dindices_direct(const Eigen::Array<int, 2,1> edge_2dind
     }
 
     // Check if the neighboring_2dindices is within the grid, if not, make them masked.
-    for (int i = 0; i < neighboring_2dindices.rows(); i++) {
+    for (int i = 0; i < neighboring_2dindices.rows(); i++)
+    {
         if (neighboring_2dindices(i, 0) < 0 || neighboring_2dindices(i, 0) > grid_cell_2dcount[0] ||
-            neighboring_2dindices(i, 1) < 0 || neighboring_2dindices(i, 1) > grid_cell_2dcount[1]) {
+            neighboring_2dindices(i, 1) < 0 || neighboring_2dindices(i, 1) > grid_cell_2dcount[1])
+        {
             mask[i] = true;
         }
     }
@@ -126,7 +140,10 @@ MaskedArray neighboring_2dindices_direct(const Eigen::Array<int, 2,1> edge_2dind
     return result;
 }
 
-Eigen::ArrayXXf endpoints(const Eigen::Array<int, 2 ,1> edge_ndindex, int edge_axis, const Grid& grid) {
+Eigen::ArrayXXf endpoints(const Eigen::Array<int, 2 ,1> edge_ndindex,
+                          int edge_axis,
+                          const Grid& grid)
+{
     int n = grid.cell_ndcount.size();
     Eigen::ArrayXf increment = Eigen::ArrayXf::Zero(n);
     increment[edge_axis] = grid.cell_sides_length;

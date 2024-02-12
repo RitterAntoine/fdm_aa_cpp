@@ -16,7 +16,9 @@ public:
     float cell_sides_length;
 
     // Constructor for the Grid class
-    Grid(Eigen::Array<int, 2 ,1> cell_ndcount, Eigen::Array<int, 2 ,1> origin, float cell_sides_length);
+    Grid(Eigen::Array<int, 2 ,1> cell_ndcount,
+         Eigen::Array<int, 2 ,1> origin,
+         float cell_sides_length);
 };
 
 // End of the inclusion guard

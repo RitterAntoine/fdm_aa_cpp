@@ -2,7 +2,8 @@
 
 
 // Constructor
-PointAdjacency::PointAdjacency(Eigen::ArrayXXf point, Eigen::ArrayXXi adjacency)
+PointAdjacency::PointAdjacency(Eigen::ArrayXXf point, 
+                               Eigen::ArrayXXi adjacency)
     : point_(point), adjacency_(adjacency) {}
 
 // Getters

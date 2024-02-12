@@ -1,10 +1,15 @@
 #include "math.h"
 
-float clamp(float val, float low, float high) {
+float clamp(float val, 
+            float low,
+            float high)
+{
     return std::max(low, std::min(val, high));
 }
 
-bool float_same_sign(float a, float b) {
+bool float_same_sign(float a, 
+                     float b)
+{
     bool a_is_neg = std::signbit(a);
     bool b_is_neg = std::signbit(b);
     bool a_is_pos = !a_is_neg;
@@ -16,7 +21,9 @@ bool float_same_sign(float a, float b) {
 
 #include <cmath>
 
-float solve_linear_interpolation_equation(float v1, float v2) {
+float solve_linear_interpolation_equation(float v1, 
+                                          float v2)
+{
     float deno = v2 - v1;
     return std::abs(deno) < 0.0001 ? 0.5 : -v1 / deno;
 }

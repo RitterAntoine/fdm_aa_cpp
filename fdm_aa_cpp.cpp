@@ -1,6 +1,7 @@
 #include <iostream>
 #include <src/grid/edge.h>
 
-int main() {
+int main()
+{
     return 0;
 }

@@ -6,7 +6,8 @@
 class PointAdjacency {
 public:
     // Constructor
-    PointAdjacency(Eigen::ArrayXXf point, Eigen::ArrayXXi adjacency);
+    PointAdjacency(Eigen::ArrayXXf point, 
+                   Eigen::ArrayXXi adjacency);
 
     // Getters
     Eigen::ArrayXXf getPoint() const;

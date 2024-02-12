@@ -291,7 +291,7 @@ def grid2_contour( # scalar.py
         scalar_field_flattened: jnp.ndarray,
         scalar_field_cell_2dcount: tuple[int, int],
         scalar_field_grid: Grid) -> PointData:
-    
+
     def uniform_grid_edge_root_point_and_adjacency(
             edge_ndindex: jnp.ndarray,
             edge_axis: int,

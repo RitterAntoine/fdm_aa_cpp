@@ -4,7 +4,8 @@
 // This test checks the values of the Neighboring2Type enum class.
 // The Neighboring2Type enum class is expected to have two values: VISIBLE and WITHIN_CELL_SIDE_LENDTH.
 // VISIBLE is expected to have a value of 0 and WITHIN_CELL_SIDE_LENDTH is expected to have a value of 1.
-TEST(EdgeTest, Neighboring2TypeValues) {
+TEST(EdgeTest, Neighboring2TypeValues)
+{
     // Check that the VISIBLE enum value is 0
     EXPECT_EQ(static_cast<int>(Neighboring2Type::VISIBLE), 0);
     // Check that the WITHIN_CELL_SIDE_LENDTH enum value is 1

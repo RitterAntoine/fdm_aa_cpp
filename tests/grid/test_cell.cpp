@@ -18,7 +18,8 @@
 // |________|________|
 //   (0, 0)   (1, 0)
 
-TEST(CellTest, CornerVertexNdIndices) {
+TEST(CellTest, CornerVertexNdIndices)
+{
     Eigen::Array<int, 2, 1> cell_ndindex(2);
     cell_ndindex << 2, 3;
     Eigen::MatrixXi res = corner_vertex_ndindices(cell_ndindex);
@@ -48,7 +49,8 @@ TEST(CellTest, CornerVertexNdIndices) {
 // |________|________|________|________|________|
 //   (0, 0)   (1, 0)   (2, 0)   (3, 0)   (4, 0)
 
-TEST(CellTest, Index1FromNdindex) {
+TEST(CellTest, Index1FromNdindex)
+{
     Eigen::Array<int, 2, 1> cell_ndcount(2);
     cell_ndcount << 4, 5;
     Eigen::Array<int, 2, 1> cell_ndindex(2);
@@ -75,7 +77,8 @@ TEST(CellTest, Index1FromNdindex) {
 // |________|________|________|________|________|
 //   (0, 0)   (1, 0)   (2, 0)   (3, 0)   (4, 0)
 
-TEST(CellTest, NdIndexFrom1DIndex) {
+TEST(CellTest, NdIndexFrom1DIndex)
+{
     Eigen::Array<int, 2, 1> cell_ndcount(2);
     cell_ndcount << 4, 5;
     Eigen::Array<int, 2, 1> cell_ndindex(2);
@@ -103,7 +106,8 @@ TEST(CellTest, NdIndexFrom1DIndex) {
 // |________|________|________|________|________|
 //   (0, 0)   (1, 0)   (2, 0)   (3, 0)   (4, 0)
 
-TEST(CellTest, NdIndexIsValid) {
+TEST(CellTest, NdIndexIsValid)
+{
     Eigen::Array<int, 2, 1> cell_nd_count(2);
     cell_nd_count << 2, 3;
     Eigen::Array<int, 2, 1> cell_ndindex(2);

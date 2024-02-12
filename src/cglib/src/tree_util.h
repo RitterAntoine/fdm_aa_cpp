@@ -1,7 +1,8 @@
 #include <Eigen/Dense>
 #include <vector>
 
-struct Tree {
+struct Tree
+{
     Eigen::VectorXf values;
     Eigen::VectorXf bools;
 };
