@@ -29,7 +29,8 @@ TEST(EdgeTest, Neighboring2TypeValues)
 // |________|________|
 //   (0, 0)   (1, 0)
 
-TEST(EdgeTest, Count2PerAxis) {
+TEST(EdgeTest, Count2PerAxis)
+{
     // Grid definition
     Eigen::Array<int, 2, 1> cell_2dcount(2);
     cell_2dcount << 2, 3;
@@ -58,7 +59,8 @@ TEST(EdgeTest, Count2PerAxis) {
 // |________|________|
 // | (0, 1) | (1, 1) |
 
-TEST(EdgeTest, Index1From2DIndex) {
+TEST(EdgeTest, Index1From2DIndex)
+{
     Eigen::Array<int, 2 ,1> edge_2dindex(2);
     edge_2dindex << 1, 2;
     int edge_axis = 0;
@@ -76,7 +78,8 @@ TEST(EdgeTest, Index1From2DIndex) {
 // The 'indices1_from_2dgrid' function is expected to return the 1D indices of the edges of a prescribed grid.
 // The grid is defined by its cell count (2, 3).
 // The expected result is a sequence of integers from 0 to 16.
-TEST(EdgeTest, Indices1From2DGrid) {
+TEST(EdgeTest, Indices1From2DGrid)
+{
     Eigen::Array<int, 2 ,1> cell_ndcount(2);
     cell_ndcount << 2, 3;
 
@@ -89,7 +92,8 @@ TEST(EdgeTest, Indices1From2DGrid) {
     ASSERT_TRUE(res.isApprox(exp_res));
 }
 
-TEST(EdgeTest, Neighboring2DIndicesDirect_1) {
+TEST(EdgeTest, Neighboring2DIndicesDirect_1)
+{
     Eigen::Array<int, 2, 1> edge_2dindex(2);
     edge_2dindex << 3, 2;
     int edge_axis = 0;
@@ -115,7 +119,8 @@ TEST(EdgeTest, Neighboring2DIndicesDirect_1) {
     ASSERT_TRUE((res_visible.mask == exp_mask_visible).all());
 }
 
-TEST(EdgeTest, Neighboring2DIndicesDirect_2) {
+TEST(EdgeTest, Neighboring2DIndicesDirect_2)
+{
     Eigen::Array<int, 2, 1> edge_2dindex(2);
     edge_2dindex << 0, 0;
     int edge_axis = 1;
@@ -159,7 +164,8 @@ TEST(EdgeTest, Neighboring2DIndicesDirect_2) {
 // |________|________|
 //   (0, 0)   (1, 0)
 
-TEST(EdgeTest, Endpoints) {
+TEST(EdgeTest, Endpoints)
+{
     Eigen::Array<int, 2 ,1> edge_ndindex(2);
     edge_ndindex << 1, 2;
     int edge_axis = 0;

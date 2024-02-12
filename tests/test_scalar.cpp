@@ -19,7 +19,8 @@
 // |________|________|
 //   (0, 0)   (1, 0)
 
-TEST(ScalarTest, GridEdgePointScalars) {
+TEST(ScalarTest, GridEdgePointScalars)
+{
     Eigen::Array<int, 2, 1> edge_ndindex(2);
     edge_ndindex << 1, 0;
     int edge_axis = 1;
@@ -43,7 +44,8 @@ TEST(ScalarTest, GridEdgePointScalars) {
 // The edge is defined by its 2D index (1, 1) and axis 1.
 // The expected result is False.
 
-TEST(ScalarTest, GridEdgeRootExistence) {
+TEST(ScalarTest, GridEdgeRootExistence)
+{
     Eigen::Array<int, 2, 1> cell_ndcount(2);
     cell_ndcount << 2, 3;
     Eigen::Array<int, 2, 1> origin(2);
@@ -84,7 +86,8 @@ TEST(ScalarTest, GridEdgeRootExistence) {
 // The edge is defined by its 2D index (1, 0) and axis 0.
 // The expected result is a 2x1 array with the root point of the edge.
 
-TEST(calarTest, GridEdgeRootPoint) {
+TEST(calarTest, GridEdgeRootPoint)
+{
     Eigen::Array<int, 2, 1> cell_ndcount(2);
     cell_ndcount << 2, 3;
     Eigen::Array<int, 2, 1> origin(2);

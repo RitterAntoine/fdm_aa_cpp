@@ -9,7 +9,8 @@
 // The grid is defined by its cell count (2, 3), origin (0, 0), and cell side length 1.0.
 // The expected result is a Grid object with the specified attributes.
 
-TEST(GridTest, Constructor) {
+TEST(GridTest, Constructor)
+{
     Eigen::Array<int, 2 ,1> cell_ndcount(2);
     cell_ndcount << 2, 3;
     Eigen::Array<int, 2 ,1> origin(2);

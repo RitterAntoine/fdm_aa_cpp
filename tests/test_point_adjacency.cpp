@@ -9,7 +9,8 @@
 // The adjacency is defined by its adjacency (0, 1), (1, 0).
 // The expected result is a PointAdjacency object with the specified attributes.
 
-TEST(PointAdjacencyTest, Constructor) {
+TEST(PointAdjacencyTest, Constructor)
+{
     Eigen::ArrayXXf point(2, 2);
     point << 1.0, 0.5,
              0.75, 1.5;

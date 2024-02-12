@@ -10,7 +10,8 @@
 // The input float is 15.0, the lower bound is 0.0, and the upper bound is 10.0.
 // The expected result is 10.0.
 
-TEST(MathTest, Clamp_Float) {
+TEST(MathTest, Clamp_Float)
+{
     float val = 5.0;
     float low = 0.0;
     float high = 10.0;
@@ -31,7 +32,8 @@ TEST(MathTest, Clamp_Float) {
 // The input floats are -1.0 and 1.0.
 // The expected result is false.
 
-TEST(MathTest, FloatSameSign) {
+TEST(MathTest, FloatSameSign)
+{
     ASSERT_FALSE(float_same_sign(-0., 0.));
     ASSERT_TRUE(float_same_sign(0., 0.));
 }
@@ -43,7 +45,8 @@ TEST(MathTest, FloatSameSign) {
 // The input floats are 1.0 and 1.0.
 // The expected result is 0.5.
 
-TEST(MathTest, SolveLinearInterpolationEquation) {
+TEST(MathTest, SolveLinearInterpolationEquation)
+{
     ASSERT_FLOAT_EQ(solve_linear_interpolation_equation(1.0, 2.0), -1.0);
     ASSERT_FLOAT_EQ(solve_linear_interpolation_equation(1.0, 1.0), 0.5);
 }

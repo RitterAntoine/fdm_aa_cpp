@@ -16,7 +16,8 @@
 // values: [0, 1, 2, 3]
 // bools: [1, 0, 0, 1]
 
-TEST(TreeUtilTest, Concatenate) {
+TEST(TreeUtilTest, Concatenate)
+{
     std::vector<Tree> trees;
     trees.push_back(Tree{Eigen::Vector<float, 2>(), Eigen::Vector<float, 2>()});
     trees[0].values << 0, 1;
