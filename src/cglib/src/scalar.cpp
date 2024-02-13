@@ -64,37 +64,8 @@ Eigen::ArrayXf grid_edge_root_point(const Eigen::Array<int, 2 ,1> edge_ndindex,
     return mask ? Eigen::ArrayXf::Constant(root_point.size(), std::nan("")) : root_point;
 }
 
-PointAdjacency grid2_contour(Eigen::ArrayXf grid_scalars_flattened,
-                             Eigen::Array<int, 2, 1> scalar_field_cell_2dcount,
-                             Grid scalar_field_grid) 
+unsigned int get_edge_adjacency_no_extraction_case(const GetEdgeAdjacencyParams params)
 {
-
-    // BEGIN Private functions for grid2_contour
-    // -----------------------------------------
-
-    PointAdjacency uniform_grid_edge_root_point_and_adjacency(Eigen::Array<int, 2 ,1> edge_ndindex,
-                                                              int edge_axis,
-                                                              Eigen::ArrayXd flattened_scalar_field,
-                                                              Grid grid)
-    {
-        // BEGIN Private functions for uniform_grid_edge_root_point_and_adjacency
-        // -----------------------------------------
-
-
-
-        // -----------------------------------------
-        // END Private functions for uniform_grid_edge_root_point_and_adjacency
-
-        Eigen::ArrayXf grid_edge_root_point_val  = grid_edge_root_point(edge_ndindex,
-                                                                        edge_axis,
-                                                                        flattened_scalar_field,
-                                                                        grid) + grid.cell_sides_length * 0.5;
-        
-        
-    }
-
-    // -----------------------------------------
-    // END Private functions for grid2_contour
-
-   
+    unsigned int NAI = 0;
+    return NAI;
 }
