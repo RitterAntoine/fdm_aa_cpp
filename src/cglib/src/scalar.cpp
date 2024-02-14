@@ -66,6 +66,31 @@ Eigen::ArrayXf grid_edge_root_point(const Eigen::Array<int, 2 ,1> edge_ndindex,
 
 unsigned int get_edge_adjacency_no_extraction_case(const GetEdgeAdjacencyParams params)
 {
-    unsigned int NAI = 0;
-    return NAI;
+    return INT_MAX;
+}
+
+
+PointAdjacency uniform_grid_edge_root_point_and_adjacency(Eigen::Array<int, 2, 1> edge_ndindex,
+                                                          int edge_axis,
+                                                          Eigen::ArrayXd flattened_scalar_field,
+                                                          Grid grid)
+{
+    Eigen::ArrayXf grid_edge_root_point_val  = grid_edge_root_point(edge_ndindex,
+                                                                    edge_axis,
+                                                                    flattened_scalar_field,
+                                                                    grid) + grid.cell_sides_length * 0.5;
+                                                                    
+
+    //Fake return to test
+    PointAdjacency point_adjacency(Eigen::ArrayXXf::Zero(2, 2), Eigen::ArrayXXi::Zero(2, 2));
+    return point_adjacency;
+}
+
+PointAdjacency grid2_contour(Eigen::ArrayXf grid_scalars_flattened,
+                             Eigen::Array<int, 2, 1> scalar_field_cell_2dcount,
+                             Grid scalar_field_grid) 
+{
+    // Fake return to test
+    PointAdjacency point_adjacency(Eigen::ArrayXXf::Zero(2, 2), Eigen::ArrayXXi::Zero(2, 2));
+    return point_adjacency;
 }

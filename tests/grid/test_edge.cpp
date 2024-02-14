@@ -64,10 +64,10 @@ TEST(EdgeTest, Index1From2DIndex)
     Eigen::Array<int, 2 ,1> edge_2dindex(2);
     edge_2dindex << 1, 2;
     int edge_axis = 0;
-    Eigen::Array<int, 2 ,1> cell_2dcount(2);
-    cell_2dcount << 2, 3;
+    Eigen::Array<int, 2 ,1> edge_2dcount(2);
+    edge_2dcount << 2, 3;
 
-    int res = index1_from_2dindex(edge_2dindex, edge_axis, count2_per_axis(cell_2dcount));
+    int res = index1_from_2dindex(edge_2dindex, edge_axis, count2_per_axis(edge_2dcount));
 
     int expected_res = 5;
 

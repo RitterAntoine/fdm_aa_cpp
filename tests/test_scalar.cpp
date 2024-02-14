@@ -122,7 +122,7 @@ TEST(calarTest, GridEdgeRootPoint)
 // This test checks the functionality of the 'get_edge_adjacency_no_extraction_case' function.
 // The 'get_edge_adjacency_no_extraction_case' function is expected to return the adjacency case of the edge given its parameters.
 // The parameters are the edge 2D index, axis, side, and cell count.
-// The expected result is 0.
+// The expected result is INT_MAX.
 
 TEST(ScalarTest, GetEdgeAdjacencyNoExtractionCase)
 {
@@ -141,6 +141,6 @@ TEST(ScalarTest, GetEdgeAdjacencyNoExtractionCase)
     params.same_side_corner_and_center = same_side_corner_and_center;
 
     unsigned int res = get_edge_adjacency_no_extraction_case(params);
-    unsigned int exp_res = 0;
+    unsigned int exp_res = INT_MAX;
     ASSERT_EQ(res, exp_res);
 }
