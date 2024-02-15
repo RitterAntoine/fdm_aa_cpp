@@ -38,6 +38,5 @@ MaskedArray neighboring_2dindices_direct(const Edge2D& edge,
                                          const Eigen::Array<int, 2, 1> grid_cell_2dcount,
                                          Neighboring2Type neighboring_type);
 
-Eigen::ArrayXXf endpoints(const Eigen::Array<int, 2 ,1> edge_ndindex,
-                          int edge_axis,
+Eigen::ArrayXXf endpoints(const Edge2D& edge,
                           const Grid& grid);

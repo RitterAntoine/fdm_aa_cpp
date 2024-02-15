@@ -148,14 +148,13 @@ MaskedArray neighboring_2dindices_direct(const Edge2D& edge,
     return result;
 }
 
-Eigen::ArrayXXf endpoints(const Eigen::Array<int, 2 ,1> edge_ndindex,
-                          int edge_axis,
+Eigen::ArrayXXf endpoints(const Edge2D& edge,
                           const Grid& grid)
 {
-    int n = grid.cell_ndcount.size();
+    int n = grid.cell_2dcount.size();
     Eigen::ArrayXf increment = Eigen::ArrayXf::Zero(n);
-    increment[edge_axis] = grid.cell_sides_length;
-    Eigen::ArrayXf v0 = edge_ndindex.cast<float>() * grid.cell_sides_length + grid.origin.cast<float>();
+    increment[edge.edge_axis] = grid.cell_sides_length;
+    Eigen::ArrayXf v0 = edge.edge_2dindex.cast<float>() * grid.cell_sides_length + grid.origin.cast<float>();
     Eigen::ArrayXf v1 = v0 + increment;
     Eigen::ArrayXXf result(2, n);
     result.row(0) = v0;

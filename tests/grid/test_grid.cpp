@@ -11,13 +11,13 @@
 
 TEST(GridTest, Constructor)
 {
-    Eigen::Array<int, 2 ,1> cell_ndcount(2);
-    cell_ndcount << 2, 3;
+    Eigen::Array<int, 2 ,1> cell_2dcount(2);
+    cell_2dcount << 2, 3;
     Eigen::Array<int, 2 ,1> origin(2);
     origin << 0, 0;
     float cell_sides_length = 1.0f;
-    Grid grid(cell_ndcount, origin, cell_sides_length);
-    EXPECT_TRUE(grid.cell_ndcount.isApprox(cell_ndcount));
+    Grid grid(cell_2dcount, origin, cell_sides_length);
+    EXPECT_TRUE(grid.cell_2dcount.isApprox(cell_2dcount));
     EXPECT_TRUE(grid.origin.isApprox(origin));
     EXPECT_FLOAT_EQ(grid.cell_sides_length, cell_sides_length);
 }

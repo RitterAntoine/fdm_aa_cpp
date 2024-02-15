@@ -209,17 +209,18 @@ TEST(EdgeTest, Neighboring2DIndicesDirect_2)
 
 TEST(EdgeTest, Endpoints)
 {
-    Eigen::Array<int, 2 ,1> edge_ndindex(2);
-    edge_ndindex << 1, 2;
+    Eigen::Array<int, 2 ,1> edge_2dindex(2);
+    edge_2dindex << 1, 2;
     int edge_axis = 0;
-    Eigen::Array<int, 2 ,1> cell_ndcount(2);
-    cell_ndcount << 2, 3;
+    Edge2D edge(edge_2dindex, edge_axis);
+    Eigen::Array<int, 2 ,1> cell_2dcount(2);
+    cell_2dcount << 2, 3;
     Eigen::Array<int, 2 ,1> origin(2);
     origin << -1., 2;
     float cell_sides_length = 0.5f;
-    Grid grid(cell_ndcount, origin, cell_sides_length);
+    Grid grid(cell_2dcount, origin, cell_sides_length);
 
-    Eigen::ArrayXXf res = endpoints(edge_ndindex, edge_axis, grid);
+    Eigen::ArrayXXf res = endpoints(edge, grid);
 
     Eigen::ArrayXXf exp_res(2, 2);
     exp_res << -0.5, 3.,

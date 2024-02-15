@@ -1,17 +1,19 @@
 #include "scalar.h"
 
-Eigen::Array<double, 2, 1> grid_edge_point_scalars(const Eigen::Array<int, 2 ,1> edge_2dindex,
-                                                   int edge_axis,
+GetEdgeAdjacencyParams::GetEdgeAdjacencyParams(Edge2D edge, int edge_side, Eigen::Array<int, 2 ,1> edge_cell_2dcount, bool same_side_corner_and_center):
+    edge(edge), edge_side(edge_side), edge_cell_2dcount(edge_cell_2dcount), same_side_corner_and_center(same_side_corner_and_center) {}
+
+Eigen::Array<double, 2, 1> grid_edge_point_scalars(const Edge2D& edge,
                                                    const Eigen::ArrayXd& grid_scalars_flattened,
                                                    const Eigen::Array<int, 2 ,1> grid_cell_2dcount)
 {
     
-    Eigen::Array<int, 2 ,1> shift = Eigen::Array<int, 2 ,1>::Zero(edge_2dindex.size());
-    shift[edge_axis] = 1;
+    Eigen::Array<int, 2 ,1> shift = Eigen::Array<int, 2 ,1>::Zero(edge.edge_2dindex.size());
+    shift[edge.edge_axis] = 1;
     
-    Eigen::ArrayXXi edge_vertex_ndindices(2, edge_2dindex.size());
-    edge_vertex_ndindices.row(0) = edge_2dindex;
-    edge_vertex_ndindices.row(1) = edge_2dindex + shift;
+    Eigen::ArrayXXi edge_vertex_ndindices(2, edge.edge_2dindex.size());
+    edge_vertex_ndindices.row(0) = edge.edge_2dindex;
+    edge_vertex_ndindices.row(1) = edge.edge_2dindex + shift;
     
     Eigen::Array<int, 2 ,1> edge_vertex_flattened_indices(edge_vertex_ndindices.rows());
     for (int i = 0; i < edge_vertex_ndindices.rows(); ++i)
@@ -28,30 +30,26 @@ Eigen::Array<double, 2, 1> grid_edge_point_scalars(const Eigen::Array<int, 2 ,1>
     return edge_scalars;
 }
 
-bool grid_edge_root_existence(const Eigen::Array<int, 2 ,1> edge_ndindex,
-                              int edge_axis,
+bool grid_edge_root_existence(const Edge2D& edge,
                               const Eigen::ArrayXd& flattened_scalar_field,
                               const Grid& grid) 
 {
     
-    Eigen::ArrayXd edge_point_scalars_val = grid_edge_point_scalars(edge_ndindex,
-                                                                    edge_axis,
+    Eigen::ArrayXd edge_point_scalars_val = grid_edge_point_scalars(edge,
                                                                     flattened_scalar_field,
-                                                                    grid.cell_ndcount);
+                                                                    grid.cell_2dcount);
 
     return !float_same_sign(edge_point_scalars_val[0], edge_point_scalars_val[1]);
 }
 
-Eigen::ArrayXf grid_edge_root_point(const Eigen::Array<int, 2 ,1> edge_ndindex,
-                                    int edge_axis,
+Eigen::ArrayXf grid_edge_root_point(const Edge2D& edge,
                                     const Eigen::ArrayXd& flattened_scalar_field,
                                     const Grid& grid)
 {
-    Eigen::ArrayXXf edge_endpoints_val = endpoints(edge_ndindex, edge_axis, grid);
-    Eigen::ArrayXd edge_point_scalars_val = grid_edge_point_scalars(edge_ndindex,
-                                                                    edge_axis,
+    Eigen::ArrayXXf edge_endpoints_val = endpoints(edge, grid);
+    Eigen::ArrayXd edge_point_scalars_val = grid_edge_point_scalars(edge,
                                                                     flattened_scalar_field,
-                                                                    grid.cell_ndcount);
+                                                                    grid.cell_2dcount);
     bool mask = float_same_sign(edge_point_scalars_val[0],
                                 edge_point_scalars_val[1]);
     float u = solve_linear_interpolation_equation(edge_point_scalars_val[0],
@@ -72,13 +70,11 @@ unsigned int get_edge_adjacency_no_extraction_case(const GetEdgeAdjacencyParams 
 
 
 
-PointAdjacency uniform_grid_edge_root_point_and_adjacency(Eigen::Array<int, 2, 1> edge_ndindex,
-                                                          int edge_axis,
+PointAdjacency uniform_grid_edge_root_point_and_adjacency(const Edge2D& edge,
                                                           Eigen::ArrayXd flattened_scalar_field,
                                                           Grid grid)
 {
-    Eigen::ArrayXf grid_edge_root_point_val  = grid_edge_root_point(edge_ndindex,
-                                                                    edge_axis,
+    Eigen::ArrayXf grid_edge_root_point_val  = grid_edge_root_point(edge,
                                                                     flattened_scalar_field,
                                                                     grid) + grid.cell_sides_length * 0.5;
                                                                     
