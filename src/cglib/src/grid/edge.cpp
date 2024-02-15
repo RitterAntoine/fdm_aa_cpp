@@ -1,6 +1,12 @@
 #include "edge.h"
 #include <iostream>
 
+Edge2D::Edge2D(Eigen::Array<int, 2, 1> edge_2dindex, int edge_axis)
+{
+    this->edge_2dindex = edge_2dindex;
+    this->edge_axis = edge_axis;
+}
+
 Eigen::Array<int, 2, 2> count2_per_axis(const Eigen::Array<int, 2, 1> grid_cell_2dcount)
 {
     Eigen::Array<int, 2 ,2> edge_2dcount(2, 2);
@@ -9,14 +15,17 @@ Eigen::Array<int, 2, 2> count2_per_axis(const Eigen::Array<int, 2, 1> grid_cell_
     return edge_2dcount;
 }
 
-int index1_from_2dindex(const Eigen::Array<int, 2 ,1> edge_2dindex,
-                        int edge_axis,
-                        const Eigen::Array<int, 2 ,2> edge_2dcount)
+int index1_from_2dindex(const Edge2D& edge,
+                        const Eigen::Array<int, 2, 2>& edge_2dcount)
 {
-    int edge_flattened_index = index1_from_ndindex(edge_2dindex, edge_2dcount.col(edge_axis));
-    int hedge_flattened_cell_count = edge_2dcount(0, 0) * edge_2dcount(0, 1);
-    edge_flattened_index += edge_axis * hedge_flattened_cell_count;
-    return edge_flattened_index;
+    if (edge.edge_axis == 0)
+    {
+        return edge.edge_2dindex[0] + edge.edge_2dindex[1] * edge_2dcount(0, 0);
+    }
+    else
+    {
+        return edge.edge_2dindex[0] + edge.edge_2dindex[1] * edge_2dcount(1, 0)  + edge_2dcount(1, 0) * edge_2dcount(1, 1);
+    }
 }
 
 Eigen::VectorXi indices1_from_2dgrid(const Eigen::Array<int, 2 ,1> grid_cell_2dcount)

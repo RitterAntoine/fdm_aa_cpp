@@ -1,22 +1,22 @@
 #include "scalar.h"
 
-Eigen::Array<double, 2, 1> grid_edge_point_scalars(const Eigen::Array<int, 2 ,1> edge_ndindex,
+Eigen::Array<double, 2, 1> grid_edge_point_scalars(const Eigen::Array<int, 2 ,1> edge_2dindex,
                                                    int edge_axis,
                                                    const Eigen::ArrayXd& grid_scalars_flattened,
-                                                   const Eigen::Array<int, 2 ,1> grid_cell_ndcount)
+                                                   const Eigen::Array<int, 2 ,1> grid_cell_2dcount)
 {
     
-    Eigen::Array<int, 2 ,1> shift = Eigen::Array<int, 2 ,1>::Zero(edge_ndindex.size());
+    Eigen::Array<int, 2 ,1> shift = Eigen::Array<int, 2 ,1>::Zero(edge_2dindex.size());
     shift[edge_axis] = 1;
     
-    Eigen::ArrayXXi edge_vertex_ndindices(2, edge_ndindex.size());
-    edge_vertex_ndindices.row(0) = edge_ndindex;
-    edge_vertex_ndindices.row(1) = edge_ndindex + shift;
+    Eigen::ArrayXXi edge_vertex_ndindices(2, edge_2dindex.size());
+    edge_vertex_ndindices.row(0) = edge_2dindex;
+    edge_vertex_ndindices.row(1) = edge_2dindex + shift;
     
     Eigen::Array<int, 2 ,1> edge_vertex_flattened_indices(edge_vertex_ndindices.rows());
     for (int i = 0; i < edge_vertex_ndindices.rows(); ++i)
     {
-        edge_vertex_flattened_indices[i] = index1_from_ndindex(edge_vertex_ndindices.row(i), grid_cell_ndcount);
+        edge_vertex_flattened_indices[i] = index1_from_2dindex(edge_vertex_ndindices.row(i), grid_cell_2dcount);
     }
     
     Eigen::Array<double, 2, 1> edge_scalars(edge_vertex_flattened_indices.size());
@@ -68,6 +68,8 @@ unsigned int get_edge_adjacency_no_extraction_case(const GetEdgeAdjacencyParams 
 {
     return INT_MAX;
 }
+
+
 
 
 PointAdjacency uniform_grid_edge_root_point_and_adjacency(Eigen::Array<int, 2, 1> edge_ndindex,

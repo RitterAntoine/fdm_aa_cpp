@@ -320,6 +320,7 @@ def grid2_contour( # scalar.py
             shift = lax.cond(params.edge_axis == 1,
                              lambda x: x[::-1], lambda x: x, shift)
             adjacent_edge_ndindex = params.edge_ndindex + shift
+            temp = params.edge_cell_ndcount
             return index1_from_2dindex(
                 adjacent_edge_ndindex,
                 adjacent_edge_axis,

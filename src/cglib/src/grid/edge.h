@@ -4,6 +4,19 @@
 #include "../limits.h"
 #include "../array.h"
 
+// 2DEdge is a class that represents a 2D edge.
+// It has three attributes: edge_2dindex and edge_axis.
+// edge_2dindex is the 2D index of the edge.
+// edge_axis is the axis of the edge.
+class Edge2D
+{
+public:
+    Eigen::Array<int, 2, 1> edge_2dindex;
+    int edge_axis;
+
+    Edge2D(Eigen::Array<int, 2, 1> edge_2dindex, int edge_axis);
+};
+
 // Neighboring2Type is an enum class that enumerates the two neighboring types of a 2D grid's edge.
 // It has two attributes: VISIBLE and WITHIN_CELL_SIDE_LENDTH.
 // VISIBLE is a visible neighboring is a neighboring that is visible from an edge.
@@ -16,9 +29,8 @@ enum class Neighboring2Type
 
 Eigen::Array<int, 2, 2> count2_per_axis(const Eigen::Array<int, 2, 1> grid_cell_2dcount);
 
-int index1_from_2dindex(const Eigen::Array<int, 2 ,1> edge_2dindex,
-                        int edge_axis,
-                        const Eigen::Array<int, 2 ,2> edge_2dcount);
+int index1_from_2dindex(const Edge2D& edge,
+                        const Eigen::Array<int, 2, 2>& edge_2dcount);
 
 Eigen::VectorXi indices1_from_2dgrid(const Eigen::Array<int, 2 ,1> grid_cell_2dcount);
 

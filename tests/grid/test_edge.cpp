@@ -44,34 +44,73 @@ TEST(EdgeTest, Count2PerAxis)
     ASSERT_TRUE((res == expected_res).all());
 }
 
-// This test checks the functionality of the 'index1_from_2dindex' function.
-// The 'index1_from_2dindex' function is expected to return the 1D index of an edge given its 2D index, axis, and the grid it belongs to.
-// The grid is a 2D grid with cell count (2, 3), origin (-1, 2), and cell side length 0.5.
-// The edge is defined by its 2D index (1, 2) and axis 0.
-// The expected result is the 1D index of the edge.
-// The edge indexing in the grid is as follows:
-//  ________ ________
-// | (0, 3) | (1, 3) |
-// |(0, 2)  |(1, 2)  |(2, 2)
-// |________|________|
-// | (0, 2) | (1, 2) |
-// |(0, 1)  |(1, 1)  |(2, 1)
-// |________|________|
-// | (0, 1) | (1, 1) |
+// These tests check the functionality of the 'Index1From2DIndex' function.
+// The 'Index1From2DIndex' function is expected to return the 1D index of an edge given its 2D index and the number of edges along each axis.
+// The grid is defined as described below:
+//
+//           1D index                              2D index
+//  ________ ________ ________            ________ ________ ________
+// |   9    |  10    |   11   |          | (0, 3) | (1, 3) | (2, 3) |
+// |20      |21      |22      |23        |(0, 2)  |(1, 2)  |(2, 2)  |(3, 2)
+// |________|________|________|          |________|________|________|
+// |   6    |   7    |    8   |          | (0, 2) | (1, 2) | (2, 2) |
+// |16      |17      |18      |19        |(0, 1)  |(1, 1)  |(2, 1)  |(3, 1)
+// |________|________|________|          |________|________|________|
+// |   3    |   4    |    5   |          | (0, 1) | (1, 1) | (2, 1) |
+// |12      |13      |14      |15        |(0, 0)  |(1, 0)  |(2, 0)  |(3, 0)
+// |________|________|________|          |________|________|________|
+//     0        1         2                (0, 0)   (1, 0)   (2, 0)
 
-TEST(EdgeTest, Index1From2DIndex)
+TEST(EdgeTest, Index1From2DInde_1)
 {
     Eigen::Array<int, 2 ,1> edge_2dindex(2);
     edge_2dindex << 1, 2;
     int edge_axis = 0;
-    Eigen::Array<int, 2 ,1> edge_2dcount(2);
-    edge_2dcount << 2, 3;
+    Edge2D edge(edge_2dindex, edge_axis);
+    Eigen::Array<int, 2, 2> edge_2dcount(2, 2);
+    edge_2dcount << 3, 4, 4, 3;
+    int edge_1dindex = index1_from_2dindex(edge, edge_2dcount);
+    int exp_edge_1dindex = 7;
+    ASSERT_EQ(edge_1dindex, exp_edge_1dindex);
+}
 
-    int res = index1_from_2dindex(edge_2dindex, edge_axis, count2_per_axis(edge_2dcount));
+TEST(EdgeTest, Index1From2DInde_2)
+{
+    Eigen::Array<int, 2 ,1> edge_2dindex(2);
+    edge_2dindex << 2, 1;
+    int edge_axis = 1;
+    Edge2D edge(edge_2dindex, edge_axis);
+    Eigen::Array<int, 2, 2> edge_2dcount(2, 2);
+    edge_2dcount << 3, 4, 4, 3;
+    int edge_1dindex = index1_from_2dindex(edge, edge_2dcount);
+    int exp_edge_1dindex = 18;
+    ASSERT_EQ(edge_1dindex, exp_edge_1dindex);
+}
 
-    int expected_res = 5;
+TEST(EdgeTest, Index1From2DInde_3)
+{
+    Eigen::Array<int, 2 ,1> edge_2dindex(2);
+    edge_2dindex << 0, 0;
+    int edge_axis = 0;
+    Edge2D edge(edge_2dindex, edge_axis);
+    Eigen::Array<int, 2, 2> edge_2dcount(2, 2);
+    edge_2dcount << 3, 4, 4, 3;
+    int edge_1dindex = index1_from_2dindex(edge, edge_2dcount);
+    int exp_edge_1dindex = 0;
+    ASSERT_EQ(edge_1dindex, exp_edge_1dindex);
+}
 
-    ASSERT_TRUE((res == expected_res));
+TEST(EdgeTest, Index1From2DInde_4)
+{
+    Eigen::Array<int, 2 ,1> edge_2dindex(2);
+    edge_2dindex << 0, 3;
+    int edge_axis = 0;
+    Edge2D edge(edge_2dindex, edge_axis);
+    Eigen::Array<int, 2, 2> edge_2dcount(2, 2);
+    edge_2dcount << 3, 4, 4, 3;
+    int edge_1dindex = index1_from_2dindex(edge, edge_2dcount);
+    int exp_edge_1dindex = 9;
+    ASSERT_EQ(edge_1dindex, exp_edge_1dindex);
 }
 
 // This test checks the functionality of the 'indices1_from_2dgrid' function.

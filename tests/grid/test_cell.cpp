@@ -31,8 +31,8 @@ TEST(CellTest, CornerVertexNdIndices)
     EXPECT_TRUE(res.isApprox(exp_res));
 }
 
-// This test checks the functionality of the 'index1_from_ndindex' function.
-// The 'index1_from_ndindex' function is expected to return the 1D index of a cell given its ND index and the grid it belongs to.
+// This test checks the functionality of the 'index1_from_2dindex' function.
+// The 'index1_from_2dindex' function is expected to return the 1D index of a cell given its ND index and the grid it belongs to.
 // The grid is a 2D grid with cell count (4, 5).
 // The cell is defined by its ND index (2, 1).
 // The expected result is the 1D index of the cell.
@@ -49,13 +49,13 @@ TEST(CellTest, CornerVertexNdIndices)
 // |________|________|________|________|________|
 //   (0, 0)   (1, 0)   (2, 0)   (3, 0)   (4, 0)
 
-TEST(CellTest, Index1FromNdindex)
+TEST(CellTest, Index1From2dindex)
 {
-    Eigen::Array<int, 2, 1> cell_ndcount(2);
-    cell_ndcount << 4, 5;
-    Eigen::Array<int, 2, 1> cell_ndindex(2);
-    cell_ndindex << 2, 1;
-    int res = index1_from_ndindex(cell_ndindex, cell_ndcount);
+    Eigen::Array<int, 2, 1> cell_2dcount(2);
+    cell_2dcount << 4, 5;
+    Eigen::Array<int, 2, 1> cell_2dindex(2);
+    cell_2dindex << 2, 1;
+    int res = index1_from_2dindex(cell_2dindex, cell_2dcount);
     EXPECT_EQ(res, 6);
 }
 
@@ -79,13 +79,13 @@ TEST(CellTest, Index1FromNdindex)
 
 TEST(CellTest, NdIndexFrom1DIndex)
 {
-    Eigen::Array<int, 2, 1> cell_ndcount(2);
-    cell_ndcount << 4, 5;
-    Eigen::Array<int, 2, 1> cell_ndindex(2);
-    cell_ndindex << 2, 1;
-    int cell_1dindex = index1_from_ndindex(cell_ndindex, cell_ndcount);
-    Eigen::Array<int, 2, 1> res = ndindex_from_1dindex(cell_1dindex, cell_ndcount);
-    EXPECT_TRUE((res == cell_ndindex).all());
+    Eigen::Array<int, 2, 1> cell_2dcount(2);
+    cell_2dcount << 4, 5;
+    Eigen::Array<int, 2, 1> cell_2dindex(2);
+    cell_2dindex << 2, 1;
+    int cell_1dindex = index1_from_2dindex(cell_2dindex, cell_2dcount);
+    Eigen::Array<int, 2, 1> res = ndindex_from_1dindex(cell_1dindex, cell_2dcount);
+    EXPECT_TRUE((res == cell_2dindex).all());
 }
 
 // This test checks the functionality of the 'ndindex_is_valid' function.

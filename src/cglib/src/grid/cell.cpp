@@ -13,17 +13,17 @@ Eigen::MatrixXi corner_vertex_ndindices(const Eigen::Array<int, 2, 1> cell_ndind
     return corner_ndindices.transpose();
 }
 
-int index1_from_ndindex(const Eigen::Array<int, 2, 1> cell_ndindex,
-                        const Eigen::Array<int, 2, 1> cell_ndcount)
+int index1_from_2dindex(const Eigen::Array<int, 2, 1> cell_2dindex,
+                        const Eigen::Array<int, 2, 1> cell_2dcount)
 {
-    int n = cell_ndcount.size();
-    int flattened_index = cell_ndindex[0];
-    for (int i = 1; i < n; ++i)
+    int size = cell_2dcount.size();
+    int cell_1dindex = cell_2dindex[0];
+    for (int i = 1; i < size; ++i)
     {
-        int shift = cell_ndcount.head(i).prod();
-        flattened_index += cell_ndindex[i] * shift;
+        int shift = cell_2dcount.head(i).prod();
+        cell_1dindex += cell_2dindex[i] * shift;
     }
-    return flattened_index;
+    return cell_1dindex;
 }
 
 Eigen::Array<int, 2, 1> ndindex_from_1dindex(int cell_1dindex,
