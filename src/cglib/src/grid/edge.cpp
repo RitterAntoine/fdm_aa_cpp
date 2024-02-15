@@ -37,8 +37,7 @@ Eigen::VectorXi indices1_from_2dgrid(const Eigen::Array<int, 2 ,1> grid_cell_2dc
     return edge_1dindices;
 }
 
-MaskedArray neighboring_2dindices_direct(const Eigen::Array<int, 2,1> edge_2dindex,
-                                         int edge_axis,
+MaskedArray neighboring_2dindices_direct(const Edge2D& edge,
                                          const Eigen::Array<int, 2,1> grid_cell_2dcount,
                                          Neighboring2Type neighboring_type)
 {
@@ -73,28 +72,28 @@ MaskedArray neighboring_2dindices_direct(const Eigen::Array<int, 2,1> edge_2dind
 
     if (neighboring_type == Neighboring2Type::VISIBLE)
     {
-        if (edge_axis == 0)
+        if (edge.edge_axis == 0)
         {
-            neighboring_2dindices << 0 + edge_2dindex[0], -1 + edge_2dindex[1],
-                                     0 + edge_2dindex[0], 1 + edge_2dindex[1],
+            neighboring_2dindices << 0 + edge.edge_2dindex[0], -1 + edge.edge_2dindex[1],
+                                     0 + edge.edge_2dindex[0], 1 + edge.edge_2dindex[1],
                                      INT_MAX, INT_MAX,
                                      INT_MAX, INT_MAX,
-                                     0 + edge_2dindex[0], -1 + edge_2dindex[1],
-                                     1 + edge_2dindex[0], -1 + edge_2dindex[1],
-                                     0 + edge_2dindex[0], 0 + edge_2dindex[1],
-                                     1 + edge_2dindex[0],0 + edge_2dindex[1];
+                                     0 + edge.edge_2dindex[0], -1 + edge.edge_2dindex[1],
+                                     1 + edge.edge_2dindex[0], -1 + edge.edge_2dindex[1],
+                                     0 + edge.edge_2dindex[0], 0 + edge.edge_2dindex[1],
+                                     1 + edge.edge_2dindex[0],0 + edge.edge_2dindex[1];
             
             mask << false, false, true, true, false, false, false, false;
         }
 
         else
         {
-            neighboring_2dindices << -1 + edge_2dindex[0], 0 + edge_2dindex[1],
-                                     -1 + edge_2dindex[0], 1 + edge_2dindex[1],
-                                     0 + edge_2dindex[0], 0 + edge_2dindex[1],
-                                     0 + edge_2dindex[0], 1 + edge_2dindex[1],
-                                     -1 + edge_2dindex[0], 0 + edge_2dindex[1],
-                                     1 + edge_2dindex[0], 0 + edge_2dindex[1],
+            neighboring_2dindices << -1 + edge.edge_2dindex[0], 0 + edge.edge_2dindex[1],
+                                     -1 + edge.edge_2dindex[0], 1 + edge.edge_2dindex[1],
+                                     0 + edge.edge_2dindex[0], 0 + edge.edge_2dindex[1],
+                                     0 + edge.edge_2dindex[0], 1 + edge.edge_2dindex[1],
+                                     -1 + edge.edge_2dindex[0], 0 + edge.edge_2dindex[1],
+                                     1 + edge.edge_2dindex[0], 0 + edge.edge_2dindex[1],
                                      INT_MAX, INT_MAX,
                                      INT_MAX, INT_MAX;
 
@@ -103,28 +102,28 @@ MaskedArray neighboring_2dindices_direct(const Eigen::Array<int, 2,1> edge_2dind
     }
     else
     {
-        if (edge_axis == 0)
+        if (edge.edge_axis == 0)
         {
-            neighboring_2dindices << -1 + edge_2dindex[0], 0 + edge_2dindex[1],
-                                     1 + edge_2dindex[0], 0 + edge_2dindex[1],
+            neighboring_2dindices << -1 + edge.edge_2dindex[0], 0 + edge.edge_2dindex[1],
+                                     1 + edge.edge_2dindex[0], 0 + edge.edge_2dindex[1],
                                      INT_MAX, INT_MAX,
                                      INT_MAX, INT_MAX,
-                                     0 + edge_2dindex[0], -1 + edge_2dindex[1],
-                                     1 + edge_2dindex[0], -1 + edge_2dindex[1],
-                                     0 + edge_2dindex[0], 0 + edge_2dindex[1],
-                                     1 + edge_2dindex[0], 0 + edge_2dindex[1];
+                                     0 + edge.edge_2dindex[0], -1 + edge.edge_2dindex[1],
+                                     1 + edge.edge_2dindex[0], -1 + edge.edge_2dindex[1],
+                                     0 + edge.edge_2dindex[0], 0 + edge.edge_2dindex[1],
+                                     1 + edge.edge_2dindex[0], 0 + edge.edge_2dindex[1];
 
             mask << false, false, true, true, false, false, false, false;
         }
 
         else
         {
-            neighboring_2dindices << 0 + edge_2dindex[0], -1 + edge_2dindex[1],
-                                     1 + edge_2dindex[0], -1 + edge_2dindex[1],
-                                     0 + edge_2dindex[0], 0 + edge_2dindex[1],
-                                     1 + edge_2dindex[0], 0 + edge_2dindex[1],
-                                     -1 + edge_2dindex[0], 0 + edge_2dindex[1],
-                                     1 + edge_2dindex[0], 0 + edge_2dindex[1],
+            neighboring_2dindices << 0 + edge.edge_2dindex[0], -1 + edge.edge_2dindex[1],
+                                     1 + edge.edge_2dindex[0], -1 + edge.edge_2dindex[1],
+                                     0 + edge.edge_2dindex[0], 0 + edge.edge_2dindex[1],
+                                     1 + edge.edge_2dindex[0], 0 + edge.edge_2dindex[1],
+                                     -1 + edge.edge_2dindex[0], 0 + edge.edge_2dindex[1],
+                                     1 + edge.edge_2dindex[0], 0 + edge.edge_2dindex[1],
                                      INT_MAX, INT_MAX,
                                      INT_MAX, INT_MAX;
 

@@ -136,10 +136,12 @@ TEST(EdgeTest, Neighboring2DIndicesDirect_1)
     Eigen::Array<int, 2, 1> edge_2dindex(2);
     edge_2dindex << 3, 2;
     int edge_axis = 0;
+    Edge2D edge(edge_2dindex, edge_axis);
+
     Eigen::Array<int, 2, 1> cell_2dcount(2);
     cell_2dcount << 4, 4;
 
-    MaskedArray res_visible = neighboring_2dindices_direct(edge_2dindex, edge_axis, cell_2dcount, Neighboring2Type::VISIBLE);
+    MaskedArray res_visible = neighboring_2dindices_direct(edge, cell_2dcount, Neighboring2Type::VISIBLE);
 
     Eigen::Array<int, 8, 2> exp_res_visible;
     exp_res_visible << 3, 1,
@@ -163,10 +165,12 @@ TEST(EdgeTest, Neighboring2DIndicesDirect_2)
     Eigen::Array<int, 2, 1> edge_2dindex(2);
     edge_2dindex << 0, 0;
     int edge_axis = 1;
+    Edge2D edge(edge_2dindex, edge_axis);
+
     Eigen::Array<int, 2, 1> cell_2dcount(2);
     cell_2dcount << 2, 2;
 
-    MaskedArray res_visible = neighboring_2dindices_direct(edge_2dindex, edge_axis, cell_2dcount, Neighboring2Type::VISIBLE);
+    MaskedArray res_visible = neighboring_2dindices_direct(edge, cell_2dcount, Neighboring2Type::VISIBLE);
 
     Eigen::Array<int, 8, 2> exp_res_visible;
     exp_res_visible << -1, 0,

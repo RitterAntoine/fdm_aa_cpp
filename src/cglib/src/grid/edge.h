@@ -34,8 +34,7 @@ int index1_from_2dindex(const Edge2D& edge,
 
 Eigen::VectorXi indices1_from_2dgrid(const Eigen::Array<int, 2 ,1> grid_cell_2dcount);
 
-MaskedArray neighboring_2dindices_direct(const Eigen::Array<int, 2, 1> edge_2dindex,
-                                         int edge_axis,
+MaskedArray neighboring_2dindices_direct(const Edge2D& edge,
                                          const Eigen::Array<int, 2, 1> grid_cell_2dcount,
                                          Neighboring2Type neighboring_type);
 
