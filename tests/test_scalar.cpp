@@ -133,7 +133,6 @@ TEST(calarTest, GridEdgeRootPoint)
     ASSERT_TRUE((res.isApprox(res_exp)));
 }
 
-
 // This test checks the functionality of the 'get_edge_adjacency_no_extraction_case' function.
 // The 'get_edge_adjacency_no_extraction_case' function is expected to return the adjacency case of the edge given its parameters.
 // The parameters are the edge 2D index, axis, side, and cell count.
@@ -141,17 +140,20 @@ TEST(calarTest, GridEdgeRootPoint)
 
 TEST(ScalarTest, GetEdgeAdjacencyNoExtractionCase)
 {
+    // Define the grid
+    Eigen::Array<int, 2, 1> cell_2dcount(2);
+    cell_2dcount << 2, 3;
+
     Eigen::Array<int, 2, 1> edge_2dindex(2);
     edge_2dindex << 1, 0;
     int edge_axis = 1;
     Edge2D edge2D(edge_2dindex, edge_axis);
 
     int edge_side = 0;
-    Eigen::Array<int, 2, 1> edge_cell_2dcount(2);
-    edge_cell_2dcount << 2, 3;
-    bool same_side_corner_and_center = false;
+    Eigen::Array<int, 2, 2> edge_2dcount = count2_per_axis(cell_2dcount);
+    bool same_side_bottom_left_corner_and_center = false;
 
-    GetEdgeAdjacencyParams params(edge2D, edge_side, edge_cell_2dcount, same_side_corner_and_center);
+    GetEdgeAdjacencyParams params(edge2D, edge_side, edge_2dcount, same_side_bottom_left_corner_and_center);
 
     unsigned int res = get_edge_adjacency_no_extraction_case(params);
     unsigned int exp_res = INT_MAX;

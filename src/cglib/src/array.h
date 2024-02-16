@@ -6,6 +6,6 @@
 // The mask attribute is a boolean array with the same shape of array, where each element indicates if the item of array is masked or not.
 class MaskedArray {
     public:
-        Eigen::ArrayXXi array;
-        Eigen::Array<bool, Eigen::Dynamic, 1> mask;
+        Eigen::Array<int, 8, 2> array;
+        Eigen::Array<bool, 8, 1> mask;
 };

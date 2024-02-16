@@ -1,7 +1,9 @@
 #include "scalar.h"
 
-GetEdgeAdjacencyParams::GetEdgeAdjacencyParams(Edge2D edge, int edge_side, Eigen::Array<int, 2 ,1> edge_cell_2dcount, bool same_side_corner_and_center):
-    edge(edge), edge_side(edge_side), edge_cell_2dcount(edge_cell_2dcount), same_side_corner_and_center(same_side_corner_and_center) {}
+GetEdgeAdjacencyParams::GetEdgeAdjacencyParams(Edge2D edge, int edge_side, Eigen::Array<int, 2 ,2> edge_2dcount, bool same_side_bottom_left_corner_and_center):
+    edge(edge), edge_side(edge_side), edge_2dcount(edge_2dcount), same_side_bottom_left_corner_and_center(same_side_bottom_left_corner_and_center) {}
+
+
 
 Eigen::Array<double, 2, 1> grid_edge_point_scalars(const Edge2D& edge,
                                                    const Eigen::ArrayXd& grid_scalars_flattened,
@@ -68,16 +70,50 @@ unsigned int get_edge_adjacency_no_extraction_case(const GetEdgeAdjacencyParams 
 }
 
 
+unsigned int get_edge_adjacency_case_001(const GetEdgeAdjacencyParams params)
+{
+    return 0; // TODO
+}
+
+unsigned int get_edge_adjacency_case_010(const GetEdgeAdjacencyParams params)
+{
+    return 0; // TODO
+}
+
+unsigned int get_edge_adjacency_case_100(const GetEdgeAdjacencyParams params)
+{
+    return 0; // TODO
+}
+
+unsigned int get_edge_adjacency_case_111(const GetEdgeAdjacencyParams params)
+{
+    return 0; // TODO
+}
 
 
 PointAdjacency uniform_grid_edge_root_point_and_adjacency(const Edge2D& edge,
                                                           Eigen::ArrayXd flattened_scalar_field,
                                                           Grid grid)
 {
+    // Grid edge root vertex computation is trivial
     Eigen::ArrayXf grid_edge_root_point_val  = grid_edge_root_point(edge,
                                                                     flattened_scalar_field,
                                                                     grid) + grid.cell_sides_length * 0.5;
-                                                                    
+    
+    // Edge adjacency computation is less trivial.
+    Eigen::Array<int, 2, 1> contour_grid_cell_2dcount;
+    contour_grid_cell_2dcount << grid.cell_2dcount[0] - 1, grid.cell_2dcount[1] - 1;
+    Eigen::Array<int, 2, 2> edge_2dcount = count2_per_axis(contour_grid_cell_2dcount);
+
+    // Get the visible neighbors
+    MaskedArray visible_neighbors_ndindices = neighboring_2dindices_direct(edge, contour_grid_cell_2dcount, Neighboring2Type::VISIBLE);
+
+    // Compute the edge root existence
+    Eigen::Array<bool, 2, 2> edge_root_existence;
+    for (int i_axis = 0; i_axis < 2; ++i_axis)
+    {
+    }
+
 
     //Fake return to test
     PointAdjacency point_adjacency(Eigen::ArrayXXf::Zero(2, 2), Eigen::ArrayXXi::Zero(2, 2));
