@@ -110,7 +110,7 @@ unsigned int get_edge_adjacency_case_100(const GetEdgeAdjacencyParams params)
 
 unsigned int get_edge_adjacency_case_111(const GetEdgeAdjacencyParams params)
 {
-    return 0; // TODO
+    return params.same_side_bottom_left_corner_and_center ? get_edge_adjacency_case_001(params) : get_edge_adjacency_case_010(params);
 }
 
 

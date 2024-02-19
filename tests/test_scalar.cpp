@@ -345,3 +345,47 @@ TEST(ScalarTest, GetEdgeAdjacencyCase100_2)
     unsigned int exp_res = 20;
     ASSERT_EQ(res, exp_res);
 }
+
+TEST(ScalarTest, GetEdgeAdjacencyCase111_1)
+{
+    // Define the grid
+    Eigen::Array<int, 2, 1> cell_2dcount(2);
+    cell_2dcount << 2, 3;
+
+    Eigen::Array<int, 2, 1> edge_2dindex(2);
+    edge_2dindex << 2, 1;
+    int edge_axis = 1;
+    Edge2D edge2D(edge_2dindex, edge_axis);
+
+    int edge_side = 0;
+    Eigen::Array<int, 2, 2> edge_2dcount = count2_per_axis(cell_2dcount);
+    bool same_side_bottom_left_corner_and_center = true;
+
+    GetEdgeAdjacencyParams params(edge2D, edge_side, edge_2dcount, same_side_bottom_left_corner_and_center);
+
+    unsigned int res = get_edge_adjacency_case_111(params);
+    unsigned int exp_res = 1;
+    ASSERT_EQ(res, exp_res);
+}
+
+TEST(ScalarTest, GetEdgeAdjacencyCase111_2)
+{
+    // Define the grid
+    Eigen::Array<int, 2, 1> cell_2dcount(2);
+    cell_2dcount << 2, 3;
+
+    Eigen::Array<int, 2, 1> edge_2dindex(2);
+    edge_2dindex << 2, 2;
+    int edge_axis = 0;
+    Edge2D edge2D(edge_2dindex, edge_axis);
+
+    int edge_side = 1;
+    Eigen::Array<int, 2, 2> edge_2dcount = count2_per_axis(cell_2dcount);
+    bool same_side_bottom_left_corner_and_center = false;
+
+    GetEdgeAdjacencyParams params(edge2D, edge_side, edge_2dcount, same_side_bottom_left_corner_and_center);
+
+    unsigned int res = get_edge_adjacency_case_111(params);
+    unsigned int exp_res = 17;
+    ASSERT_EQ(res, exp_res);
+}
