@@ -69,6 +69,20 @@ unsigned int get_edge_adjacency_no_extraction_case(const GetEdgeAdjacencyParams 
     return INT_MAX;
 }
 
+unsigned int convert_edge_shift_to_adjacency(Eigen::Array<int, 2, 1> shift,
+                                             const GetEdgeAdjacencyParams params,
+                                             int adjacent_edge_axis)
+{
+    if (params.edge.edge_axis == 1)
+    {
+        shift = shift.reverse();
+    }
+    Eigen::Array<int, 2, 1> adjacent_edge_ndindex = params.edge.edge_2dindex + shift;
+    Edge2D adjacent_edge_ndindex_edge(adjacent_edge_ndindex, adjacent_edge_axis);
+    return index1_from_2dindex(adjacent_edge_ndindex_edge,
+                               params.edge_2dcount);
+}
+
 
 unsigned int get_edge_adjacency_case_001(const GetEdgeAdjacencyParams params)
 {

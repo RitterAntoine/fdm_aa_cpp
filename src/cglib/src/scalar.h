@@ -30,8 +30,8 @@ Eigen::ArrayXf grid_edge_root_point(const Edge2D& edge,
 unsigned int get_edge_adjacency_no_extraction_case(const GetEdgeAdjacencyParams params);
 
 unsigned int convert_edge_shift_to_adjacency(Eigen::Array<int, 2, 1> shift,
-                                     GetEdgeAdjacencyParams params,
-                                     int adjacent_edge_axis);
+                                             const GetEdgeAdjacencyParams params,
+                                             int adjacent_edge_axis);
 
 unsigned int get_edge_adjacency_case_001(const GetEdgeAdjacencyParams params);
 
