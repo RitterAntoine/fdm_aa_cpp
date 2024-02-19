@@ -23,7 +23,7 @@ bool grid_edge_root_existence(const Edge2D& edge,
                               const Eigen::ArrayXd& flattened_scalar_field,
                               const Grid& grid);
 
-Eigen::ArrayXf grid_edge_root_point(const Edge2D& edge,
+Eigen::Array<float, 2, 1> grid_edge_root_point(const Edge2D& edge,
                                     const Eigen::ArrayXd& flattened_scalar_field,
                                     const Grid& grid);
 

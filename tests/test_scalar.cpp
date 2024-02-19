@@ -126,8 +126,8 @@ TEST(calarTest, GridEdgeRootPoint)
     float cell_sides_length = 1;
     Grid grid(cell_2dcount, origin, cell_sides_length);
 
-    Eigen::ArrayXf res = grid_edge_root_point(edge, flattened_scalar_field, grid);
-    Eigen::ArrayXf res_exp(2);
+    Eigen::Array<float, 2, 1> res = grid_edge_root_point(edge, flattened_scalar_field, grid);
+    Eigen::Array<float, 2, 1> res_exp(2);
 
     res_exp << 0.5, 0;
     ASSERT_TRUE((res.isApprox(res_exp)));

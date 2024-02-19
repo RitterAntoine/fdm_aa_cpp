@@ -131,6 +131,7 @@ TEST(EdgeTest, Indices1From2DGrid)
     ASSERT_TRUE(res.isApprox(exp_res));
 }
 
+
 TEST(EdgeTest, Neighboring2DIndicesDirect_1)
 {
     Eigen::Array<int, 2, 1> edge_2dindex(2);
