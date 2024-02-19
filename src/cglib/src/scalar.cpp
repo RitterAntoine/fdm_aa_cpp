@@ -86,17 +86,26 @@ unsigned int convert_edge_shift_to_adjacency(Eigen::Array<int, 2, 1> shift,
 
 unsigned int get_edge_adjacency_case_001(const GetEdgeAdjacencyParams params)
 {
-    return 0; // TODO
+    Eigen::Array<int, 2, 1> shift;
+    shift << 1, -1 + params.edge_side;
+    int adjacent_edge_axis = (params.edge.edge_axis + 1) % 2;
+    return convert_edge_shift_to_adjacency(shift, params, adjacent_edge_axis);
 }
 
 unsigned int get_edge_adjacency_case_010(const GetEdgeAdjacencyParams params)
 {
-    return 0; // TODO
+    Eigen::Array<int, 2, 1> shift;
+    shift << 0, -1 + params.edge_side;
+    int adjacent_edge_axis = (params.edge.edge_axis + 1) % 2;
+    return convert_edge_shift_to_adjacency(shift, params, adjacent_edge_axis);
 }
 
 unsigned int get_edge_adjacency_case_100(const GetEdgeAdjacencyParams params)
 {
-    return 0; // TODO
+    Eigen::Array<int, 2, 1> shift;
+    shift << 0, -1 + 2 * params.edge_side;
+    int adjacent_edge_axis = (params.edge.edge_axis + 1) % 2;
+    return convert_edge_shift_to_adjacency(shift, params, adjacent_edge_axis);
 }
 
 unsigned int get_edge_adjacency_case_111(const GetEdgeAdjacencyParams params)
