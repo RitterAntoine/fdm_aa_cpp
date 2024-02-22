@@ -243,7 +243,6 @@ PointAdjacency uniform_grid_edge_root_point_and_adjacency(const Edge2D& edge,
     bool same_side_corner_and_center_top = average_scalar_top * flattened_scalar_field[index1_from_2dindex(edge.edge_2dindex, grid.cell_2dcount)] >= 0;
     bool same_side_corner_and_center_bottom = average_scalar_bottom * flattened_scalar_field[index1_from_2dindex(edge.edge_2dindex, grid.cell_2dcount)] >= 0;
 
-    
     // autopep8: off
     // axis == 0 ->
     // We are currently computing the adjacency of a horizontal edge.
@@ -268,48 +267,44 @@ PointAdjacency uniform_grid_edge_root_point_and_adjacency(const Edge2D& edge,
     //  |         o  o         |  |     |   |  o         o  o         o
     //  |        /|  |\        |  |     |   |  |\        |  |        /|
     //  |_ _ _ _o_|  |_o_ __ _ |  |_ _ _o_ _|  |_o_ _ _ _|  |_ _ _ _o_|
-    //
-    //  axis == 1 -> We are currently computing the adjacency of a vertical
-    //  edge.
-    //  Here the cases are the transpose of the previous cases, i.e., the
-    //  axes are flipped.
-    // ---------------------------------------------------------------------
 
-    // Compute the case index
-    Eigen::Array<int, 2, 1> case_index;
-    case_index << 4 * root_exist_config(0, 0) + 2 * root_exist_config(0, 1) + 1 * root_exist_config(0, 2),
-                  4 * root_exist_config(1, 0) + 2 * root_exist_config(1, 1) + 1 * root_exist_config(1, 2);
-    
-    // Get the edge adjacency
-    Eigen::Array<unsigned int, 2, 1> adjacency_array;
-    for (int i = 0; i < case_index.size(); ++i)
+    // Compute the edge adjacency
+    Eigen::Array<unsigned int, 2, 1> case_index = Eigen::Array<unsigned int, 2, 1>::Zero();
+
+    int case_index_val_top = 0;
+    int case_index_val_bottom = 0;
+    case_index_val_top = root_exist_config(1, 0) * 4 + root_exist_config(1, 1) * 2 + root_exist_config(1, 2);
+    case_index_val_bottom = root_exist_config(0, 0) * 4 + root_exist_config(0, 1) * 2 + root_exist_config(0, 2);
+    case_index << case_index_val_top, case_index_val_bottom;
+
+    Eigen::Array<unsigned int, 2, 1> adjacency_array = Eigen::Array<unsigned int, 2, 1>::Zero();
+    for (int i = 0; i < 2; ++i)
     {
-        GetEdgeAdjacencyParams get_edge_adjacency_params_i(edge, edge.edge_axis, edge_2dcount, same_side_corner_and_center_top);
         switch (case_index[i])
         {
             case 0:
-                adjacency_array[i] = get_edge_adjacency_no_extraction_case(get_edge_adjacency_params_i);
+                adjacency_array[i] = get_edge_adjacency_no_extraction_case(GetEdgeAdjacencyParams(edge, i, edge_2dcount, same_side_corner_and_center_top));
                 break;
             case 1:
-                adjacency_array[i] = get_edge_adjacency_case_001(get_edge_adjacency_params_i);
+                adjacency_array[i] = get_edge_adjacency_case_001(GetEdgeAdjacencyParams(edge, i, edge_2dcount, same_side_corner_and_center_top));
                 break;
             case 2:
-                adjacency_array[i] = get_edge_adjacency_case_010(get_edge_adjacency_params_i);
+                adjacency_array[i] = get_edge_adjacency_case_010(GetEdgeAdjacencyParams(edge, i, edge_2dcount, same_side_corner_and_center_top));
                 break;
             case 3:
-                adjacency_array[i] = get_edge_adjacency_no_extraction_case(get_edge_adjacency_params_i);
+                adjacency_array[i] = get_edge_adjacency_no_extraction_case(GetEdgeAdjacencyParams(edge, i, edge_2dcount, same_side_corner_and_center_top));
                 break;
             case 4:
-                adjacency_array[i] = get_edge_adjacency_case_100(get_edge_adjacency_params_i);
+                adjacency_array[i] = get_edge_adjacency_case_100(GetEdgeAdjacencyParams(edge, i, edge_2dcount, same_side_corner_and_center_bottom));
                 break;
             case 5:
-                adjacency_array[i] = get_edge_adjacency_no_extraction_case(get_edge_adjacency_params_i);
+                adjacency_array[i] = get_edge_adjacency_no_extraction_case(GetEdgeAdjacencyParams(edge, i, edge_2dcount, same_side_corner_and_center_bottom));
                 break;
             case 6:
-                adjacency_array[i] = get_edge_adjacency_no_extraction_case(get_edge_adjacency_params_i);
+                adjacency_array[i] = get_edge_adjacency_no_extraction_case(GetEdgeAdjacencyParams(edge, i, edge_2dcount, same_side_corner_and_center_bottom));
                 break;
             case 7:
-                adjacency_array[i] = get_edge_adjacency_case_111(get_edge_adjacency_params_i);
+                adjacency_array[i] = get_edge_adjacency_case_111(GetEdgeAdjacencyParams(edge, i, edge_2dcount, same_side_corner_and_center_bottom));
                 break;
         }
     }

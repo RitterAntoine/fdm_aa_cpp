@@ -498,6 +498,7 @@ TEST(ScalarTest, UniformGridEdgeRootPointAndAdjacency_1)
     exp_adjacency << 0, 3;
 
     ASSERT_TRUE((res_point.isApprox(exp_point)));
+    ASSERT_TRUE((res_adjacency.isApprox(exp_adjacency)));
 }
 
 TEST(ScalarTest, UniformGridEdgeRootPointAndAdjacency_2)
@@ -519,7 +520,9 @@ TEST(ScalarTest, UniformGridEdgeRootPointAndAdjacency_2)
     int edge_axis = 0;
     Edge2D edge2D(edge_2dindex, edge_axis);
 
-    PointAdjacency res = uniform_grid_edge_root_point_and_adjacency(edge2D, flattened_scalar_field, grid);    
+    PointAdjacency res = uniform_grid_edge_root_point_and_adjacency(edge2D, flattened_scalar_field, grid);
+    Eigen::Array<float, 2, 1> res_point = res.getPoint();
+    Eigen::Array<unsigned int, 2, 1> res_adjacency = res.getAdjacency();  
 
     Eigen::Array<float, 2, 1> exp_point(2);
     exp_point << 1.83333, 1.5;
@@ -527,7 +530,8 @@ TEST(ScalarTest, UniformGridEdgeRootPointAndAdjacency_2)
     Eigen::Array<unsigned int, 2, 1> exp_adjacency(2);
     exp_adjacency << 7, 10;
 
-    ASSERT_TRUE((res.getPoint().isApprox(exp_point)));
+    ASSERT_TRUE((res_point.isApprox(exp_point)));
+    ASSERT_TRUE((res_adjacency.isApprox(exp_adjacency)));
 }
 
 TEST(ScalarTest, UniformGridEdgeRootPointAndAdjacency_3)
@@ -549,7 +553,9 @@ TEST(ScalarTest, UniformGridEdgeRootPointAndAdjacency_3)
     int edge_axis = 1;
     Edge2D edge2D(edge_2dindex, edge_axis);
 
-    PointAdjacency res = uniform_grid_edge_root_point_and_adjacency(edge2D, flattened_scalar_field, grid);    
+    PointAdjacency res = uniform_grid_edge_root_point_and_adjacency(edge2D, flattened_scalar_field, grid);  
+    Eigen::Array<float, 2, 1> res_point = res.getPoint();
+    Eigen::Array<unsigned int, 2, 1> res_adjacency = res.getAdjacency();  
 
     Eigen::Array<float, 2, 1> exp_point(2);
     exp_point << 1.5, 1.83333;
@@ -557,5 +563,6 @@ TEST(ScalarTest, UniformGridEdgeRootPointAndAdjacency_3)
     Eigen::Array<unsigned int, 2, 1> exp_adjacency(2);
     exp_adjacency << 3, 9;
 
-    ASSERT_TRUE((res.getPoint().isApprox(exp_point)));
+    ASSERT_TRUE((res_point.isApprox(exp_point)));
+    ASSERT_TRUE((res_adjacency.isApprox(exp_adjacency)));
 }
