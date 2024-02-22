@@ -19,20 +19,62 @@
 // |________|________|
 //   (0, 0)   (1, 0)
 
-TEST(ScalarTest, GridEdgePointScalars)
+TEST(ScalarTest, GridEdgePointScalars_1)
 {
+    Eigen::Array<int, 2, 1> cell_ndcount(2);
+    cell_ndcount << 2, 3;
+
     Eigen::Array<int, 2, 1> edge_ndindex(2);
     edge_ndindex << 1, 0;
     int edge_axis = 1;
     Edge2D edge(edge_ndindex, edge_axis);
-    Eigen::Array<int, 2, 1> cell_ndcount(2);
-    cell_ndcount << 2, 3;
+
     Eigen::ArrayXd grid_scalars_flattened = Eigen::ArrayXd::LinSpaced(6, 0, 5);
 
     Eigen::Array<double, 2, 1> res = grid_edge_point_scalars(edge, grid_scalars_flattened, cell_ndcount);
 
     Eigen::Array<double, 2, 1> exp_res(2);
     exp_res << 1, 3;
+
+    ASSERT_TRUE((res.isApprox(exp_res)));
+}
+
+TEST(ScalarTest, GridEdgePointScalars_2)
+{
+    Eigen::Array<int, 2, 1> cell_ndcount(2);
+    cell_ndcount << 2, 3;
+
+    Eigen::Array<int, 2, 1> edge_ndindex(2);
+    edge_ndindex << 0, 0;
+    int edge_axis = 0;
+    Edge2D edge(edge_ndindex, edge_axis);
+
+    Eigen::ArrayXd grid_scalars_flattened = Eigen::ArrayXd::LinSpaced(6, 0, 5);
+
+    Eigen::Array<double, 2, 1> res = grid_edge_point_scalars(edge, grid_scalars_flattened, cell_ndcount);
+
+    Eigen::Array<double, 2, 1> exp_res(2);
+    exp_res << 0, 1;
+
+    ASSERT_TRUE((res.isApprox(exp_res)));
+}
+
+TEST(ScalarTest, GridEdgePointScalars_3)
+{
+    Eigen::Array<int, 2, 1> cell_ndcount(2);
+    cell_ndcount << 3, 3;
+
+    Eigen::Array<int, 2, 1> edge_ndindex(2);
+    edge_ndindex << 2, 1;
+    int edge_axis = 1;
+    Edge2D edge(edge_ndindex, edge_axis);
+
+    Eigen::ArrayXd grid_scalars_flattened = Eigen::ArrayXd::LinSpaced(9, 0, 8);
+
+    Eigen::Array<double, 2, 1> res = grid_edge_point_scalars(edge, grid_scalars_flattened, cell_ndcount);
+
+    Eigen::Array<double, 2, 1> exp_res(2);
+    exp_res << 5, 8;
 
     ASSERT_TRUE((res.isApprox(exp_res)));
 }
@@ -88,37 +130,9 @@ TEST(ScalarTest, GridEdgeRootExistence)
     ASSERT_FALSE(res1);
 }
 
-// This test checks the functionality of the 'grid_edge_root_point' function.
-// The 'grid_edge_root_point' function is expected to return the root point of the edge given its 2D index, axis, and the grid it belongs to.
-// The grid is a 2D grid with cell count (2, 3), origin (0, 0), and cell side length 1.
-// The edge is defined by its 2D index (0, 0) and axis 0.
-// The expected result is a 2x1 array with the root point of the edge.
-// The edge is defined by its 2D index (1, 0) and axis 0.
-// The expected result is a 2x1 array with the root point of the edge.
-
-TEST(calarTest, GridEdgeRootPoint)
+TEST(calarTest, GridEdgeRootPoint_1)
 {
-    // Edge 2D indexing per axis
-    //  ________ ________
-    // | (0, 3) | (1, 3) |
-    // |(0, 2)  |(1, 2)  |(2, 2)
-    // |________|________|
-    // | (0, 2) | (1, 2) |
-    // |(0, 1)  |(1, 1)  |(2, 1)
-    // |________|________|
-    // | (0, 1) | (1, 1) |
-    // |(0, 0)  |(1, 0)  |(2, 0)
-    // |________|________|
-    //   (0, 0)   (1, 0)
-    // Associate scalars to the vertices
-    // Include the values from the helper function : [-0.5, 0.5, -0.25, 0.75, -0.1, 0.9]
-    Eigen::Array<int, 2, 1> edge_2dindex(2);
-    edge_2dindex << 0, 0;
-    int edge_axis = 0;
-    Edge2D edge(edge_2dindex, edge_axis);
-
-    const Eigen::ArrayXd flattened_scalar_field = Eigen::Map<const Eigen::ArrayXd>(new double[6]{-0.5, 0.5, -0.25, 0.75, -0.1, 0.9}, 6);
-
+    // Define the grid
     Eigen::Array<int, 2, 1> cell_2dcount(2);
     cell_2dcount << 2, 3;
     Eigen::Array<int, 2, 1> origin(2);
@@ -126,11 +140,75 @@ TEST(calarTest, GridEdgeRootPoint)
     float cell_sides_length = 1;
     Grid grid(cell_2dcount, origin, cell_sides_length);
 
-    Eigen::Array<float, 2, 1> res = grid_edge_root_point(edge, flattened_scalar_field, grid);
-    Eigen::Array<float, 2, 1> res_exp(2);
+    // Define the scalar field
+    const Eigen::Array<double, 6, 1> flattened_scalar_field = Eigen::Map<const Eigen::ArrayXd>(new double[6]{-0.5, 0.5, -0.25, 0.75, -0.1, 0.9}, 6);
 
-    res_exp << 0.5, 0;
-    ASSERT_TRUE((res.isApprox(res_exp)));
+    // Define the edge
+    Eigen::Array<int, 2, 1> edge_2dindex(2);
+    edge_2dindex << 0, 0;
+    int edge_axis = 0;
+    Edge2D edge2D(edge_2dindex, edge_axis);
+
+    Eigen::Array<float, 2, 1> res = grid_edge_root_point(edge2D, flattened_scalar_field, grid);
+
+    Eigen::Array<float, 2, 1> exp_res(2);
+    exp_res << 0.5, 0;
+
+    ASSERT_TRUE((res.isApprox(exp_res)));
+}
+
+TEST(calarTest, GridEdgeRootPoint_2)
+{
+    // Define the grid
+    Eigen::Array<int, 2, 1> cell_2dcount(2);
+    cell_2dcount << 2, 3;
+    Eigen::Array<int, 2, 1> origin(2);
+    origin << 0, 0;
+    float cell_sides_length = 1;
+    Grid grid(cell_2dcount, origin, cell_sides_length);
+
+    // Define the scalar field
+    const Eigen::Array<double, 6, 1> flattened_scalar_field = Eigen::Map<const Eigen::ArrayXd>(new double[6]{-0.5, 0.5, -0.25, 0.75, -0.1, 0.9}, 6);
+
+    // Define the edge
+    Eigen::Array<int, 2, 1> edge_2dindex(2);
+    edge_2dindex << 0, 1;
+    int edge_axis = 0;
+    Edge2D edge2D(edge_2dindex, edge_axis);
+
+    Eigen::Array<float, 2, 1> res = grid_edge_root_point(edge2D, flattened_scalar_field, grid);
+
+    Eigen::Array<float, 2, 1> exp_res(2);
+    exp_res << 0.25, 1;
+
+    ASSERT_TRUE((res.isApprox(exp_res)));
+}
+
+TEST(calarTest, GridEdgeRootPoint_3)
+{
+    // Define the grid
+    Eigen::Array<int, 2, 1> cell_2dcount(2);
+    cell_2dcount << 2, 3;
+    Eigen::Array<int, 2, 1> origin(2);
+    origin << 0, 0;
+    float cell_sides_length = 1;
+    Grid grid(cell_2dcount, origin, cell_sides_length);
+
+    // Define the scalar field
+    const Eigen::Array<double, 6, 1> flattened_scalar_field = Eigen::Map<const Eigen::ArrayXd>(new double[6]{-0.5, 0.5, -0.25, 0.75, -0.1, 0.9}, 6);
+
+    // Define the edge
+    Eigen::Array<int, 2, 1> edge_2dindex(2);
+    edge_2dindex << 0, 2;
+    int edge_axis = 0;
+    Edge2D edge2D(edge_2dindex, edge_axis);
+
+    Eigen::Array<float, 2, 1> res = grid_edge_root_point(edge2D, flattened_scalar_field, grid);
+
+    Eigen::Array<float, 2, 1> exp_res(2);
+    exp_res << 0.1, 2;
+
+    ASSERT_TRUE((res.isApprox(exp_res)));
 }
 
 // This test checks the functionality of the 'get_edge_adjacency_no_extraction_case' function.
@@ -388,4 +466,96 @@ TEST(ScalarTest, GetEdgeAdjacencyCase111_2)
     unsigned int res = get_edge_adjacency_case_111(params);
     unsigned int exp_res = 17;
     ASSERT_EQ(res, exp_res);
+}
+
+TEST(ScalarTest, UniformGridEdgeRootPointAndAdjacency_1)
+{
+    // Define the grid
+    Eigen::Array<int, 2, 1> cell_2dcount(2);
+    cell_2dcount << 3, 3;
+    Eigen::Array<int, 2, 1> origin(2);
+    origin << 0, 0;
+    float cell_sides_length = 1;
+    Grid grid(cell_2dcount, origin, cell_sides_length);
+
+    // Define the scalar field
+    const Eigen::Array<double, 9, 1> flattened_scalar_field = Eigen::Map<const Eigen::ArrayXd>(new double[9]{-0.5, 0.5, 1, -1, -0.5, 1, 1, 1, 1}, 9);
+
+    // Define the edge
+    Eigen::Array<int, 2, 1> edge_2dindex(2);
+    edge_2dindex << 1, 0;
+    int edge_axis = 1;
+    Edge2D edge2D(edge_2dindex, edge_axis);
+
+    PointAdjacency res = uniform_grid_edge_root_point_and_adjacency(edge2D, flattened_scalar_field, grid);
+    Eigen::Array<float, 2, 1> res_point = res.getPoint();
+    Eigen::Array<unsigned int, 2, 1> res_adjacency = res.getAdjacency();
+
+    Eigen::Array<float, 2, 1> exp_point(2);
+    exp_point << 1.5, 1;
+
+    Eigen::Array<unsigned int, 2, 1> exp_adjacency(2);
+    exp_adjacency << 0, 3;
+
+    ASSERT_TRUE((res_point.isApprox(exp_point)));
+}
+
+TEST(ScalarTest, UniformGridEdgeRootPointAndAdjacency_2)
+{
+    // Define the grid
+    Eigen::Array<int, 2, 1> cell_2dcount(2);
+    cell_2dcount << 3, 3;
+    Eigen::Array<int, 2, 1> origin(2);
+    origin << 0, 0;
+    float cell_sides_length = 1;
+    Grid grid(cell_2dcount, origin, cell_sides_length);
+
+    // Define the scalar field
+    const Eigen::Array<double, 9, 1> flattened_scalar_field = Eigen::Map<const Eigen::ArrayXd>(new double[9]{-0.5, 0.5, 1, -1, -0.5, 1, 1, 1, 1}, 9);
+
+    // Define the edge
+    Eigen::Array<int, 2, 1> edge_2dindex(2);
+    edge_2dindex << 1, 1;
+    int edge_axis = 0;
+    Edge2D edge2D(edge_2dindex, edge_axis);
+
+    PointAdjacency res = uniform_grid_edge_root_point_and_adjacency(edge2D, flattened_scalar_field, grid);    
+
+    Eigen::Array<float, 2, 1> exp_point(2);
+    exp_point << 1.83333, 1.5;
+
+    Eigen::Array<unsigned int, 2, 1> exp_adjacency(2);
+    exp_adjacency << 7, 10;
+
+    ASSERT_TRUE((res.getPoint().isApprox(exp_point)));
+}
+
+TEST(ScalarTest, UniformGridEdgeRootPointAndAdjacency_3)
+{
+    // Define the grid
+    Eigen::Array<int, 2, 1> cell_2dcount(2);
+    cell_2dcount << 3, 3;
+    Eigen::Array<int, 2, 1> origin(2);
+    origin << 0, 0;
+    float cell_sides_length = 1;
+    Grid grid(cell_2dcount, origin, cell_sides_length);
+
+    // Define the scalar field
+    const Eigen::Array<double, 9, 1> flattened_scalar_field = Eigen::Map<const Eigen::ArrayXd>(new double[9]{-0.5, 0.5, 1, -1, -0.5, 1, 1, 1, 1}, 9);
+
+    // Define the edge
+    Eigen::Array<int, 2, 1> edge_2dindex(2);
+    edge_2dindex << 1, 1;
+    int edge_axis = 1;
+    Edge2D edge2D(edge_2dindex, edge_axis);
+
+    PointAdjacency res = uniform_grid_edge_root_point_and_adjacency(edge2D, flattened_scalar_field, grid);    
+
+    Eigen::Array<float, 2, 1> exp_point(2);
+    exp_point << 1.5, 1.83333;
+
+    Eigen::Array<unsigned int, 2, 1> exp_adjacency(2);
+    exp_adjacency << 3, 9;
+
+    ASSERT_TRUE((res.getPoint().isApprox(exp_point)));
 }

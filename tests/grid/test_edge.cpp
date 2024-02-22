@@ -29,7 +29,7 @@ TEST(EdgeTest, Neighboring2TypeValues)
 // |________|________|
 //   (0, 0)   (1, 0)
 
-TEST(EdgeTest, Count2PerAxis)
+TEST(EdgeTest, Count2PerAxis_1)
 {
     // Grid definition
     Eigen::Array<int, 2, 1> cell_2dcount(2);
@@ -40,6 +40,21 @@ TEST(EdgeTest, Count2PerAxis)
     Eigen::Array<int, 2 ,2> expected_res(2, 2);
     expected_res << 2, 4,
                     3, 3;
+
+    ASSERT_TRUE((res == expected_res).all());
+}
+
+TEST(EdgeTest, Count2PerAxis_2)
+{
+    // Grid definition
+    Eigen::Array<int, 2, 1> cell_2dcount(2);
+    cell_2dcount << 3, 3;
+
+    Eigen::Array<int, 2, 2> res = count2_per_axis(cell_2dcount);
+
+    Eigen::Array<int, 2 ,2> expected_res(2, 2);
+    expected_res << 3, 4,
+                    4, 3;
 
     ASSERT_TRUE((res == expected_res).all());
 }
@@ -134,58 +149,102 @@ TEST(EdgeTest, Indices1From2DGrid)
 
 TEST(EdgeTest, Neighboring2DIndicesDirect_1)
 {
+    // Define the grid
+    Eigen::Array<int, 2, 1> cell_2dcount(2);
+    cell_2dcount << 3, 3;
+
+    // Define the edge
     Eigen::Array<int, 2, 1> edge_2dindex(2);
-    edge_2dindex << 3, 2;
+    edge_2dindex << 1, 1;
     int edge_axis = 0;
     Edge2D edge(edge_2dindex, edge_axis);
 
-    Eigen::Array<int, 2, 1> cell_2dcount(2);
-    cell_2dcount << 4, 4;
-
+    // Get the neighboring 2D indices
     MaskedArray res_visible = neighboring_2dindices_direct(edge, cell_2dcount, Neighboring2Type::VISIBLE);
 
+    // Define the expected result
     Eigen::Array<int, 8, 2> exp_res_visible;
-    exp_res_visible << 3, 1,
-                       3, 3,
+    exp_res_visible << 1, 0,
+                       1, 2,
                        INT_MAX, INT_MAX,
                        INT_MAX, INT_MAX,
-                       3, 1,
-                       4, 1,
-                       3, 2,
-                       4, 2;
+                       1, 0,
+                       2, 0,
+                       1, 1,
+                       2, 1;
     
     Eigen::Array<bool, 8, 1> exp_mask_visible;
     exp_mask_visible << false, false, true, true, false, false, false, false;
 
+    // Check the result
     ASSERT_TRUE((res_visible.array == exp_res_visible).all());
     ASSERT_TRUE((res_visible.mask == exp_mask_visible).all());
 }
 
 TEST(EdgeTest, Neighboring2DIndicesDirect_2)
 {
+    // Define the grid
+    Eigen::Array<int, 2, 1> cell_2dcount(2);
+    cell_2dcount << 3, 3;
+
+    // Define the edge
     Eigen::Array<int, 2, 1> edge_2dindex(2);
-    edge_2dindex << 0, 0;
-    int edge_axis = 1;
+    edge_2dindex << 1, 0;
+    int edge_axis = 0;
     Edge2D edge(edge_2dindex, edge_axis);
 
-    Eigen::Array<int, 2, 1> cell_2dcount(2);
-    cell_2dcount << 2, 2;
-
+    // Get the neighboring 2D indices
     MaskedArray res_visible = neighboring_2dindices_direct(edge, cell_2dcount, Neighboring2Type::VISIBLE);
 
+    // Define the expected result
     Eigen::Array<int, 8, 2> exp_res_visible;
-    exp_res_visible << -1, 0,
-                       -1, 1,
-                       0, 0,
-                       0, 1,
-                       -1, 0,
-                       1, 0,
+    exp_res_visible << 1, -1,
+                       1, 1,
                        INT_MAX, INT_MAX,
-                       INT_MAX, INT_MAX;
+                       INT_MAX, INT_MAX,
+                       1, -1,
+                       2, -1,
+                       1, 0,
+                       2, 0;
     
     Eigen::Array<bool, 8, 1> exp_mask_visible;
-    exp_mask_visible << true, true, false, false, true, false, true, true;
+    exp_mask_visible << true, false, true, true, true, true, false, false;
 
+    // Check the result
+    ASSERT_TRUE((res_visible.array == exp_res_visible).all());
+    ASSERT_TRUE((res_visible.mask == exp_mask_visible).all());
+}
+
+TEST(EdgeTest, Neighboring2DIndicesDirect_3)
+{
+    // Define the grid
+    Eigen::Array<int, 2, 1> cell_2dcount(2);
+    cell_2dcount << 3, 3;
+
+    // Define the edge
+    Eigen::Array<int, 2, 1> edge_2dindex(2);
+    edge_2dindex << 2, 3;
+    int edge_axis = 0;
+    Edge2D edge(edge_2dindex, edge_axis);
+
+    // Get the neighboring 2D indices
+    MaskedArray res_visible = neighboring_2dindices_direct(edge, cell_2dcount, Neighboring2Type::VISIBLE);
+
+    // Define the expected result
+    Eigen::Array<int, 8, 2> exp_res_visible;
+    exp_res_visible << 2, 2,
+                       2, 4,
+                       INT_MAX, INT_MAX,
+                       INT_MAX, INT_MAX,
+                       2, 2,
+                       3, 2,
+                       2, 3,
+                       3, 3;
+    
+    Eigen::Array<bool, 8, 1> exp_mask_visible;
+    exp_mask_visible << false, true, true, true, false, false, true, true;
+
+    // Check the result
     ASSERT_TRUE((res_visible.array == exp_res_visible).all());
     ASSERT_TRUE((res_visible.mask == exp_mask_visible).all());
 }

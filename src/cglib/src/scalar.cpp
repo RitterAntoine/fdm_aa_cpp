@@ -1,4 +1,5 @@
 #include "scalar.h"
+#include <iostream>
 
 GetEdgeAdjacencyParams::GetEdgeAdjacencyParams(Edge2D edge, int edge_side, Eigen::Array<int, 2 ,2> edge_2dcount, bool same_side_bottom_left_corner_and_center):
     edge(edge), edge_side(edge_side), edge_2dcount(edge_2dcount), same_side_bottom_left_corner_and_center(same_side_bottom_left_corner_and_center) {}
@@ -9,7 +10,6 @@ Eigen::Array<double, 2, 1> grid_edge_point_scalars(const Edge2D& edge,
                                                    const Eigen::ArrayXd& grid_scalars_flattened,
                                                    const Eigen::Array<int, 2 ,1> grid_cell_2dcount)
 {
-    
     Eigen::Array<int, 2 ,1> shift = Eigen::Array<int, 2 ,1>::Zero(edge.edge_2dindex.size());
     shift[edge.edge_axis] = 1;
     
@@ -36,11 +36,9 @@ bool grid_edge_root_existence(const Edge2D& edge,
                               const Eigen::ArrayXd& flattened_scalar_field,
                               const Grid& grid) 
 {
-    
     Eigen::ArrayXd edge_point_scalars_val = grid_edge_point_scalars(edge,
                                                                     flattened_scalar_field,
                                                                     grid.cell_2dcount);
-
     return !float_same_sign(edge_point_scalars_val[0], edge_point_scalars_val[1]);
 }
 
@@ -119,38 +117,76 @@ PointAdjacency uniform_grid_edge_root_point_and_adjacency(const Edge2D& edge,
                                                           Grid grid)
 {
     // Grid edge root vertex computation is trivial
-    Eigen::ArrayXf grid_edge_root_point_val  = grid_edge_root_point(edge,
+    Eigen::Array<float, 2, 1> grid_edge_root_point_val  = grid_edge_root_point(edge,
                                                                     flattened_scalar_field,
                                                                     grid) + grid.cell_sides_length * 0.5;
-    
+
     // Edge adjacency computation is less trivial.
     Eigen::Array<int, 2, 1> contour_grid_cell_2dcount;
     contour_grid_cell_2dcount << grid.cell_2dcount[0] - 1, grid.cell_2dcount[1] - 1;
+
     Eigen::Array<int, 2, 2> edge_2dcount = count2_per_axis(contour_grid_cell_2dcount);
 
     // Get the visible neighbors
     MaskedArray visible_neighbors_ndindices = neighboring_2dindices_direct(edge, contour_grid_cell_2dcount, Neighboring2Type::VISIBLE);
 
     // Compute the edge root existence
-    Eigen::Array<bool, 2, 2> edge_root_existence;
-    for (int i_axis = 0; i_axis < 2; ++i_axis)
-    {
-        Eigen::Array<int, 1, Eigen::Dynamic> visible_neighbors_ndindices_array = visible_neighbors_ndindices.array.row(i_axis);
-        Eigen::Array<bool, 1, Eigen::Dynamic> edge_root_existence_i_axis = Eigen::Array<bool, 1, Eigen::Dynamic>::Zero(visible_neighbors_ndindices_array.size());
-        for (int i = 0; i < visible_neighbors_ndindices_array.size(); ++i)
-        {
-            edge_root_existence_i_axis[i] = grid_edge_root_existence(edge, flattened_scalar_field, grid);
-        }
-        edge_root_existence_i_axis = edge_root_existence_i_axis && !visible_neighbors_ndindices.mask.row(i_axis);
-        edge_root_existence.row(i_axis) = edge_root_existence_i_axis;
-    }
+    bool edge_root_existence_h1;
+    bool edge_root_existence_h2;
+    bool edge_root_existence_h3;
+    bool edge_root_existence_h4;
+    bool edge_root_existence_v1;
+    bool edge_root_existence_v2;
+    bool edge_root_existence_v3;
+    bool edge_root_existence_v4;
 
+    if (visible_neighbors_ndindices.mask[0]) {edge_root_existence_h1 = false;}
+    else {Edge2D edge_h1 = Edge2D(visible_neighbors_ndindices.array.row(0), 0);edge_root_existence_h1 = grid_edge_root_existence(edge_h1, flattened_scalar_field, grid);}
+
+    if (visible_neighbors_ndindices.mask[1]) {edge_root_existence_h2 = false;}
+    else {Edge2D edge_h2 = Edge2D(visible_neighbors_ndindices.array.row(1), 0);edge_root_existence_h2 = grid_edge_root_existence(edge_h2, flattened_scalar_field, grid);}
+
+    if (visible_neighbors_ndindices.mask[2]) {edge_root_existence_h3 = false;}
+    else {Edge2D edge_h3 = Edge2D(visible_neighbors_ndindices.array.row(2), 0);edge_root_existence_h3 = grid_edge_root_existence(edge_h3, flattened_scalar_field, grid);}
+
+    if (visible_neighbors_ndindices.mask[3]) {edge_root_existence_h4 = false;}
+    else {Edge2D edge_h4 = Edge2D(visible_neighbors_ndindices.array.row(3), 0);edge_root_existence_h4 = grid_edge_root_existence(edge_h4, flattened_scalar_field, grid);}
+
+    if (visible_neighbors_ndindices.mask[4]) {edge_root_existence_v1 = false;}
+    else {Edge2D edge_v1 = Edge2D(visible_neighbors_ndindices.array.row(4), 1);edge_root_existence_v1 = grid_edge_root_existence(edge_v1, flattened_scalar_field, grid);}
+
+    if (visible_neighbors_ndindices.mask[5]) {edge_root_existence_v2 = false;}
+    else {Edge2D edge_v2 = Edge2D(visible_neighbors_ndindices.array.row(5), 1);edge_root_existence_v2 = grid_edge_root_existence(edge_v2, flattened_scalar_field, grid);}
+
+    if (visible_neighbors_ndindices.mask[6]) {edge_root_existence_v3 = false;}
+    else {Edge2D edge_v3 = Edge2D(visible_neighbors_ndindices.array.row(6), 1);edge_root_existence_v3 = grid_edge_root_existence(edge_v3, flattened_scalar_field, grid);}
+
+    if (visible_neighbors_ndindices.mask[7]) {edge_root_existence_v4 = false;}
+    else {Edge2D edge_v4 = Edge2D(visible_neighbors_ndindices.array.row(7), 1);edge_root_existence_v4 = grid_edge_root_existence(edge_v4, flattened_scalar_field, grid);}
+
+
+    Eigen::Array<bool, 8, 1> edge_root_existence;
+    edge_root_existence << edge_root_existence_h1,
+                           edge_root_existence_h2,
+                           edge_root_existence_h3,
+                           edge_root_existence_h4,
+                           edge_root_existence_v1,
+                           edge_root_existence_v2,
+                           edge_root_existence_v3,
+                           edge_root_existence_v4;
 
     // Reorder the edge root existence
     Eigen::Array<bool, 2, 3> root_exist_config;
-    int next_edge_axis = (edge.edge_axis + 1) % 2;
-    root_exist_config << edge_root_existence(edge.edge_axis, 0), edge_root_existence(next_edge_axis, 0), edge_root_existence(next_edge_axis, 1),
-                         edge_root_existence(edge.edge_axis, 1), edge_root_existence(next_edge_axis, 2), edge_root_existence(next_edge_axis, 3);
+    if (edge.edge_axis == 0)
+    {
+        root_exist_config.row(0) << edge_root_existence[0], edge_root_existence[4], edge_root_existence[5];
+        root_exist_config.row(1) << edge_root_existence[1], edge_root_existence[6], edge_root_existence[7];
+    }
+    else
+    {
+        root_exist_config.row(0) << edge_root_existence[4], edge_root_existence[0], edge_root_existence[1];
+        root_exist_config.row(1) << edge_root_existence[5], edge_root_existence[2], edge_root_existence[3];
+    }
 
     // Compute the edge adjacent cells ndindices
     Eigen::Array<int, 2, 1> cell_shift = Eigen::Array<int, 2, 1>::Zero();
@@ -177,90 +213,126 @@ PointAdjacency uniform_grid_edge_root_point_and_adjacency(const Edge2D& edge,
         }
     }
 
-    Eigen::Array<int, 2, 1> edge_adjacent_cells_1dindices = Eigen::Array<int, 2, 1>::Zero();
-    for (int i = 0; i < edge_adjacent_cells_2dindices.size(); ++i)
-    {
-        edge_adjacent_cells_1dindices[i] = index1_from_2dindex(edge_adjacent_cells_2dindices.row(i), contour_grid_cell_2dcount);
-    }
-
     // Compute the grid corner vertex ndindices
-    Eigen::MatrixXi grid_corner_vertex_ndindices(edge_adjacent_cells_2dindices.size(), 4);
-    for (int i = 0; i < edge_adjacent_cells_2dindices.size(); ++i)
-    {
-        grid_corner_vertex_ndindices.row(i) = corner_vertex_2dindices(edge_adjacent_cells_2dindices.row(i)).transpose();
-    }
+    Eigen::Array<int, 4, 2> grid_corner_vertex_2dindices_top = corner_vertex_2dindices(edge_adjacent_cells_2dindices.row(0));
+    Eigen::Array<int, 4, 2> grid_corner_vertex_2dindices_bottom = corner_vertex_2dindices(edge_adjacent_cells_2dindices.row(1));
 
     // Compute the grid corner 1dindices
-    Eigen::Array<int, 2, 1> grid_corner_1dindices = Eigen::Array<int, 2, 1>::Zero();
-    for (int i = 0; i < grid_corner_vertex_ndindices.rows(); ++i)
+    Eigen::Array<int, 4, 1> grid_corner_1dindices_top = Eigen::Array<int, 4, 1>::Zero();
+    Eigen::Array<int, 4, 1> grid_corner_1dindices_bottom = Eigen::Array<int, 4, 1>::Zero();
+    for (int i = 0; i < grid_corner_vertex_2dindices_top.rows(); ++i)
     {
-        grid_corner_1dindices[i] = index1_from_2dindex(grid_corner_vertex_ndindices.row(i), grid.cell_2dcount);
+        grid_corner_1dindices_top[i] = index1_from_2dindex(grid_corner_vertex_2dindices_top.row(i), grid.cell_2dcount);
+        grid_corner_1dindices_bottom[i] = index1_from_2dindex(grid_corner_vertex_2dindices_bottom.row(i), grid.cell_2dcount);
     }
 
     // Compute the corner scalars
-    Eigen::Array<float, 2, 4> corner_scalars = Eigen::Array<float, 2, 4>::Zero();
-    for (int i = 0; i < grid_corner_1dindices.size(); ++i)
+    Eigen::Array<float, 4, 1> corner_scalars_top = Eigen::Array<float, 4, 1>::Zero();
+    Eigen::Array<float, 4, 1> corner_scalars_bottom = Eigen::Array<float, 4, 1>::Zero();
+    for (int i = 0; i < corner_scalars_top.size(); ++i)
     {
-        for (int j = 0; j < corner_scalars.cols(); ++j)
-        {  
-            corner_scalars(i, j) = flattened_scalar_field[grid_corner_1dindices[i]];
-        }
+        corner_scalars_top[i] = flattened_scalar_field[grid_corner_1dindices_top[i]];
+        corner_scalars_bottom[i] = flattened_scalar_field[grid_corner_1dindices_bottom[i]];
     }
 
     // Compute the average scalar
-    Eigen::Array<float, 2, 1> average_scalar = corner_scalars.rowwise().mean();
+    float average_scalar_top = corner_scalars_top.mean();
+    float average_scalar_bottom = corner_scalars_bottom.mean();
 
     // Compute the same side corner and center
-    Eigen::Array<bool, 2, 1> same_side_corner_and_center = Eigen::Array<bool, 2, 1>::Zero();
-    for (int i = 0; i < same_side_corner_and_center.size(); ++i)
-    {
-        same_side_corner_and_center[i] = average_scalar[i] * flattened_scalar_field[index1_from_2dindex(edge.edge_2dindex, grid.cell_2dcount)] >= 0;
-    }
+    bool same_side_corner_and_center_top = average_scalar_top * flattened_scalar_field[index1_from_2dindex(edge.edge_2dindex, grid.cell_2dcount)] >= 0;
+    bool same_side_corner_and_center_bottom = average_scalar_bottom * flattened_scalar_field[index1_from_2dindex(edge.edge_2dindex, grid.cell_2dcount)] >= 0;
+
+    
+    // autopep8: off
+    // axis == 0 ->
+    // We are currently computing the adjacency of a horizontal edge.
+    //
+    //     side == 0 -> find adjacency with visible bottom edges
+    //
+    //      001          010          100          111          111
+    //   _ _ _ _o_    _o_ __ _     _ _ _o_ _    _o_ _ _ _    _ _ _ _o_
+    //  |        \|  |/        |  |     |   |  |/        |  |        \|
+    //  |         o  o         |  |     |   |  o         o  o         o
+    //  |         |  |         |  |     |   |  |        /|  |\        |
+    //  |_________|  |_________|  |_____o___|  |______ o_|  |_o_______|
+    //
+    //                                 ||
+    //                        Flip Y   ||
+    //                                 \/
+    //     side == 1 -> find adjacency with top visible edges
+    //
+    //      001          010          100          111          111
+    //   _________    _________    _____o___    ______ o_    _o_______
+    //  |         |  |         |  |     |   |  |        \|  |/        |
+    //  |         o  o         |  |     |   |  o         o  o         o
+    //  |        /|  |\        |  |     |   |  |\        |  |        /|
+    //  |_ _ _ _o_|  |_o_ __ _ |  |_ _ _o_ _|  |_o_ _ _ _|  |_ _ _ _o_|
+    //
+    //  axis == 1 -> We are currently computing the adjacency of a vertical
+    //  edge.
+    //  Here the cases are the transpose of the previous cases, i.e., the
+    //  axes are flipped.
+    // ---------------------------------------------------------------------
 
     // Compute the case index
-    Eigen::Array<int, 2, 1> case_index = Eigen::Array<int, 2, 1>::Zero();
-    case_index[0] = 4 * root_exist_config(0, 0) + 2 * root_exist_config(0, 1) + 1 * root_exist_config(0, 2);
-    case_index[1] = 4 * root_exist_config(1, 0) + 2 * root_exist_config(1, 1) + 1 * root_exist_config(1, 2);
-
-    // Compute the branches
-    Eigen::Array<unsigned int, 2, 1> branches = Eigen::Array<unsigned int, 2, 1>::Zero();
-    branches[0] = get_edge_adjacency_no_extraction_case(GetEdgeAdjacencyParams(edge, 0, edge_2dcount, same_side_corner_and_center[0]));
-    branches[1] = get_edge_adjacency_no_extraction_case(GetEdgeAdjacencyParams(edge, 1, edge_2dcount, same_side_corner_and_center[1]));
-
-    // Compute the adjacency list
-    Eigen::Array<unsigned int, 2, 1> adjacency_list = Eigen::Array<unsigned int, 2, 1>::Zero();
-    for (int i = 0; i < 2; ++i)
+    Eigen::Array<int, 2, 1> case_index;
+    case_index << 4 * root_exist_config(0, 0) + 2 * root_exist_config(0, 1) + 1 * root_exist_config(0, 2),
+                  4 * root_exist_config(1, 0) + 2 * root_exist_config(1, 1) + 1 * root_exist_config(1, 2);
+    
+    // Get the edge adjacency
+    Eigen::Array<unsigned int, 2, 1> adjacency_array;
+    for (int i = 0; i < case_index.size(); ++i)
     {
-        GetEdgeAdjacencyParams get_edge_adjacency_params_i(edge, i, edge_2dcount, same_side_corner_and_center[i]);
-        adjacency_list[i] = branches[i];
+        GetEdgeAdjacencyParams get_edge_adjacency_params_i(edge, edge.edge_axis, edge_2dcount, same_side_corner_and_center_top);
+        switch (case_index[i])
+        {
+            case 0:
+                adjacency_array[i] = get_edge_adjacency_no_extraction_case(get_edge_adjacency_params_i);
+                break;
+            case 1:
+                adjacency_array[i] = get_edge_adjacency_case_001(get_edge_adjacency_params_i);
+                break;
+            case 2:
+                adjacency_array[i] = get_edge_adjacency_case_010(get_edge_adjacency_params_i);
+                break;
+            case 3:
+                adjacency_array[i] = get_edge_adjacency_no_extraction_case(get_edge_adjacency_params_i);
+                break;
+            case 4:
+                adjacency_array[i] = get_edge_adjacency_case_100(get_edge_adjacency_params_i);
+                break;
+            case 5:
+                adjacency_array[i] = get_edge_adjacency_no_extraction_case(get_edge_adjacency_params_i);
+                break;
+            case 6:
+                adjacency_array[i] = get_edge_adjacency_no_extraction_case(get_edge_adjacency_params_i);
+                break;
+            case 7:
+                adjacency_array[i] = get_edge_adjacency_case_111(get_edge_adjacency_params_i);
+                break;
+        }
     }
 
-    // Compute the adjacency array
-    Eigen::Array<unsigned int, 2, 1> adjacency_array = Eigen::Array<unsigned int, 2, 1>::Zero();
-    for (int i = 0; i < adjacency_list.size(); ++i)
+    // Convert the adjacency array to float
+    for (int i = 0; i < adjacency_array.size(); ++i)
     {
-        if (adjacency_list[i] == INT_MAX)
+        if (adjacency_array[i] == INT_MAX)
         {
             adjacency_array[i] = std::nan("");
-        }
-        else
-        {
-            adjacency_array[i] = adjacency_list[i];
         }
     }
 
     return PointAdjacency(grid_edge_root_point_val, adjacency_array);
 }
 
-PointAdjacency grid2_contour(Eigen::ArrayXf grid_scalars_flattened,
+PointAdjacency grid2_contour(Eigen::ArrayXd grid_scalars_flattened,
                              Eigen::Array<int, 2, 1> scalar_field_cell_2dcount,
                              Grid scalar_field_grid) 
 {
-    // 
+    // First we need to get all the edges per axis of the grid in an array
+    Eigen::Array<int, 2, 2> edge_2dcount = count2_per_axis(scalar_field_cell_2dcount);
 
-
-
-    // Fake return to test
-    PointAdjacency point_adjacency(Eigen::ArrayXf::Zero(2), Eigen::Array<unsigned int, 2, 1>::Zero());
-    return point_adjacency;
+    // Fake return value
+    return PointAdjacency(Eigen::ArrayXf::Zero(2), Eigen::Array<unsigned int, 2, 1>::Zero());
 }

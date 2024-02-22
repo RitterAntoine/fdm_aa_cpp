@@ -6,15 +6,15 @@
 class PointAdjacency {
 public:
     // Constructor
-    PointAdjacency(Eigen::ArrayXf point, 
+    PointAdjacency(Eigen::Array<float, 2, 1> point, 
                    Eigen::Array<unsigned int, 2, 1> adjacency);
 
     // Getters
-    Eigen::ArrayXf getPoint() const;
+    Eigen::Array<float, 2, 1> getPoint() const;
     Eigen::Array<unsigned int, 2, 1> getAdjacency() const;
 
 private:
-    Eigen::ArrayXf point_;
+    Eigen::Array<float, 2, 1> point_;
     Eigen::Array<unsigned int, 2, 1> adjacency_;
 };
 

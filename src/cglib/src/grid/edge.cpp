@@ -131,13 +131,26 @@ MaskedArray neighboring_2dindices_direct(const Edge2D& edge,
         }
     }
 
+    Eigen::Array<int, 2, 2> grid_edge_2dcount = count2_per_axis(grid_cell_2dcount);
+
     // Check if the neighboring_2dindices is within the grid, if not, make them masked.
     for (int i = 0; i < neighboring_2dindices.rows(); i++)
     {
-        if (neighboring_2dindices(i, 0) < 0 || neighboring_2dindices(i, 0) > grid_cell_2dcount[0] ||
-            neighboring_2dindices(i, 1) < 0 || neighboring_2dindices(i, 1) > grid_cell_2dcount[1])
+        if (i < 4)
         {
-            mask[i] = true;
+            if (neighboring_2dindices(i, 0) < 0 || neighboring_2dindices(i, 0) > grid_edge_2dcount(0, 0) -1||
+                neighboring_2dindices(i, 1) < 0 || neighboring_2dindices(i, 1) > grid_edge_2dcount(0, 1) -1)
+            {
+                mask[i] = true;
+            }
+        }
+        else
+        {
+            if (neighboring_2dindices(i, 0) < 0 || neighboring_2dindices(i, 0) > grid_edge_2dcount(1, 0) -1||
+                neighboring_2dindices(i, 1) < 0 || neighboring_2dindices(i, 1) > grid_edge_2dcount(1, 1) -1)
+            {
+                mask[i] = true;
+            }
         }
     }
 
@@ -161,3 +174,4 @@ Eigen::ArrayXXf endpoints(const Edge2D& edge,
     result.row(1) = v1;
     return result;
 }
+

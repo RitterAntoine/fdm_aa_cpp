@@ -1,29 +1,12 @@
 #include <gtest/gtest.h>
 #include "src/grid/cell.h"
 
-// This test checks the functionality of the 'corner_vertex_ndindices' function.
-// The 'corner_vertex_ndindices' function is expected to return the ND indices of the corner vertices of a cell given its ND index.
-// The cell is defined by its ND index (2, 3).
-// The expected result is a 4x2 array with the ND indices of the corner vertices.
-// The cell indexing in the grid is as follows:
-//  ________ ________
-// | (0, 3) | (1, 3) |
-// |(0, 2)  |(1, 2)  |(2, 2)
-// |________|________|
-// | (0, 2) | (1, 2) |
-// |(0, 1)  |(1, 1)  |(2, 1)
-// |________|________|
-// | (0, 1) | (1, 1) |
-// |(0, 0)  |(1, 0)  |(2, 0)
-// |________|________|
-//   (0, 0)   (1, 0)
-
-TEST(CellTest, CornerVertex2dIndices)
+TEST(CellTest, CornerVertex2dIndices_1)
 {
     Eigen::Array<int, 2, 1> cell_2dindex(2);
     cell_2dindex << 2, 3;
-    Eigen::MatrixXi res = corner_vertex_2dindices(cell_2dindex);
-    Eigen::MatrixXi exp_res(4, 2);
+    Eigen::Array<int, 4, 2> res = corner_vertex_2dindices(cell_2dindex);
+    Eigen::Array<int, 4, 2> exp_res(4, 2);
     exp_res << 2, 3,
                3, 3,
                2, 4,
@@ -31,23 +14,18 @@ TEST(CellTest, CornerVertex2dIndices)
     EXPECT_TRUE(res.isApprox(exp_res));
 }
 
-// This test checks the functionality of the 'index1_from_2dindex' function.
-// The 'index1_from_2dindex' function is expected to return the 1D index of a cell given its ND index and the grid it belongs to.
-// The grid is a 2D grid with cell count (4, 5).
-// The cell is defined by its ND index (2, 1).
-// The expected result is the 1D index of the cell.
-// The cell indexing in the grid is as follows:
-//  ________ ________ ________ ________ ________
-// | (0, 4) | (1, 4) | (2, 4) | (3, 4) | (4, 4) |
-// |(0, 3)  |(1, 3)  |(2, 3)  |(3, 3)  |(4, 3)  |(5, 3)
-// |________|________|________|________|________|
-// | (0, 2) | (1, 2) | (2, 2) | (3, 2) | (4, 2) |
-// |(0, 1)  |(1, 1)  |(2, 1)  |(3, 1)  |(4, 1)  |(5, 1)
-// |________|________|________|________|________|
-// | (0, 1) | (1, 1) | (2, 1) | (3, 1) | (4, 1) |
-// |(0, 0)  |(1, 0)  |(2, 0)  |(3, 0)  |(4, 0)  |(5, 0)
-// |________|________|________|________|________|
-//   (0, 0)   (1, 0)   (2, 0)   (3, 0)   (4, 0)
+TEST(CellTest, CornerVertex2dIndices_2)
+{
+    Eigen::Array<int, 2, 1> cell_2dindex(2);
+    cell_2dindex << 0, 0;
+    Eigen::Array<int, 4, 2> res = corner_vertex_2dindices(cell_2dindex);
+    Eigen::Array<int, 4, 2> exp_res(4, 2);
+    exp_res << 0, 0,
+               1, 0,
+               0, 1,
+               1, 1;
+    EXPECT_TRUE(res.isApprox(exp_res));
+}
 
 TEST(CellTest, Index1From2dindex)
 {
@@ -59,24 +37,6 @@ TEST(CellTest, Index1From2dindex)
     EXPECT_EQ(res, 6);
 }
 
-// This test checks the functionality of the 'ndindex_from_1dindex' function.
-// The 'ndindex_from_1dindex' function is expected to return the ND index of a cell given its 1D index and the grid it belongs to.
-// The grid is a 2D grid with cell count (4, 5).
-// The cell is defined by its 1D index 6.
-// The expected result is the ND index of the cell.
-// The cell indexing in the grid is as follows:
-//  ________ ________ ________ ________ ________
-// | (0, 4) | (1, 4) | (2, 4) | (3, 4) | (4, 4) |
-// |(0, 3)  |(1, 3)  |(2, 3)  |(3, 3)  |(4, 3)  |(5, 3)
-// |________|________|________|________|________|
-// | (0, 2) | (1, 2) | (2, 2) | (3, 2) | (4, 2) |
-// |(0, 1)  |(1, 1)  |(2, 1)  |(3, 1)  |(4, 1)  |(5, 1)
-// |________|________|________|________|________|
-// | (0, 1) | (1, 1) | (2, 1) | (3, 1) | (4, 1) |
-// |(0, 0)  |(1, 0)  |(2, 0)  |(3, 0)  |(4, 0)  |(5, 0)
-// |________|________|________|________|________|
-//   (0, 0)   (1, 0)   (2, 0)   (3, 0)   (4, 0)
-
 TEST(CellTest, Index2DFrom1DIndex)
 {
     Eigen::Array<int, 2, 1> cell_2dcount(2);
@@ -87,24 +47,6 @@ TEST(CellTest, Index2DFrom1DIndex)
     Eigen::Array<int, 2, 1> res = index2d_from_1dindex(cell_1dindex, cell_2dcount);
     EXPECT_TRUE((res == cell_2dindex).all());
 }
-
-// This test checks the functionality of the 'ndindex_is_valid' function.
-// The 'ndindex_is_valid' function is expected to return true if the ND index is valid for the given grid, and false otherwise.
-// The grid is a 2D grid with cell count (4, 5).
-// The cell is defined by its ND index (2, 1).
-// The expected result is true.
-// The cell indexing in the grid is as follows:
-//  ________ ________ ________ ________ ________
-// | (0, 4) | (1, 4) | (2, 4) | (3, 4) | (4, 4) |
-// |(0, 3)  |(1, 3)  |(2, 3)  |(3, 3)  |(4, 3)  |(5, 3)
-// |________|________|________|________|________|
-// | (0, 2) | (1, 2) | (2, 2) | (3, 2) | (4, 2) |
-// |(0, 1)  |(1, 1)  |(2, 1)  |(3, 1)  |(4, 1)  |(5, 1)
-// |________|________|________|________|________|
-// | (0, 1) | (1, 1) | (2, 1) | (3, 1) | (4, 1) |
-// |(0, 0)  |(1, 0)  |(2, 0)  |(3, 0)  |(4, 0)  |(5, 0)
-// |________|________|________|________|________|
-//   (0, 0)   (1, 0)   (2, 0)   (3, 0)   (4, 0)
 
 TEST(CellTest, Index2DIsValid)
 {

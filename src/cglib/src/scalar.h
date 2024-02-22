@@ -40,3 +40,7 @@ unsigned int get_edge_adjacency_case_010(const GetEdgeAdjacencyParams params);
 unsigned int get_edge_adjacency_case_100(const GetEdgeAdjacencyParams params);
 
 unsigned int get_edge_adjacency_case_111(const GetEdgeAdjacencyParams params);
+
+PointAdjacency uniform_grid_edge_root_point_and_adjacency(const Edge2D& edge,
+                                                          Eigen::ArrayXd flattened_scalar_field,
+                                                          Grid grid);

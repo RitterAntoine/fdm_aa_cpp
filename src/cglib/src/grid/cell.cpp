@@ -1,16 +1,18 @@
 #include "cell.h"
 
-Eigen::MatrixXi corner_vertex_2dindices(const Eigen::Array<int, 2, 1> cell_2dindex)
+Eigen::Array<int, 4, 2> corner_vertex_2dindices(const Eigen::Array<int, 2, 1> cell_2dindex)
 {
     int n = 2;
-    int corner_count = 1 << n;
-    Eigen::Array<int, 2, 1> corner_cell_2dcount = Eigen::Array<int, 2, 1>::Constant(n, 2);
-    Eigen::MatrixXi corner_2dindices(n, corner_count);
+    int corner_count = 4;
+    Eigen::Array<int, 4, 2> corner_vertex_2dindex(corner_count, 2);
     for (int i = 0; i < corner_count; ++i)
     {
-        corner_2dindices.col(i) = index2d_from_1dindex(i, corner_cell_2dcount) + cell_2dindex;
+        for (int j = 0; j < n; ++j)
+        {
+            corner_vertex_2dindex(i, j) = cell_2dindex[j] + (i >> j) % 2;
+        }
     }
-    return corner_2dindices.transpose();
+    return corner_vertex_2dindex;
 }
 
 int index1_from_2dindex(const Eigen::Array<int, 2, 1> cell_2dindex,
