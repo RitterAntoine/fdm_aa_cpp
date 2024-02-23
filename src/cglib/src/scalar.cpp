@@ -190,11 +190,63 @@ PointAdjacency uniform_grid_edge_root_point_and_adjacency(const Edge2D& edge,
 
     // Compute the edge adjacent cells ndindices
     Eigen::Array<int, 2, 1> cell_shift = Eigen::Array<int, 2, 1>::Zero();
-    if (edge.edge_axis == 0) {cell_shift << 0, -1;}
-    else {cell_shift << -1, 0;}
     Eigen::Array<int, 2, 2> edge_adjacent_cells_2dindices = Eigen::Array<int, 2, 2>::Zero();
-    edge_adjacent_cells_2dindices.row(0) = edge.edge_2dindex + cell_shift;
-    edge_adjacent_cells_2dindices.row(1) = edge.edge_2dindex;
+    if (edge.edge_axis == 0) 
+    {
+        cell_shift << 0, -1;
+        edge_adjacent_cells_2dindices.row(0) = edge.edge_2dindex + cell_shift;
+        edge_adjacent_cells_2dindices.row(1) = edge.edge_2dindex;
+    }
+    else
+    {
+        if (root_exist_config(0, 0) * root_exist_config(0, 1) * root_exist_config(0, 2) == 0)
+        {
+            if (root_exist_config(0, 0))
+            {
+                cell_shift << -1, 0;
+                edge_adjacent_cells_2dindices.row(0) = edge.edge_2dindex + cell_shift;
+            }
+            if (root_exist_config(0, 1))
+            {
+                cell_shift << -1, 0;
+                edge_adjacent_cells_2dindices.row(0) = edge.edge_2dindex + cell_shift;
+            }
+            if (root_exist_config(0, 2))
+            {
+                cell_shift << -1, 1;
+                edge_adjacent_cells_2dindices.row(0) = edge.edge_2dindex + cell_shift;
+            }
+        }
+        else
+        {
+            cell_shift << 0, -1;
+            edge_adjacent_cells_2dindices.row(0) = edge.edge_2dindex + cell_shift;
+        }
+
+        if (root_exist_config(1, 0) * root_exist_config(1, 1) * root_exist_config(1, 2) == 0)
+        {
+            if (root_exist_config(1, 0))
+            {
+                cell_shift << 1, 0;
+                edge_adjacent_cells_2dindices.row(1) = edge.edge_2dindex + cell_shift;
+            }
+            if (root_exist_config(1, 1))
+            {
+                cell_shift << 0, 0;
+                edge_adjacent_cells_2dindices.row(1) = edge.edge_2dindex + cell_shift;
+            }
+            if (root_exist_config(1, 2))
+            {
+                cell_shift << 0, 1;
+                edge_adjacent_cells_2dindices.row(1) = edge.edge_2dindex + cell_shift;
+            }
+        }
+        else
+        {
+            cell_shift << 1, 0;
+            edge_adjacent_cells_2dindices.row(1) = edge.edge_2dindex + cell_shift;
+        }
+    }
     
     Eigen::Array<bool, 2, 2> edge_adjacent_cells_2dindices_mask = Eigen::Array<bool, 2, 2>::Zero();
     for (int i = 0; i < edge_adjacent_cells_2dindices.rows(); ++i)
@@ -216,6 +268,15 @@ PointAdjacency uniform_grid_edge_root_point_and_adjacency(const Edge2D& edge,
     // Compute the grid corner vertex ndindices
     Eigen::Array<int, 4, 2> grid_corner_vertex_2dindices_top = corner_vertex_2dindices(edge_adjacent_cells_2dindices.row(0));
     Eigen::Array<int, 4, 2> grid_corner_vertex_2dindices_bottom = corner_vertex_2dindices(edge_adjacent_cells_2dindices.row(1));
+    if (edge.edge_axis == 1)
+    {
+        Eigen::Array<int, 2, 1> shift;
+        shift << 0, -1;
+        grid_corner_vertex_2dindices_bottom.row(0) += shift;
+        grid_corner_vertex_2dindices_bottom.row(1) += shift;
+        grid_corner_vertex_2dindices_bottom.row(2) += shift;
+        grid_corner_vertex_2dindices_bottom.row(3) += shift;
+    }
 
     // Compute the grid corner 1dindices
     Eigen::Array<int, 4, 1> grid_corner_1dindices_top = Eigen::Array<int, 4, 1>::Zero();
@@ -278,36 +339,95 @@ PointAdjacency uniform_grid_edge_root_point_and_adjacency(const Edge2D& edge,
     case_index << case_index_val_top, case_index_val_bottom;
 
     Eigen::Array<unsigned int, 2, 1> adjacency_array = Eigen::Array<unsigned int, 2, 1>::Zero();
-    for (int i = 0; i < 2; ++i)
+    Edge2D edge_adj_1 = Edge2D(Eigen::Array<int, 2, 1>::Zero(), 0);
+    Edge2D edge_adj_2 = Edge2D(Eigen::Array<int, 2, 1>::Zero(), 0);
+    Eigen::Array<int, 2, 1> edge_shift;
+
+    if (edge.edge_axis == 0)
     {
-        switch (case_index[i])
+        if (case_index[0] == 1)
         {
-            case 0:
-                adjacency_array[i] = get_edge_adjacency_no_extraction_case(GetEdgeAdjacencyParams(edge, i, edge_2dcount, same_side_corner_and_center_top));
-                break;
-            case 1:
-                adjacency_array[i] = get_edge_adjacency_case_001(GetEdgeAdjacencyParams(edge, i, edge_2dcount, same_side_corner_and_center_top));
-                break;
-            case 2:
-                adjacency_array[i] = get_edge_adjacency_case_010(GetEdgeAdjacencyParams(edge, i, edge_2dcount, same_side_corner_and_center_top));
-                break;
-            case 3:
-                adjacency_array[i] = get_edge_adjacency_no_extraction_case(GetEdgeAdjacencyParams(edge, i, edge_2dcount, same_side_corner_and_center_top));
-                break;
-            case 4:
-                adjacency_array[i] = get_edge_adjacency_case_100(GetEdgeAdjacencyParams(edge, i, edge_2dcount, same_side_corner_and_center_bottom));
-                break;
-            case 5:
-                adjacency_array[i] = get_edge_adjacency_no_extraction_case(GetEdgeAdjacencyParams(edge, i, edge_2dcount, same_side_corner_and_center_bottom));
-                break;
-            case 6:
-                adjacency_array[i] = get_edge_adjacency_no_extraction_case(GetEdgeAdjacencyParams(edge, i, edge_2dcount, same_side_corner_and_center_bottom));
-                break;
-            case 7:
-                adjacency_array[i] = get_edge_adjacency_case_111(GetEdgeAdjacencyParams(edge, i, edge_2dcount, same_side_corner_and_center_bottom));
-                break;
+            edge_shift << 1, 0;
+            edge_adj_1.edge_2dindex = edge_adjacent_cells_2dindices.row(0);
+            edge_adj_1.edge_2dindex += edge_shift;
+            edge_adj_1.edge_axis = 1;
+        }
+        if (case_index[0] == 2)
+        {
+            edge_adj_1.edge_2dindex = edge_adjacent_cells_2dindices.row(0);
+            edge_adj_1.edge_axis = 1;
+        }
+        if (case_index[0] == 4)
+        {
+            edge_shift << 0, 1;
+            edge_adj_1.edge_2dindex = edge_adjacent_cells_2dindices.row(0);
+            edge_adj_1.edge_2dindex += edge_shift;
+            edge_adj_1.edge_axis = 0;
+        }
+
+        if (case_index[1] == 1)
+        {
+            edge_shift << 1, -1;
+            edge_adj_2.edge_2dindex = edge_adjacent_cells_2dindices.row(1);
+            edge_adj_2.edge_2dindex += edge_shift;
+            edge_adj_2.edge_axis = 1;
+        }
+        if (case_index[1] == 2)
+        {
+            edge_adj_2.edge_2dindex = edge_adjacent_cells_2dindices.row(1);
+            edge_adj_2.edge_axis = 1;
+        }
+        if (case_index[1] == 4)
+        {
+            edge_shift << 0, -1;
+            edge_adj_2.edge_2dindex = edge_adjacent_cells_2dindices.row(1);
+            edge_adj_2.edge_axis = 0;
         }
     }
+    else
+    {
+        if (case_index[0] == 1)
+        {
+            edge_shift << -1, 0;
+            edge_adj_1.edge_2dindex = edge_adjacent_cells_2dindices.row(0);
+            edge_adj_1.edge_axis = 0;
+        }
+        if (case_index[0] == 2)
+        {
+            edge_shift << -1, 1;
+            edge_adj_1.edge_2dindex = edge_adjacent_cells_2dindices.row(0);
+            edge_adj_1.edge_2dindex += edge_shift;
+            edge_adj_1.edge_axis = 0;
+        }
+        if (case_index[0] == 4)
+        {
+            edge_shift << -1, 0;
+            edge_adj_1.edge_2dindex = edge_adjacent_cells_2dindices.row(0);
+            edge_adj_1.edge_2dindex += edge_shift;
+            edge_adj_1.edge_axis = 1;
+        }
+
+        if (case_index[1] == 1)
+        {
+            edge_adj_2.edge_2dindex = edge_adjacent_cells_2dindices.row(1);
+            edge_adj_2.edge_axis = 0;
+        }
+        if (case_index[1] == 2)
+        {
+            edge_adj_2.edge_2dindex = edge_adjacent_cells_2dindices.row(1);
+            edge_adj_2.edge_axis = 0;
+        }
+        if (case_index[1] == 4)
+        {
+            edge_shift << -1, 0;
+            edge_adj_2.edge_2dindex = edge_adjacent_cells_2dindices.row(1);
+            edge_adj_2.edge_2dindex += edge_shift;
+            edge_adj_2.edge_axis = 1;
+        }
+    }
+
+    adjacency_array[0] = index1_from_2dindex(edge_adj_1, edge_2dcount);
+    adjacency_array[1] = index1_from_2dindex(edge_adj_2, edge_2dcount);
 
     // Convert the adjacency array to float
     for (int i = 0; i < adjacency_array.size(); ++i)
