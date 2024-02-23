@@ -59,7 +59,7 @@ Eigen::Array<float, 2, 1> grid_edge_root_point(const Edge2D& edge,
               epsilon,
               1. - epsilon);
     Eigen::ArrayXf root_point = (1. - u) * edge_endpoints_val.row(0) + u * edge_endpoints_val.row(1);
-    return mask ? Eigen::ArrayXf::Constant(root_point.size(), std::nan("")) : root_point;
+    return mask ? Eigen::ArrayXf::Constant(root_point.size(), INT_MAX) : root_point;
 }
 
 unsigned int get_edge_adjacency_no_extraction_case(const GetEdgeAdjacencyParams params)
@@ -164,7 +164,6 @@ PointAdjacency uniform_grid_edge_root_point_and_adjacency(const Edge2D& edge,
     if (visible_neighbors_ndindices.mask[7]) {edge_root_existence_v4 = false;}
     else {Edge2D edge_v4 = Edge2D(visible_neighbors_ndindices.array.row(7), 1);edge_root_existence_v4 = grid_edge_root_existence(edge_v4, flattened_scalar_field, grid);}
 
-
     Eigen::Array<bool, 8, 1> edge_root_existence;
     edge_root_existence << edge_root_existence_h1,
                            edge_root_existence_h2,
@@ -174,8 +173,6 @@ PointAdjacency uniform_grid_edge_root_point_and_adjacency(const Edge2D& edge,
                            edge_root_existence_v2,
                            edge_root_existence_v3,
                            edge_root_existence_v4;
-
-    
 
     // Reorder the edge root existence
     Eigen::Array<bool, 2, 3> root_exist_config;
@@ -189,7 +186,6 @@ PointAdjacency uniform_grid_edge_root_point_and_adjacency(const Edge2D& edge,
         root_exist_config.row(0) << edge_root_existence[4], edge_root_existence[0], edge_root_existence[1];
         root_exist_config.row(1) << edge_root_existence[5], edge_root_existence[2], edge_root_existence[3];
     }
-    
 
     // Compute the edge adjacent cells ndindices
     Eigen::Array<int, 2, 1> cell_shift = Eigen::Array<int, 2, 1>::Zero();
@@ -311,12 +307,12 @@ PointAdjacency uniform_grid_edge_root_point_and_adjacency(const Edge2D& edge,
         {
             if (edge_adjacent_cells_2dindices_mask(i, j))
             {
-                edge_adjacent_cells_2dindices(i, j) = 0;
+                edge_adjacent_cells_2dindices(i, j) = INT_MAX;
             }
         }
     }
 
-    // Compute the grid corner vertex ndindices
+    // Compute the grid corner vertex 2dindices
     Eigen::Array<int, 4, 2> grid_corner_vertex_2dindices_top = corner_vertex_2dindices(edge_adjacent_cells_2dindices.row(0));
     Eigen::Array<int, 4, 2> grid_corner_vertex_2dindices_bottom = corner_vertex_2dindices(edge_adjacent_cells_2dindices.row(1));
     if (edge.edge_axis == 1)
@@ -327,7 +323,7 @@ PointAdjacency uniform_grid_edge_root_point_and_adjacency(const Edge2D& edge,
         grid_corner_vertex_2dindices_bottom.row(1) += shift;
         grid_corner_vertex_2dindices_bottom.row(2) += shift;
         grid_corner_vertex_2dindices_bottom.row(3) += shift;
-    }
+    };
 
     // Compute the grid corner 1dindices
     Eigen::Array<int, 4, 1> grid_corner_1dindices_top = Eigen::Array<int, 4, 1>::Zero();
@@ -341,10 +337,24 @@ PointAdjacency uniform_grid_edge_root_point_and_adjacency(const Edge2D& edge,
     // Compute the corner scalars
     Eigen::Array<float, 4, 1> corner_scalars_top = Eigen::Array<float, 4, 1>::Zero();
     Eigen::Array<float, 4, 1> corner_scalars_bottom = Eigen::Array<float, 4, 1>::Zero();
-    for (int i = 0; i < corner_scalars_top.size(); ++i)
+    for (int i = 0; i < 4; ++i)
     {
-        corner_scalars_top[i] = flattened_scalar_field[grid_corner_1dindices_top[i]];
-        corner_scalars_bottom[i] = flattened_scalar_field[grid_corner_1dindices_bottom[i]];
+        if (grid_corner_1dindices_top[i] < 0 || grid_corner_1dindices_top[i] >= flattened_scalar_field.size())
+        {
+            corner_scalars_top[i] = INT_MAX;
+        }
+        else
+        {
+            corner_scalars_top[i] = flattened_scalar_field[grid_corner_1dindices_top[i]];
+        }
+        if (grid_corner_1dindices_bottom[i] < 0 || grid_corner_1dindices_bottom[i] >= flattened_scalar_field.size())
+        {
+            corner_scalars_bottom[i] = INT_MAX;
+        }
+        else
+        {
+            corner_scalars_bottom[i] = flattened_scalar_field[grid_corner_1dindices_bottom[i]];
+        }
     }
 
     // Compute the average scalar
@@ -403,9 +413,9 @@ PointAdjacency uniform_grid_edge_root_point_and_adjacency(const Edge2D& edge,
     case_index_val_bottom = root_exist_config(0, 0) * 4 + root_exist_config(0, 1) * 2 + root_exist_config(0, 2);
     case_index << case_index_val_bottom, case_index_val_top;
 
-    Eigen::Array<unsigned int, 2, 1> adjacency_array = Eigen::Array<unsigned int, 2, 1>::Zero();
-    Edge2D edge_adj_1 = Edge2D(Eigen::Array<int, 2, 1>::Zero(), 0);
-    Edge2D edge_adj_2 = Edge2D(Eigen::Array<int, 2, 1>::Zero(), 0);
+    Eigen::Array<unsigned int, 2, 1> adjacency_array = Eigen::Array<unsigned int, 2, 1>::Constant(INT_MAX);
+    Edge2D edge_adj_1 = Edge2D(Eigen::Array<int, 2, 1>::Constant(INT_MAX), 0);
+    Edge2D edge_adj_2 = Edge2D(Eigen::Array<int, 2, 1>::Constant(INT_MAX), 0);
     Eigen::Array<int, 2, 1> edge_shift;
 
     if (edge.edge_axis == 0)
@@ -425,6 +435,10 @@ PointAdjacency uniform_grid_edge_root_point_and_adjacency(const Edge2D& edge,
             edge_adj_1.edge_2dindex = edge_adjacent_cells_2dindices.row(0);
             edge_adj_1.edge_axis = 0;
         }
+        if (case_index[0] == 0 || case_index[0] == 3 || case_index[0] == 5 || case_index[0] == 6)
+        {
+            edge_adj_1.edge_2dindex = Eigen::Array<int, 2, 1>::Constant(INT_MAX);
+        }
 
         if (case_index[1] == 1)
         {
@@ -440,6 +454,10 @@ PointAdjacency uniform_grid_edge_root_point_and_adjacency(const Edge2D& edge,
         {
             edge_adj_2.edge_2dindex = edge_adjacent_cells_2dindices.row(1);
             edge_adj_2.edge_axis = 0;
+        }
+        if (case_index[1] == 0 || case_index[1] == 3 || case_index[1] == 5 || case_index[1] == 6)
+        {
+            edge_adj_2.edge_2dindex = Eigen::Array<int, 2, 1>::Constant(INT_MAX);
         }
     }
     else
@@ -459,6 +477,10 @@ PointAdjacency uniform_grid_edge_root_point_and_adjacency(const Edge2D& edge,
             edge_adj_1.edge_2dindex = edge_adjacent_cells_2dindices.row(0);
             edge_adj_1.edge_axis = 1;
         }
+        if (case_index[0] == 0 || case_index[0] == 3 || case_index[0] == 5 || case_index[0] == 6)
+        {
+            edge_adj_1.edge_2dindex = Eigen::Array<int, 2, 1>::Constant(INT_MAX);
+        }
 
         if (case_index[1] == 1)
         {
@@ -475,20 +497,31 @@ PointAdjacency uniform_grid_edge_root_point_and_adjacency(const Edge2D& edge,
             edge_adj_2.edge_2dindex = edge_adjacent_cells_2dindices.row(1);
             edge_adj_2.edge_axis = 1;
         }
-    }
-
-    adjacency_array[0] = index1_from_2dindex(edge_adj_1, edge_2dcount);
-    adjacency_array[1] = index1_from_2dindex(edge_adj_2, edge_2dcount);
-
-    // Convert the adjacency array to float
-    for (int i = 0; i < adjacency_array.size(); ++i)
-    {
-        if (adjacency_array[i] == INT_MAX)
+        if (case_index[1] == 0 || case_index[1] == 3 || case_index[1] == 5 || case_index[1] == 6)
         {
-            adjacency_array[i] = std::nan("");
+            edge_adj_2.edge_2dindex = Eigen::Array<int, 2, 1>::Constant(INT_MAX);
         }
     }
 
+    if ((edge_adj_1.edge_2dindex[0] != INT_MAX) && (edge_adj_1.edge_2dindex[1] != INT_MAX))
+    {
+        adjacency_array[0] = index1_from_2dindex(edge_adj_1, edge_2dcount);
+    }
+    else
+    {
+        adjacency_array[0] = INT_MAX;
+    }
+
+    if ((edge_adj_2.edge_2dindex[0] != INT_MAX) && (edge_adj_2.edge_2dindex[1] != INT_MAX))
+    {
+        adjacency_array[1] = index1_from_2dindex(edge_adj_2, edge_2dcount);
+    }
+    else
+    {
+        adjacency_array[1] = INT_MAX;
+    }
+
+    // Convert the adjacency array to float
     Eigen::ArrayX2f list_point = Eigen::ArrayX2f(1, 2);
     Eigen::ArrayX2i list_adjacency = Eigen::ArrayX2i(1, 2);
     return PointAdjacency(list_point, list_adjacency, grid_edge_root_point_val, adjacency_array);
@@ -503,8 +536,8 @@ PointAdjacency grid2_contour(Eigen::ArrayXd grid_scalars_flattened,
     int count = 0;
     Eigen::Array<int, 2, 2> edge_2dcount = count2_per_axis(scalar_field_cell_2dcount);
     int size = (scalar_field_cell_2dcount[0] -1) * scalar_field_cell_2dcount[1] + (scalar_field_cell_2dcount[1] -1) * scalar_field_cell_2dcount[0];
-    Eigen::ArrayX2f list_point(size, 2); // Assuming list_point is a 2D array with 'size' rows and 2 columns
-    Eigen::ArrayX2i list_adjacency(size, 2); // Assuming list_adjacency is a 2D array with 'size' rows and 2 columns
+    Eigen::ArrayX2f list_point(size, 2);
+    Eigen::ArrayX2i list_adjacency(size, 2);
 
     // First all the horizontal edges
     for (int i = 0; i < scalar_field_cell_2dcount[0] -1; ++i)
@@ -530,10 +563,10 @@ PointAdjacency grid2_contour(Eigen::ArrayXd grid_scalars_flattened,
             Eigen::Array<int, 2, 1> edge_2dindex;
             edge_2dindex << j, i;
             Edge2D edge_v = Edge2D(edge_2dindex, 1);
-            // PointAdjacency edge_point_adjacency = uniform_grid_edge_root_point_and_adjacency(edge_v, grid_scalars_flattened, scalar_field_grid);
+            PointAdjacency edge_point_adjacency = uniform_grid_edge_root_point_and_adjacency(edge_v, grid_scalars_flattened, scalar_field_grid);
             // Add the new point_adjacency to the list
-            // list_point.row(count) = edge_point_adjacency.getPoint();
-            // list_adjacency.row(count) = edge_point_adjacency.getAdjacency();
+            list_point.row(count) = edge_point_adjacency.getPoint().cast<float>();
+            list_adjacency.row(count) = edge_point_adjacency.getAdjacency().cast<int>();
             count++;
         }
     }

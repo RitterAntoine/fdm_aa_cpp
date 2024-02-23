@@ -1199,10 +1199,30 @@ TEST(ScalarTest, Grid2Contour_1)
     Grid grid(cell_2dcount, origin, cell_sides_length);
 
     // Define the scalar field
-    const Eigen::Array<double, 6, 1> flattened_scalar_field = Eigen::Map<const Eigen::ArrayXd>(new double[6]{-0.5, 0.5, -1, -0.5, 1, 1}, 6);
+    const Eigen::Array<double, 6, 1> flattened_scalar_field = Eigen::Map<const Eigen::ArrayXd>(new double[6]{-0.5, 0.5, -0.25, 0.75, -0.1, 0.9}, 6);
 
     PointAdjacency res = grid2_contour(flattened_scalar_field, cell_2dcount, grid);
 
-    std::cout << "Res point: " << res.getListPoint() << std::endl;
-    std::cout << "Res adjacency: " << res.getListAdjacency() << std::endl;
+    Eigen::ArrayX2f res_list_point = res.getListPoint();
+    Eigen::ArrayX2i res_list_adjacency = res.getListAdjacency();
+    Eigen::ArrayX2f exp_list_point = Eigen::ArrayX2f(7, 2);
+    exp_list_point << 1, 0.5,
+                      0.75, 1.5,
+                      0.6, 2.5,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX;
+    
+    Eigen::ArrayX2i exp_list_adjacency = Eigen::ArrayX2i(7, 2);
+    exp_list_adjacency << INT_MAX, 1,
+                          0, 2,
+                          1, INT_MAX,
+                          INT_MAX, INT_MAX,
+                          INT_MAX, INT_MAX,
+                          INT_MAX, INT_MAX,
+                          INT_MAX, INT_MAX;
+
+    ASSERT_TRUE((res_list_point.isApprox(exp_list_point)));
+    ASSERT_TRUE((res_list_adjacency.isApprox(exp_list_adjacency)));
 }
