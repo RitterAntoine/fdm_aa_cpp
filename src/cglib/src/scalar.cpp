@@ -175,6 +175,8 @@ PointAdjacency uniform_grid_edge_root_point_and_adjacency(const Edge2D& edge,
                            edge_root_existence_v3,
                            edge_root_existence_v4;
 
+    
+
     // Reorder the edge root existence
     Eigen::Array<bool, 2, 3> root_exist_config;
     if (edge.edge_axis == 0)
@@ -187,18 +189,66 @@ PointAdjacency uniform_grid_edge_root_point_and_adjacency(const Edge2D& edge,
         root_exist_config.row(0) << edge_root_existence[4], edge_root_existence[0], edge_root_existence[1];
         root_exist_config.row(1) << edge_root_existence[5], edge_root_existence[2], edge_root_existence[3];
     }
+    
 
     // Compute the edge adjacent cells ndindices
     Eigen::Array<int, 2, 1> cell_shift = Eigen::Array<int, 2, 1>::Zero();
     Eigen::Array<int, 2, 2> edge_adjacent_cells_2dindices = Eigen::Array<int, 2, 2>::Zero();
     if (edge.edge_axis == 0) 
     {
-        cell_shift << 0, -1;
-        edge_adjacent_cells_2dindices.row(0) = edge.edge_2dindex + cell_shift;
-        edge_adjacent_cells_2dindices.row(1) = edge.edge_2dindex;
+        // First row is for the bottom
+        if (root_exist_config(0, 0) * root_exist_config(0, 1) * root_exist_config(0, 2) == 0)
+        {
+            if (root_exist_config(0, 0))
+            {
+                cell_shift << 0, -1;
+                edge_adjacent_cells_2dindices.row(0) = edge.edge_2dindex + cell_shift;
+            }
+            if (root_exist_config(0, 1))
+            {
+                cell_shift << 0, -1;
+                edge_adjacent_cells_2dindices.row(0) = edge.edge_2dindex + cell_shift;
+            }
+            if (root_exist_config(0, 2))
+            {
+                cell_shift << 1, -1;
+                edge_adjacent_cells_2dindices.row(0) = edge.edge_2dindex + cell_shift;
+            }
+        }
+        else
+        {
+            cell_shift << 0, -1;
+            edge_adjacent_cells_2dindices.row(0) = edge.edge_2dindex + cell_shift;
+        }
+
+        // Second row is for the top
+        if (root_exist_config(1, 0) * root_exist_config(1, 1) * root_exist_config(1, 2) == 0)
+        {
+            if (root_exist_config(1, 0))
+            {
+                cell_shift << 0, 1;
+                edge_adjacent_cells_2dindices.row(1) = edge.edge_2dindex + cell_shift;
+            }
+            if (root_exist_config(1, 1))
+            {
+                cell_shift << 0, 0;
+                edge_adjacent_cells_2dindices.row(1) = edge.edge_2dindex + cell_shift;
+            }
+            if (root_exist_config(1, 2))
+            {
+                cell_shift << 1, 0;
+                edge_adjacent_cells_2dindices.row(1) = edge.edge_2dindex + cell_shift;
+            }
+        }
+        else
+        {
+            cell_shift << 1, 0;
+            edge_adjacent_cells_2dindices.row(1) = edge.edge_2dindex + cell_shift;
+        }
     }
-    else
+    else // edge.axis == 1
     {
+        // First row is for the left
         if (root_exist_config(0, 0) * root_exist_config(0, 1) * root_exist_config(0, 2) == 0)
         {
             if (root_exist_config(0, 0))
@@ -223,6 +273,7 @@ PointAdjacency uniform_grid_edge_root_point_and_adjacency(const Edge2D& edge,
             edge_adjacent_cells_2dindices.row(0) = edge.edge_2dindex + cell_shift;
         }
 
+        // Second row is for the right
         if (root_exist_config(1, 0) * root_exist_config(1, 1) * root_exist_config(1, 2) == 0)
         {
             if (root_exist_config(1, 0))
@@ -328,6 +379,20 @@ PointAdjacency uniform_grid_edge_root_point_and_adjacency(const Edge2D& edge,
     //  |         o  o         |  |     |   |  o         o  o         o
     //  |        /|  |\        |  |     |   |  |\        |  |        /|
     //  |_ _ _ _o_|  |_o_ __ _ |  |_ _ _o_ _|  |_o_ _ _ _|  |_ _ _ _o_|
+    //
+    // axis == 1 ->
+    // We are currently computing the adjacency of a vertical edge.
+    //
+    //     side == 0 -> find adjacency with visible left edges
+    //
+    //      001          010          100          111          111
+    //  
+    //   _ _ _ _ _    _ _ _ _o_    _ _ _ _ _  
+    //  |         |  |        \|  |         |
+    //  |         o  |         o  o- - - - -o
+    //  |        /|  |         |  |         |
+    //  |_ _ _ _o_|  |_ _ _ _ _|  |_ _ _ _ _|
+
 
     // Compute the edge adjacency
     Eigen::Array<unsigned int, 2, 1> case_index = Eigen::Array<unsigned int, 2, 1>::Zero();
@@ -336,7 +401,7 @@ PointAdjacency uniform_grid_edge_root_point_and_adjacency(const Edge2D& edge,
     int case_index_val_bottom = 0;
     case_index_val_top = root_exist_config(1, 0) * 4 + root_exist_config(1, 1) * 2 + root_exist_config(1, 2);
     case_index_val_bottom = root_exist_config(0, 0) * 4 + root_exist_config(0, 1) * 2 + root_exist_config(0, 2);
-    case_index << case_index_val_top, case_index_val_bottom;
+    case_index << case_index_val_bottom, case_index_val_top;
 
     Eigen::Array<unsigned int, 2, 1> adjacency_array = Eigen::Array<unsigned int, 2, 1>::Zero();
     Edge2D edge_adj_1 = Edge2D(Eigen::Array<int, 2, 1>::Zero(), 0);
@@ -347,9 +412,7 @@ PointAdjacency uniform_grid_edge_root_point_and_adjacency(const Edge2D& edge,
     {
         if (case_index[0] == 1)
         {
-            edge_shift << 1, 0;
             edge_adj_1.edge_2dindex = edge_adjacent_cells_2dindices.row(0);
-            edge_adj_1.edge_2dindex += edge_shift;
             edge_adj_1.edge_axis = 1;
         }
         if (case_index[0] == 2)
@@ -359,17 +422,13 @@ PointAdjacency uniform_grid_edge_root_point_and_adjacency(const Edge2D& edge,
         }
         if (case_index[0] == 4)
         {
-            edge_shift << 0, 1;
             edge_adj_1.edge_2dindex = edge_adjacent_cells_2dindices.row(0);
-            edge_adj_1.edge_2dindex += edge_shift;
             edge_adj_1.edge_axis = 0;
         }
 
         if (case_index[1] == 1)
         {
-            edge_shift << 1, -1;
             edge_adj_2.edge_2dindex = edge_adjacent_cells_2dindices.row(1);
-            edge_adj_2.edge_2dindex += edge_shift;
             edge_adj_2.edge_axis = 1;
         }
         if (case_index[1] == 2)
@@ -379,7 +438,6 @@ PointAdjacency uniform_grid_edge_root_point_and_adjacency(const Edge2D& edge,
         }
         if (case_index[1] == 4)
         {
-            edge_shift << 0, -1;
             edge_adj_2.edge_2dindex = edge_adjacent_cells_2dindices.row(1);
             edge_adj_2.edge_axis = 0;
         }
@@ -388,22 +446,17 @@ PointAdjacency uniform_grid_edge_root_point_and_adjacency(const Edge2D& edge,
     {
         if (case_index[0] == 1)
         {
-            edge_shift << -1, 0;
             edge_adj_1.edge_2dindex = edge_adjacent_cells_2dindices.row(0);
             edge_adj_1.edge_axis = 0;
         }
         if (case_index[0] == 2)
         {
-            edge_shift << -1, 1;
             edge_adj_1.edge_2dindex = edge_adjacent_cells_2dindices.row(0);
-            edge_adj_1.edge_2dindex += edge_shift;
             edge_adj_1.edge_axis = 0;
         }
         if (case_index[0] == 4)
         {
-            edge_shift << -1, 0;
             edge_adj_1.edge_2dindex = edge_adjacent_cells_2dindices.row(0);
-            edge_adj_1.edge_2dindex += edge_shift;
             edge_adj_1.edge_axis = 1;
         }
 
@@ -419,9 +472,7 @@ PointAdjacency uniform_grid_edge_root_point_and_adjacency(const Edge2D& edge,
         }
         if (case_index[1] == 4)
         {
-            edge_shift << -1, 0;
             edge_adj_2.edge_2dindex = edge_adjacent_cells_2dindices.row(1);
-            edge_adj_2.edge_2dindex += edge_shift;
             edge_adj_2.edge_axis = 1;
         }
     }
