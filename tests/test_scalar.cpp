@@ -856,11 +856,6 @@ TEST(ScalarTest, UniformGridEdgeRootPointAndAdjacency_1_3)
     Eigen::Array<unsigned int, 2, 1> exp_adjacency(2);
     exp_adjacency << 9, 3;
 
-    std::cout << res_point << std::endl;
-    std::cout << exp_point << std::endl;
-    std::cout << res_adjacency << std::endl;
-    std::cout << exp_adjacency << std::endl;
-
     ASSERT_TRUE((res_point.isApprox(exp_point)));
     ASSERT_TRUE((res_adjacency.isApprox(exp_adjacency)));
 }
@@ -1157,4 +1152,57 @@ TEST(ScalarTest, UniformGridEdgeRootPointAndAdjacency_2_3)
 
     ASSERT_TRUE((res_point.isApprox(exp_point)));
     ASSERT_TRUE((res_adjacency.isApprox(exp_adjacency)));
+}
+
+// Test the function PointAdjacency grid2_contour
+
+TEST(ScalarTest, Grid2Contour_1)
+{
+    // The scalar field is defined as follows:
+    //  ________ ________
+    // |        |        |
+    // |   1    |   1    |
+    // |________|________|
+    // |        |        |
+    // |   -1   |  -0.5  |
+    // |________|________|
+    // |        |        |
+    // |  -0.5  |  0.5   |
+    // |________|________|
+    //
+    // The edge grid 2D indexing is as follows:
+    //  ________ 
+    // | (0, 2) |
+    // |(0, 1)  |(1, 1)
+    // |________|
+    // | (0, 1) |
+    // |(0, 0)  |(1, 0)
+    // |________|
+    //   (0, 0) 
+    // 
+    // The edge grid 1D indexing is as follows:
+    //  ________ 
+    // |   2    |
+    // |5       |6
+    // |________|
+    // |   1    |
+    // |3       |4
+    // |________|
+    //     0    
+
+    // Define the grid
+    Eigen::Array<int, 2, 1> cell_2dcount(2);
+    cell_2dcount << 2, 3;
+    Eigen::Array<int, 2, 1> origin(2);
+    origin << 0, 0;
+    float cell_sides_length = 1;
+    Grid grid(cell_2dcount, origin, cell_sides_length);
+
+    // Define the scalar field
+    const Eigen::Array<double, 6, 1> flattened_scalar_field = Eigen::Map<const Eigen::ArrayXd>(new double[6]{-0.5, 0.5, -1, -0.5, 1, 1}, 6);
+
+    PointAdjacency res = grid2_contour(flattened_scalar_field, cell_2dcount, grid);
+
+    std::cout << "Res point: " << res.getListPoint() << std::endl;
+    std::cout << "Res adjacency: " << res.getListAdjacency() << std::endl;
 }

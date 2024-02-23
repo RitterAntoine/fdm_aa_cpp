@@ -44,3 +44,7 @@ unsigned int get_edge_adjacency_case_111(const GetEdgeAdjacencyParams params);
 PointAdjacency uniform_grid_edge_root_point_and_adjacency(const Edge2D& edge,
                                                           Eigen::ArrayXd flattened_scalar_field,
                                                           Grid grid);
+
+PointAdjacency grid2_contour(Eigen::ArrayXd grid_scalars_flattened,
+                             Eigen::Array<int, 2, 1> scalar_field_cell_2dcount,
+                             Grid scalar_field_grid);
