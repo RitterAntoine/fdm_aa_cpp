@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "src/tree_util.h"
+#include "tree_util.h"
 
 // This test checks the functionality of the 'concatenate' function.
 // The 'concatenate' function is expected to concatenate the input trees into a single tree.

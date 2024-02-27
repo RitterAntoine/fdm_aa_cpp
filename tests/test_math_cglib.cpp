@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "src/math.h"
+#include "math_cglib.h"
 
 // This test checks the functionality of the 'clamp' function.
 // The 'clamp' function is expected to clamp the input float within the specified interval.

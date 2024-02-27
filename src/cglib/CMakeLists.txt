@@ -3,24 +3,26 @@ cmake_minimum_required(VERSION 3.28.1)
 project(cglib)
 
 set(CGLIB_SOURCES 
-    src/grid/cell.cpp
-    src/grid/edge.cpp
-    src/grid/grid.cpp
-    src/math.cpp
-    src/point_adjacency.cpp
-    src/scalar.cpp
-    src/tree_util.cpp
+    grid/cell.cpp
+    grid/edge.cpp
+    grid/grid.cpp
+    cycle.cpp
+    math_cglib.cpp
+    point_adjacency.cpp
+    scalar.cpp
+    tree_util.cpp
 )
 
 set(CGLIB_HEADERS 
-    src/grid/cell.h
-    src/grid/edge.h
-    src/grid/grid.h
-    src/array.h
-    src/math.h
-    src/point_adjacency.h
-    src/scalar.h
-    src/tree_util.h
+    grid/cell.h
+    grid/edge.h
+    grid/grid.h
+    array.h
+    cycle.h
+    math_cglib.h
+    point_adjacency.h
+    scalar.h
+    tree_util.h
 )
 
 add_library(cglib ${CGLIB_SOURCES})

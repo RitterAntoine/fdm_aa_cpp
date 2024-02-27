@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "src/grid/edge.h"
+#include "grid/edge.h"
 
 // This test checks the values of the Neighboring2Type enum class.
 // The Neighboring2Type enum class is expected to have two values: VISIBLE and WITHIN_CELL_SIDE_LENDTH.

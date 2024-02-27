@@ -1,6 +1,9 @@
+#ifndef Scalar_H
+#define Scalar_H
+
 #include <Eigen/Dense>
 #include "grid/cell.h"
-#include "math.h"
+#include "math_cglib.h"
 #include "grid/edge.h"
 #include "point_adjacency.h"
 
@@ -45,6 +48,8 @@ PointAdjacency uniform_grid_edge_root_point_and_adjacency(const Edge2D& edge,
                                                           Eigen::ArrayXd flattened_scalar_field,
                                                           Grid grid);
 
-PointAdjacency grid2_contour(Eigen::ArrayXd grid_scalars_flattened,
+ListPointAdjacency grid2_contour(Eigen::ArrayXd grid_scalars_flattened,
                              Eigen::Array<int, 2, 1> scalar_field_cell_2dcount,
                              Grid scalar_field_grid);
+
+#endif

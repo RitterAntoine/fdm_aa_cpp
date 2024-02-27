@@ -1,4 +1,4 @@
-#include "math.h"
+#include "math_cglib.h"
 
 float clamp(float val, 
             float low,

@@ -1,3 +1,6 @@
+#ifndef Math_cglib_H
+#define Math_cglib_H
+
 #include <Eigen/Dense>
 
 float clamp(float val, 
@@ -9,3 +12,5 @@ bool float_same_sign(float a,
 
 float solve_linear_interpolation_equation(float v1, 
                                           float v2);
+
+#endif

@@ -1,7 +1,9 @@
+#ifndef Edge_H
+#define Edge_H
+
 #include <Eigen/Dense>
 #include "grid.h"
 #include "cell.h"
-#include "../limits.h"
 #include "../array.h"
 
 // 2DEdge is a class that represents a 2D edge.
@@ -40,3 +42,5 @@ MaskedArray neighboring_2dindices_direct(const Edge2D& edge,
 
 Eigen::ArrayXXf endpoints(const Edge2D& edge,
                           const Grid& grid);
+
+#endif

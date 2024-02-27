@@ -1,3 +1,6 @@
+#ifndef Array_H
+#define Array_H
+
 #include <Eigen/Dense>
 
 // MaskedArray is a class that represents an array with masked elements.
@@ -9,3 +12,5 @@ class MaskedArray {
         Eigen::Array<int, 8, 2> array;
         Eigen::Array<bool, 8, 1> mask;
 };
+
+#endif

@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "src/scalar.h"
+#include "scalar.h"
 
 // This test checks the functionality of the 'grid_edge_point_scalars' function.
 // The 'grid_edge_point_scalars' function is expected to return the scalars of the edge given its 2D index, axis, and the grid it belongs to.
@@ -1201,7 +1201,7 @@ TEST(ScalarTest, Grid2Contour_1)
     // Define the scalar field
     const Eigen::Array<double, 6, 1> flattened_scalar_field = Eigen::Map<const Eigen::ArrayXd>(new double[6]{-0.5, 0.5, -0.25, 0.75, -0.1, 0.9}, 6);
 
-    PointAdjacency res = grid2_contour(flattened_scalar_field, cell_2dcount, grid);
+    ListPointAdjacency res = grid2_contour(flattened_scalar_field, cell_2dcount, grid);
 
     Eigen::ArrayX2f res_list_point = res.getListPoint();
     Eigen::ArrayX2i res_list_adjacency = res.getListAdjacency();
@@ -1249,7 +1249,7 @@ TEST(ScalarTest, Grid2Contour_2)
         1, 0.5, -1, -1, -1, -1, 1, 1,
         1, 1, 1, 1, 1, 1, 1, 1}, 64);
 
-    PointAdjacency res = grid2_contour(flattened_scalar_field, cell_2dcount, grid);
+    ListPointAdjacency res = grid2_contour(flattened_scalar_field, cell_2dcount, grid);
 
     Eigen::ArrayX2f res_list_point = res.getListPoint();
     Eigen::ArrayX2i res_list_adjacency = res.getListAdjacency();
@@ -1480,20 +1480,6 @@ TEST(ScalarTest, Grid2Contour_2)
                           108, 47,
                           INT_MAX, INT_MAX,
                           INT_MAX, INT_MAX;
-
-    // DEBUG
-    // print the difference between the two arrays
-    //std::cout << "Difference between the two arrays: " << std::endl;
-    //for (int i = 0; i < res_list_point.rows(); i++)
-    //{
-    //    for (int j = 0; j < res_list_point.cols(); j++)
-    //    {
-    //        if (res_list_point(i, j) != exp_list_point(i, j))
-    //        {
-    //            std::cout << "res_list_point(" << i << ", " << j << ") = " << res_list_point(i, j) << " != " << exp_list_point(i, j) << " = exp_list_point(" << i << ", " << j << ")" << std::endl;
-    //        }
-    //    }
-    //}
 
     ASSERT_TRUE((res_list_point.isApprox(exp_list_point)));
     ASSERT_TRUE((res_list_adjacency.isApprox(exp_list_adjacency)));

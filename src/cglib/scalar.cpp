@@ -530,13 +530,10 @@ PointAdjacency uniform_grid_edge_root_point_and_adjacency(const Edge2D& edge,
         adjacency_array[1] = INT_MAX;
     }
 
-    // Convert the adjacency array to float
-    Eigen::ArrayX2f list_point = Eigen::ArrayX2f(1, 2);
-    Eigen::ArrayX2i list_adjacency = Eigen::ArrayX2i(1, 2);
-    return PointAdjacency(list_point, list_adjacency, grid_edge_root_point_val, adjacency_array);
+    return PointAdjacency(grid_edge_root_point_val, adjacency_array);
 }
 
-PointAdjacency grid2_contour(Eigen::ArrayXd grid_scalars_flattened,
+ListPointAdjacency grid2_contour(Eigen::ArrayXd grid_scalars_flattened,
                              Eigen::Array<int, 2, 1> scalar_field_cell_2dcount,
                              Grid scalar_field_grid) 
 {
@@ -580,5 +577,5 @@ PointAdjacency grid2_contour(Eigen::ArrayXd grid_scalars_flattened,
         }
     }
 
-    return PointAdjacency(list_point, list_adjacency, Eigen::Array<float, 2, 1>::Zero(), Eigen::Array<unsigned int, 2, 1>::Zero());
+    return ListPointAdjacency(list_point, list_adjacency);
 }

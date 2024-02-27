@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "src/grid/grid.h"
+#include "grid/grid.h"
 
 // This test checks the constructor of the Grid class.
 // The Grid class is expected to have the following attributes:

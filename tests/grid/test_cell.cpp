@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "src/grid/cell.h"
+#include "grid/cell.h"
 
 TEST(CellTest, CornerVertex2dIndices_1)
 {

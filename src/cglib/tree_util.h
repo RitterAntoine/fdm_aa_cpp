@@ -1,3 +1,6 @@
+#ifndef Tree_Util_H
+#define Tree_Util_H
+
 #include <Eigen/Dense>
 #include <vector>
 
@@ -8,3 +11,5 @@ struct Tree
 };
 
 Tree concatenate(const std::vector<Tree>& trees);
+
+#endif

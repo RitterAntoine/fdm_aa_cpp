@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "src/point_adjacency.h"
+#include "point_adjacency.h"
 
 // This test checks the constructor of the PointAdjacency class.
 // The PointAdjacency class is expected to have the following attributes:
