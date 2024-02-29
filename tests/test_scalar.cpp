@@ -326,7 +326,7 @@ TEST(ScalarTest, GridEdgeRootExistence_4)
     ASSERT_EQ(res, exp_res);
 }
 
-TEST(calarTest, GridEdgeRootPoint_1)
+TEST(ScalarTest, GridEdgeRootPoint_1)
 {
     // Define the grid
     Eigen::Array<int, 2, 1> cell_2dcount(2);
@@ -353,7 +353,7 @@ TEST(calarTest, GridEdgeRootPoint_1)
     ASSERT_TRUE((res.isApprox(exp_res)));
 }
 
-TEST(calarTest, GridEdgeRootPoint_2)
+TEST(ScalarTest, GridEdgeRootPoint_2)
 {
     // Define the grid
     Eigen::Array<int, 2, 1> cell_2dcount(2);
@@ -380,7 +380,7 @@ TEST(calarTest, GridEdgeRootPoint_2)
     ASSERT_TRUE((res.isApprox(exp_res)));
 }
 
-TEST(calarTest, GridEdgeRootPoint_3)
+TEST(ScalarTest, GridEdgeRootPoint_3)
 {
     // Define the grid
     Eigen::Array<int, 2, 1> cell_2dcount(2);

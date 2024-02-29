@@ -1,7 +1,9 @@
 #ifndef Cycle_H
 #define Cycle_H
 
+#include <fstream>
 #include <scalar.h>
+#include <point_adjacency.h>
 
 class Cycle {
 public:
@@ -20,5 +22,9 @@ private:
     Eigen::ArrayX2i cycle_data_;
     unsigned int cycle_count_;
 };
+
+void save(const std::string& file, const Cycle& cycle);
+
+Cycle load(const std::string& file);
 
 #endif

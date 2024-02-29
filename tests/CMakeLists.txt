@@ -3,6 +3,7 @@ set(TEST_SOURCES
     grid/test_cell.cpp
     grid/test_edge.cpp
     grid/test_grid.cpp
+    test_cycle.cpp
     test_math_cglib.cpp
     test_point_adjacency.cpp
     test_scalar.cpp
