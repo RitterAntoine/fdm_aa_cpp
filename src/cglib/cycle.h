@@ -21,6 +21,8 @@ public:
     unsigned int getCycleCount() const;
 
     // Setters
+    void setVisitedPoints(Eigen::Array<bool, Eigen::Dynamic, 1> visited_points);
+    void setCycleData(Eigen::ArrayX3i cycle_data);
     void setCycleCount(unsigned int cycle_count);
 
 private:

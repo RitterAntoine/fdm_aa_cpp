@@ -24,7 +24,7 @@ int index1_from_2dindex(const Edge2D& edge,
     }
     else
     {
-        return edge.edge_2dindex[0] + edge.edge_2dindex[1] * edge_2dcount(1, 0)  + edge_2dcount(1, 0) * edge_2dcount(1, 1);
+        return edge_2dcount(0, 0) * edge_2dcount(0, 1) + edge.edge_2dindex[0] + edge.edge_2dindex[1] * edge_2dcount(1, 0);
     }
 }
 

@@ -1,5 +1,5 @@
 #include <iostream>
-#include <src/grid/edge.h>
+#include <cycle.h>
 
 int main()
 {

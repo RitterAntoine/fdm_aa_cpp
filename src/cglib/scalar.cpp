@@ -546,12 +546,12 @@ ListPointAdjacency grid2_contour(Eigen::ArrayXd grid_scalars_flattened,
     Eigen::ArrayX2i list_adjacency(size, 2);
 
     // First all the horizontal edges
-    for (int i = 0; i < scalar_field_cell_2dcount[0] -1; ++i)
+    for (int i = 0; i < scalar_field_cell_2dcount[1]; ++i)
     {
-        for (int j = 0; j < scalar_field_cell_2dcount[1]; ++j)
+        for (int j = 0; j < scalar_field_cell_2dcount[0] -1; ++j)
         {
             Eigen::Array<int, 2, 1> edge_2dindex;
-            edge_2dindex << i, j;
+            edge_2dindex << j, i;
             Edge2D edge_h = Edge2D(edge_2dindex, 0);
             PointAdjacency edge_point_adjacency = uniform_grid_edge_root_point_and_adjacency(edge_h, grid_scalars_flattened, scalar_field_grid);
             // Add the new point_adjacency to the list

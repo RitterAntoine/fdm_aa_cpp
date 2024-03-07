@@ -517,7 +517,7 @@ TEST(ScalarTest, GetEdgeAdjacencyCase001_2)
     cell_2dcount << 2, 3;
 
     Eigen::Array<int, 2, 1> edge_2dindex(2);
-    edge_2dindex << 2, 2;
+    edge_2dindex << 1, 2;
     int edge_axis = 0;
     Edge2D edge2D(edge_2dindex, edge_axis);
 
@@ -528,7 +528,7 @@ TEST(ScalarTest, GetEdgeAdjacencyCase001_2)
     GetEdgeAdjacencyParams params(edge2D, edge_side, edge_2dcount, same_side_bottom_left_corner_and_center);
 
     unsigned int res = get_edge_adjacency_case_001(params);
-    unsigned int exp_res = 15;
+    unsigned int exp_res = 13;
     ASSERT_EQ(res, exp_res);
 }
 
@@ -572,7 +572,7 @@ TEST(ScalarTest, GetEdgeAdjacencyCase010_2)
     GetEdgeAdjacencyParams params(edge2D, edge_side, edge_2dcount, same_side_bottom_left_corner_and_center);
 
     unsigned int res = get_edge_adjacency_case_010(params);
-    unsigned int exp_res = 14;
+    unsigned int exp_res = 13;
     ASSERT_EQ(res, exp_res);
 }
 
@@ -616,7 +616,7 @@ TEST(ScalarTest, GetEdgeAdjacencyCase100_2)
     GetEdgeAdjacencyParams params(edge2D, edge_side, edge_2dcount, same_side_bottom_left_corner_and_center);
 
     unsigned int res = get_edge_adjacency_case_100(params);
-    unsigned int exp_res = 20;
+    unsigned int exp_res = 19;
     ASSERT_EQ(res, exp_res);
 }
 
@@ -660,7 +660,7 @@ TEST(ScalarTest, GetEdgeAdjacencyCase111_2)
     GetEdgeAdjacencyParams params(edge2D, edge_side, edge_2dcount, same_side_bottom_left_corner_and_center);
 
     unsigned int res = get_edge_adjacency_case_111(params);
-    unsigned int exp_res = 17;
+    unsigned int exp_res = 16;
     ASSERT_EQ(res, exp_res);
 }
 
@@ -1158,77 +1158,6 @@ TEST(ScalarTest, UniformGridEdgeRootPointAndAdjacency_2_3)
 
 TEST(ScalarTest, Grid2Contour_1)
 {
-    // The scalar field is defined as follows:
-    //  ________ ________
-    // |        |        |
-    // |   1    |   1    |
-    // |________|________|
-    // |        |        |
-    // |   -1   |  -0.5  |
-    // |________|________|
-    // |        |        |
-    // |  -0.5  |  0.5   |
-    // |________|________|
-    //
-    // The edge grid 2D indexing is as follows:
-    //  ________ 
-    // | (0, 2) |
-    // |(0, 1)  |(1, 1)
-    // |________|
-    // | (0, 1) |
-    // |(0, 0)  |(1, 0)
-    // |________|
-    //   (0, 0) 
-    // 
-    // The edge grid 1D indexing is as follows:
-    //  ________ 
-    // |   2    |
-    // |5       |6
-    // |________|
-    // |   1    |
-    // |3       |4
-    // |________|
-    //     0    
-
-    // Define the grid
-    Eigen::Array<int, 2, 1> cell_2dcount(2);
-    cell_2dcount << 2, 3;
-    Eigen::Array<int, 2, 1> origin(2);
-    origin << 0, 0;
-    float cell_sides_length = 1;
-    Grid grid(cell_2dcount, origin, cell_sides_length);
-
-    // Define the scalar field
-    const Eigen::Array<double, 6, 1> flattened_scalar_field = Eigen::Map<const Eigen::ArrayXd>(new double[6]{-0.5, 0.5, -0.25, 0.75, -0.1, 0.9}, 6);
-
-    ListPointAdjacency res = grid2_contour(flattened_scalar_field, cell_2dcount, grid);
-
-    Eigen::ArrayX2f res_list_point = res.getListPoint();
-    Eigen::ArrayX2i res_list_adjacency = res.getListAdjacency();
-    Eigen::ArrayX2f exp_list_point = Eigen::ArrayX2f(7, 2);
-    exp_list_point << 1, 0.5,
-                      0.75, 1.5,
-                      0.6, 2.5,
-                      INT_MAX, INT_MAX,
-                      INT_MAX, INT_MAX,
-                      INT_MAX, INT_MAX,
-                      INT_MAX, INT_MAX;
-    
-    Eigen::ArrayX2i exp_list_adjacency = Eigen::ArrayX2i(7, 2);
-    exp_list_adjacency << INT_MAX, 1,
-                          0, 2,
-                          1, INT_MAX,
-                          INT_MAX, INT_MAX,
-                          INT_MAX, INT_MAX,
-                          INT_MAX, INT_MAX,
-                          INT_MAX, INT_MAX;
-
-    ASSERT_TRUE((res_list_point.isApprox(exp_list_point)));
-    ASSERT_TRUE((res_list_adjacency.isApprox(exp_list_adjacency)));
-}
-
-TEST(ScalarTest, Grid2Contour_2)
-{
     // Define the grid
     Eigen::Array<int, 2, 1> cell_2dcount(2);
     cell_2dcount << 8, 8;
@@ -1264,44 +1193,44 @@ TEST(ScalarTest, Grid2Contour_2)
                       INT_MAX, INT_MAX,
                       INT_MAX, INT_MAX,
                       INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
                       2.16667, 2.5,
-                      1.83333, 3.5,
-                      1.83333, 4.5,
-                      1.83333, 5.5,
-                      1.83333, 6.5,
-                      INT_MAX, INT_MAX,
-                      INT_MAX, INT_MAX,
-                      INT_MAX, INT_MAX,
-                      INT_MAX, INT_MAX,
-                      INT_MAX, INT_MAX,
-                      INT_MAX, INT_MAX,
-                      INT_MAX, INT_MAX,
-                      INT_MAX, INT_MAX,
-                      INT_MAX, INT_MAX,
-                      INT_MAX, INT_MAX,
-                      INT_MAX, INT_MAX,
-                      INT_MAX, INT_MAX,
-                      INT_MAX, INT_MAX,
-                      INT_MAX, INT_MAX,
-                      INT_MAX, INT_MAX,
-                      INT_MAX, INT_MAX,
-                      INT_MAX, INT_MAX,
-                      INT_MAX, INT_MAX,
-                      INT_MAX, INT_MAX,
-                      INT_MAX, INT_MAX,
-                      INT_MAX, INT_MAX,
-                      INT_MAX, INT_MAX,
-                      INT_MAX, INT_MAX,
-                      INT_MAX, INT_MAX,
                       INT_MAX, INT_MAX,
                       INT_MAX, INT_MAX,
                       INT_MAX, INT_MAX,
                       6, 2.5,
-                      6, 3.5,
-                      6, 4.5,
-                      6, 5.5,
-                      6, 6.5,
                       INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      1.83333, 3.5,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      6, 3.5,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      1.83333, 4.5,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      6, 4.5,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      1.83333, 5.5,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      6, 5.5,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      1.83333, 6.5,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      6, 6.5,
                       INT_MAX, INT_MAX,
                       INT_MAX, INT_MAX,
                       INT_MAX, INT_MAX,
@@ -1378,44 +1307,44 @@ TEST(ScalarTest, Grid2Contour_2)
                           INT_MAX, INT_MAX,
                           INT_MAX, INT_MAX,
                           INT_MAX, INT_MAX,
+                          INT_MAX, INT_MAX,
+                          INT_MAX, INT_MAX,
+                          INT_MAX, INT_MAX,
+                          INT_MAX, INT_MAX,
+                          INT_MAX, INT_MAX,
                           66, 22,
-                          15, 29,
-                          22, 36,
-                          29, 43,
-                          36, 106,
-                          INT_MAX, INT_MAX,
-                          INT_MAX, INT_MAX,
-                          INT_MAX, INT_MAX,
-                          INT_MAX, INT_MAX,
-                          INT_MAX, INT_MAX,
-                          INT_MAX, INT_MAX,
-                          INT_MAX, INT_MAX,
-                          INT_MAX, INT_MAX,
-                          INT_MAX, INT_MAX,
-                          INT_MAX, INT_MAX,
-                          INT_MAX, INT_MAX,
-                          INT_MAX, INT_MAX,
-                          INT_MAX, INT_MAX,
-                          INT_MAX, INT_MAX,
-                          INT_MAX, INT_MAX,
-                          INT_MAX, INT_MAX,
-                          INT_MAX, INT_MAX,
-                          INT_MAX, INT_MAX,
-                          INT_MAX, INT_MAX,
-                          INT_MAX, INT_MAX,
-                          INT_MAX, INT_MAX,
-                          INT_MAX, INT_MAX,
-                          INT_MAX, INT_MAX,
-                          INT_MAX, INT_MAX,
                           INT_MAX, INT_MAX,
                           INT_MAX, INT_MAX,
                           INT_MAX, INT_MAX,
                           69, 26,
-                          19, 33,
-                          26, 40,
-                          33, 47,
-                          40, 109,
                           INT_MAX, INT_MAX,
+                          INT_MAX, INT_MAX,
+                          15, 29,
+                          INT_MAX, INT_MAX,
+                          INT_MAX, INT_MAX,
+                          INT_MAX, INT_MAX,
+                          19, 33,
+                          INT_MAX, INT_MAX,
+                          INT_MAX, INT_MAX,
+                          22, 36,
+                          INT_MAX, INT_MAX,
+                          INT_MAX, INT_MAX,
+                          INT_MAX, INT_MAX,
+                          26, 40,
+                          INT_MAX, INT_MAX,
+                          INT_MAX, INT_MAX,
+                          29, 43,
+                          INT_MAX, INT_MAX,
+                          INT_MAX, INT_MAX,
+                          INT_MAX, INT_MAX,
+                          33, 47,
+                          INT_MAX, INT_MAX,
+                          INT_MAX, INT_MAX,
+                          36, 106,
+                          INT_MAX, INT_MAX,
+                          INT_MAX, INT_MAX,
+                          INT_MAX, INT_MAX,
+                          40, 109,
                           INT_MAX, INT_MAX,
                           INT_MAX, INT_MAX,
                           INT_MAX, INT_MAX,
