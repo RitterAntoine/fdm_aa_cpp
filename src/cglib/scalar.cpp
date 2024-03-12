@@ -1,5 +1,4 @@
 #include "scalar.h"
-#include <iostream>
 
 GetEdgeAdjacencyParams::GetEdgeAdjacencyParams(Edge2D edge, int edge_side, Eigen::Array<int, 2 ,2> edge_2dcount, bool same_side_bottom_left_corner_and_center):
     edge(edge), edge_side(edge_side), edge_2dcount(edge_2dcount), same_side_bottom_left_corner_and_center(same_side_bottom_left_corner_and_center) {}

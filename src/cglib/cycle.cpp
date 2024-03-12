@@ -133,22 +133,20 @@ int number_of_points_in_cycle_data(Eigen::ArrayX3i cycle_data) {
     return number_of_points;
 }
 
-Cycle process_point(Cycle cycle, int& current_point, int& next_point, int& previous_point, int& nb_point_processed, int cycle_count) {
+Cycle process_point(Cycle cycle, int& current_point, int& next_point, int& previous_point, int cycle_count) {
     Eigen::Array<bool, Eigen::Dynamic, 1> visited_points = cycle.getVisitedPoints();
     Eigen::ArrayX3i cycle_data = cycle.getCycleData();
 
     visited_points(current_point) = true;
     cycle.setVisitedPoints(visited_points);
-    cycle_data(nb_point_processed, 0) = current_point;
-    cycle_data(nb_point_processed, 1) = next_point;
-    cycle_data(nb_point_processed, 2) = cycle_count;
+    cycle_data(current_point, 0) = current_point;
+    cycle_data(current_point, 1) = next_point;
+    cycle_data(current_point, 2) = cycle_count;
     cycle.setCycleData(cycle_data);
-    nb_point_processed++;
     return cycle;
 }
 
 Cycle graph_flood_from_point(Cycle cycle, int point) {
-    int nb_point_processed = number_of_points_in_cycle_data(cycle.getCycleData());
     int current_point = point;
     int temp_current_point = current_point;
     int next_point = cycle.getListPointAdjacency().getListAdjacency()(current_point, 0);
@@ -156,7 +154,7 @@ Cycle graph_flood_from_point(Cycle cycle, int point) {
     int cycle_count = cycle.getCycleCount();
 
     while (!cycle.getVisitedPoints()(current_point)) {
-        cycle = process_point(cycle, current_point, next_point, previous_point, nb_point_processed, cycle_count);
+        cycle = process_point(cycle, current_point, next_point, previous_point, cycle_count);
         current_point = next_point;
         next_point = cycle.getListPointAdjacency().getListAdjacency()(current_point, 0);
         if (next_point == temp_current_point) {
