@@ -18,10 +18,10 @@ private:
     Eigen::Array<unsigned int, 2, 1> adjacency_;
 };
 
-class ListPointAdjacency {
+class Graph {
 public:
     // Constructor
-    ListPointAdjacency(Eigen::ArrayX2f list_point,
+    Graph(Eigen::ArrayX2f list_point,
                        Eigen::ArrayX2i list_adjacency);
 
     // Getters

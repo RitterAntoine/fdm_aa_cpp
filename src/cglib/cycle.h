@@ -9,26 +9,30 @@
 class Cycle {
 public:
     // Constructor
-    Cycle(ListPointAdjacency list_point_adjacency, 
+    Cycle(Graph list_point_adjacency, 
           Eigen::Array<bool, Eigen::Dynamic, 1> visited_points,
-          Eigen::ArrayX3i cycle_data,
+          Eigen::ArrayX3i cycle_points_data,
+          Eigen::ArrayX2i cycle_data,
           unsigned int cycle_count);
 
     // Getters
-    ListPointAdjacency getListPointAdjacency() const;
+    Graph getListPointAdjacency() const;
     Eigen::Array<bool, Eigen::Dynamic, 1> getVisitedPoints() const;
-    Eigen::ArrayX3i getCycleData() const;
+    Eigen::ArrayX3i getCyclePointsData() const;
+    Eigen::ArrayX2i getCycleData() const;
     unsigned int getCycleCount() const;
 
     // Setters
     void setVisitedPoints(Eigen::Array<bool, Eigen::Dynamic, 1> visited_points);
-    void setCycleData(Eigen::ArrayX3i cycle_data);
+    void setCyclePointsData(Eigen::ArrayX3i cycle_points_data);
+    void setCycleData(Eigen::ArrayX2i cycle_data);
     void setCycleCount(unsigned int cycle_count);
 
 private:
-    ListPointAdjacency list_point_adjacency_;
+    Graph list_point_adjacency_;
     Eigen::Array<bool, Eigen::Dynamic, 1> visited_points_;
-    Eigen::ArrayX3i cycle_data_;
+    Eigen::ArrayX3i cycle_points_data_;
+    Eigen::ArrayX2i cycle_data_;
     unsigned int cycle_count_;
 };
 
@@ -40,6 +44,6 @@ void delete_file(const std::string& file);
 
 Cycle graph_flood_from_point(Cycle cycle, int point);
 
-Cycle create_from_graph(ListPointAdjacency graph);
+Cycle create_from_graph(Graph graph);
 
 #endif

@@ -2,96 +2,166 @@
 #include "cycle.h"
 
 TEST(CycleTest, CycleConstructor) {
+    // List of points
     Eigen::ArrayX2f list_point = Eigen::ArrayX2f(3, 2);
     list_point << 0, 0,
                   1, 1,
                   2, 2;
+
+    // List of adjacency
     Eigen::ArrayX2i list_adjacency = Eigen::ArrayX2i(3, 2);
     list_adjacency << INT_MAX, 1,
                       0, 2,
                       1, INT_MAX;
-    ListPointAdjacency list_point_adjacency(list_point, list_adjacency);
+
+    // Create the graph
+    Graph list_point_adjacency(list_point, list_adjacency);
+
+    // Visited points
     Eigen::Array<bool, Eigen::Dynamic, 1> visited_points = Eigen::Array<bool, Eigen::Dynamic, 1>(3);
     visited_points << false, false, false;
-    Eigen::ArrayX3i cycle_data = Eigen::ArrayX3i(3, 3);
-    cycle_data << 0, 1, 0,
+
+    // Cycle points data (point, next_point, cycle)
+    Eigen::ArrayX3i cycle_points_data = Eigen::ArrayX3i(3, 3);
+    cycle_points_data << 0, 1, 0,
                   1, 2, 0,
                   2, 0, 0;
+
+    // Cycle data (start_point, nb_points)
+    Eigen::ArrayX2i cycle_data = Eigen::ArrayX2i(3, 2);
+    cycle_data << 0, 3,
+                  INT_MAX, INT_MAX,
+                  INT_MAX, INT_MAX;
+    // Cycle count
     unsigned int cycle_count = 1;
-    Cycle cycle(list_point_adjacency, visited_points, cycle_data, cycle_count);
+
+    // Create the cycle
+    Cycle cycle(list_point_adjacency, visited_points, cycle_points_data, cycle_data, cycle_count);
     
+
+
+    // Test the getters
     Eigen::ArrayX2f list_point_res = cycle.getListPointAdjacency().getListPoint();
     Eigen::ArrayX2f list_point_exp = Eigen::ArrayX2f(3, 2);
     list_point_exp << 0, 0,
                       1, 1,
                       2, 2;
     EXPECT_TRUE(list_point_res.isApprox(list_point_exp));
+
     Eigen::ArrayX2i list_adjacency_res = cycle.getListPointAdjacency().getListAdjacency();
     Eigen::ArrayX2i list_adjacency_exp = Eigen::ArrayX2i(3, 2);
     list_adjacency_exp << INT_MAX, 1,
                           0, 2,
                           1, INT_MAX;
     EXPECT_TRUE(list_adjacency_res.isApprox(list_adjacency_exp));
+
     Eigen::Array<bool, Eigen::Dynamic, 1> visited_points_res = cycle.getVisitedPoints();
     Eigen::Array<bool, Eigen::Dynamic, 1> visited_points_exp = Eigen::Array<bool, Eigen::Dynamic, 1>(3);
     visited_points_exp << false, false, false;
     EXPECT_TRUE(visited_points_res.isApprox(visited_points_exp));
-    Eigen::ArrayX3i cycle_data_res = cycle.getCycleData();
-    Eigen::ArrayX3i cycle_data_exp = Eigen::ArrayX3i(3, 3);
-    cycle_data_exp << 0, 1, 0,
+
+    Eigen::ArrayX3i cycle_points_data_res = cycle.getCyclePointsData();
+    Eigen::ArrayX3i cycle_points_data_exp = Eigen::ArrayX3i(3, 3);
+    cycle_points_data_exp << 0, 1, 0,
                       1, 2, 0,
                       2, 0, 0;
+    EXPECT_TRUE(cycle_points_data_res.isApprox(cycle_points_data_exp));
+
+    Eigen::ArrayX2i cycle_data_res = cycle.getCycleData();
+    Eigen::ArrayX2i cycle_data_exp = Eigen::ArrayX2i(3, 2);
+    cycle_data_exp << 0, 3,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX;
     EXPECT_TRUE(cycle_data_res.isApprox(cycle_data_exp));
+
     unsigned int cycle_count_res = cycle.getCycleCount();
     unsigned int cycle_count_exp = 1;
     EXPECT_EQ(cycle_count_res, cycle_count_exp);
 }
 
 TEST(CycleTest, CycleSaveLoad) {
+    // List of points
     Eigen::ArrayX2f list_point = Eigen::ArrayX2f(3, 2);
     list_point << 0, 0,
                   1, 1,
                   2, 2;
+
+    // List of adjacency
     Eigen::ArrayX2i list_adjacency = Eigen::ArrayX2i(3, 2);
     list_adjacency << INT_MAX, 1,
                       0, 2,
                       1, INT_MAX;
-    ListPointAdjacency list_point_adjacency(list_point, list_adjacency);
+
+    // Create the graph
+    Graph list_point_adjacency(list_point, list_adjacency);
+
+    // Visited points
     Eigen::Array<bool, Eigen::Dynamic, 1> visited_points = Eigen::Array<bool, Eigen::Dynamic, 1>(3);
     visited_points << false, false, false;
-    Eigen::ArrayX3i cycle_data = Eigen::ArrayX3i(3, 3);
-    cycle_data << 0, 1, 0,
+
+    // Cycle points data (point, next_point, cycle)
+    Eigen::ArrayX3i cycle_points_data = Eigen::ArrayX3i(3, 3);
+    cycle_points_data << 0, 1, 0,
                   1, 2, 0,
                   2, 0, 0;
+
+    // Cycle data (start_point, nb_points)
+    Eigen::ArrayX2i cycle_data = Eigen::ArrayX2i(3, 2);
+    cycle_data << 0, 3,
+                  INT_MAX, INT_MAX,
+                  INT_MAX, INT_MAX;
+
+    // Cycle count
     unsigned int cycle_count = 1;
-    Cycle cycle(list_point_adjacency, visited_points, cycle_data, cycle_count);
+
+    // Create the cycle
+    Cycle cycle(list_point_adjacency, visited_points, cycle_points_data, cycle_data, cycle_count);
+
+    // Save the cycle to a file
     save("cycle_test.txt", cycle);
+
+    // Load the cycle from the file
     Cycle cycle_loaded = load("cycle_test.txt");
+
+    // Test the getters
     Eigen::ArrayX2f list_point_res = cycle_loaded.getListPointAdjacency().getListPoint();
     Eigen::ArrayX2f list_point_exp = Eigen::ArrayX2f(3, 2);
     list_point_exp << 0, 0,
                       1, 1,
                       2, 2;
     EXPECT_TRUE(list_point_res.isApprox(list_point_exp));
+
     Eigen::ArrayX2i list_adjacency_res = cycle_loaded.getListPointAdjacency().getListAdjacency();
     Eigen::ArrayX2i list_adjacency_exp = Eigen::ArrayX2i(3, 2);
     list_adjacency_exp << INT_MAX, 1,
                           0, 2,
                           1, INT_MAX;
     EXPECT_TRUE(list_adjacency_res.isApprox(list_adjacency_exp));
+
     Eigen::Array<bool, Eigen::Dynamic, 1> visited_points_res = cycle_loaded.getVisitedPoints();
     Eigen::Array<bool, Eigen::Dynamic, 1> visited_points_exp = Eigen::Array<bool, Eigen::Dynamic, 1>(3);
     visited_points_exp << false, false, false;
     EXPECT_TRUE(visited_points_res.isApprox(visited_points_exp));
-    Eigen::ArrayX3i cycle_data_res = cycle_loaded.getCycleData();
-    Eigen::ArrayX3i cycle_data_exp = Eigen::ArrayX3i(3, 3);
-    cycle_data_exp << 0, 1, 0,
+
+    Eigen::ArrayX3i cycle_points_data_res = cycle_loaded.getCyclePointsData();
+    Eigen::ArrayX3i cycle_points_data_exp = Eigen::ArrayX3i(3, 3);
+    cycle_points_data_exp << 0, 1, 0,
                       1, 2, 0,
                       2, 0, 0;
+    EXPECT_TRUE(cycle_points_data_res.isApprox(cycle_points_data_exp));
+
+    Eigen::ArrayX2i cycle_data_res = cycle_loaded.getCycleData();
+    Eigen::ArrayX2i cycle_data_exp = Eigen::ArrayX2i(3, 2);
+    cycle_data_exp << 0, 3,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX;
     EXPECT_TRUE(cycle_data_res.isApprox(cycle_data_exp));
+
     unsigned int cycle_count_res = cycle_loaded.getCycleCount();
     unsigned int cycle_count_exp = 1;
     EXPECT_EQ(cycle_count_res, cycle_count_exp);
+
+    // Delete the file
     delete_file("cycle_test.txt");
 }
 
@@ -110,7 +180,7 @@ TEST(CycleTest, CycleCreateFromGraph_1) {
                                                                                                                1, -1, -1, 1, 
                                                                                                                1, 1, 1, 1}, 16);
 
-    ListPointAdjacency res = grid2_contour(flattened_scalar_field, cell_2dcount, grid);
+    Graph res = grid2_contour(flattened_scalar_field, cell_2dcount, grid);
 
     Eigen::Array<float, 24, 2> list_point = res.getListPoint();
     Eigen::Array<int, 24, 2> list_adjacency = res.getListAdjacency();
@@ -202,9 +272,9 @@ TEST(CycleTest, CycleCreateFromGraph_1) {
                           0;
     EXPECT_TRUE(visited_points_res.isApprox(visited_points_exp));
 
-    Eigen::Array<int, 24, 3> cycle_data_res = cycle.getCycleData();
-    Eigen::Array<int, 24, 3> cycle_data_exp = Eigen::Array<int, 24, 3>(24, 3);
-    cycle_data_exp << INT_MAX, INT_MAX, INT_MAX,
+    Eigen::Array<int, 24, 3> cycle_points_data_res = cycle.getCyclePointsData();
+    Eigen::Array<int, 24, 3> cycle_points_data_exp = Eigen::Array<int, 24, 3>(24, 3);
+    cycle_points_data_exp << INT_MAX, INT_MAX, INT_MAX,
                       INT_MAX, INT_MAX, INT_MAX,
                       INT_MAX, INT_MAX, INT_MAX,
                       3, 13, 0,
@@ -228,6 +298,34 @@ TEST(CycleTest, CycleCreateFromGraph_1) {
                       21, 6, 0,
                       22, 21, 0,
                       INT_MAX, INT_MAX, INT_MAX;
+    EXPECT_TRUE(cycle_points_data_res.isApprox(cycle_points_data_exp));
+
+    Eigen::Array<int, 24, 2> cycle_data_res = cycle.getCycleData();
+    Eigen::Array<int, 24, 2> cycle_data_exp = Eigen::Array<int, 24, 2>(24, 2);
+    cycle_data_exp << 3, 8,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX;
     EXPECT_TRUE(cycle_data_res.isApprox(cycle_data_exp));
 
     unsigned int cycle_count_res = cycle.getCycleCount();
@@ -250,7 +348,7 @@ TEST(CycleTest, CycleCreateFromGraph_2) {
                                                                                                                1, -1, -1, 1, 1, -1, -1, 1, 
                                                                                                                1, 1, 1, 1, 1, 1, 1, 1}, 32);
 
-    ListPointAdjacency res = grid2_contour(flattened_scalar_field, cell_2dcount, grid);
+    Graph res = grid2_contour(flattened_scalar_field, cell_2dcount, grid);
 
     Eigen::Array<float, 52, 2> list_point = res.getListPoint();
     Eigen::Array<int, 52, 2> list_adjacency = res.getListAdjacency();
@@ -370,9 +468,9 @@ TEST(CycleTest, CycleCreateFromGraph_2) {
                           INT_MAX, INT_MAX;
     EXPECT_TRUE(list_adjacency_res.isApprox(list_adjacency_exp));
 
-    Eigen::Array<int, 52, 3> cycle_data_res = cycle.getCycleData();
-    Eigen::Array<int, 52, 3> cycle_data_exp = Eigen::Array<int, 52, 3>(52, 3);
-    cycle_data_exp << INT_MAX, INT_MAX, INT_MAX,
+    Eigen::Array<int, 52, 3> cycle_points_data_res = cycle.getCyclePointsData();
+    Eigen::Array<int, 52, 3> cycle_points_data_exp = Eigen::Array<int, 52, 3>(52, 3);
+    cycle_points_data_exp << INT_MAX, INT_MAX, INT_MAX,
                       INT_MAX, INT_MAX, INT_MAX,
                       INT_MAX, INT_MAX, INT_MAX,
                       INT_MAX, INT_MAX, INT_MAX,
@@ -425,7 +523,65 @@ TEST(CycleTest, CycleCreateFromGraph_2) {
                       50, 49, 1,
                       INT_MAX, INT_MAX, INT_MAX;
 
+    EXPECT_TRUE(cycle_points_data_res.isApprox(cycle_points_data_exp));
+
+    Eigen::Array<int, 52, 2> cycle_data_res = cycle.getCycleData();
+    Eigen::Array<int, 52, 2> cycle_data_exp = Eigen::Array<int, 52, 2>(52, 2);
+    cycle_data_exp << 7, 8,
+                      11, 8,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX,
+                      INT_MAX, INT_MAX;
+                        
     EXPECT_TRUE(cycle_data_res.isApprox(cycle_data_exp));
+
 
     unsigned int cycle_count_res = cycle.getCycleCount();
     unsigned int cycle_count_exp = 2;

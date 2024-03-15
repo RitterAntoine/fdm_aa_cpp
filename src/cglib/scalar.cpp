@@ -532,7 +532,7 @@ PointAdjacency uniform_grid_edge_root_point_and_adjacency(const Edge2D& edge,
     return PointAdjacency(grid_edge_root_point_val, adjacency_array);
 }
 
-ListPointAdjacency grid2_contour(Eigen::ArrayXd grid_scalars_flattened,
+Graph grid2_contour(Eigen::ArrayXd grid_scalars_flattened,
                              Eigen::Array<int, 2, 1> scalar_field_cell_2dcount,
                              Grid scalar_field_grid) 
 {
@@ -576,5 +576,5 @@ ListPointAdjacency grid2_contour(Eigen::ArrayXd grid_scalars_flattened,
         }
     }
 
-    return ListPointAdjacency(list_point, list_adjacency);
+    return Graph(list_point, list_adjacency);
 }

@@ -9,6 +9,7 @@ set(CGLIB_SOURCES
     cycle.cpp
     math_cglib.cpp
     point_adjacency.cpp
+    polyline.cpp
     scalar.cpp
     tree_util.cpp
 )
@@ -21,6 +22,7 @@ set(CGLIB_HEADERS
     cycle.h
     math_cglib.h
     point_adjacency.h
+    polyline.h
     scalar.h
     tree_util.h
 )

@@ -1178,7 +1178,7 @@ TEST(ScalarTest, Grid2Contour_1)
         1, 0.5, -1, -1, -1, -1, 1, 1,
         1, 1, 1, 1, 1, 1, 1, 1}, 64);
 
-    ListPointAdjacency res = grid2_contour(flattened_scalar_field, cell_2dcount, grid);
+    Graph res = grid2_contour(flattened_scalar_field, cell_2dcount, grid);
 
     Eigen::ArrayX2f res_list_point = res.getListPoint();
     Eigen::ArrayX2i res_list_adjacency = res.getListAdjacency();
