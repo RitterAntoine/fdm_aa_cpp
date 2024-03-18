@@ -587,3 +587,136 @@ TEST(CycleTest, CycleCreateFromGraph_2) {
     unsigned int cycle_count_exp = 2;
     EXPECT_EQ(cycle_count_res, cycle_count_exp);
 }
+
+TEST(CycleTest, CycleToPolyline_1)
+{
+    // List of points
+    Eigen::ArrayX2f list_point = Eigen::ArrayX2f(3, 2);
+    list_point << 0, 0,
+                  1, 1,
+                  2, 2;
+
+    // List of adjacency
+    Eigen::ArrayX2i list_adjacency = Eigen::ArrayX2i(3, 2);
+    list_adjacency << INT_MAX, 1,
+                      0, 2,
+                      1, INT_MAX;
+
+    // Create the graph
+    Graph list_point_adjacency(list_point, list_adjacency);
+
+    // Visited points
+    Eigen::Array<bool, Eigen::Dynamic, 1> visited_points = Eigen::Array<bool, Eigen::Dynamic, 1>(3);
+    visited_points << false, false, false;
+
+    // Cycle points data (point, next_point, cycle)
+    Eigen::ArrayX3i cycle_points_data = Eigen::ArrayX3i(3, 3);
+    cycle_points_data << 0, 1, 0,
+                  1, 2, 0,
+                  2, 0, 0;
+
+    // Cycle data (start_point, nb_points)
+    Eigen::ArrayX2i cycle_data = Eigen::ArrayX2i(3, 2);
+    cycle_data << 0, 3,
+                  INT_MAX, INT_MAX,
+                  INT_MAX, INT_MAX;
+    // Cycle count
+    unsigned int cycle_count = 1;
+
+    // Create the cycle
+    Cycle cycle(list_point_adjacency, visited_points, cycle_points_data, cycle_data, cycle_count);
+
+    // cycle_to_polyline
+    Polyline polyline = cycle_to_polyline(cycle, 0);
+
+    Eigen::Array<float, Eigen::Dynamic, 2> vertices_res = polyline.vertices;
+    Eigen::Array<float, Eigen::Dynamic, 2> vertices_exp = Eigen::Array<float, Eigen::Dynamic, 2>(3, 2);
+    vertices_exp << 0, 0,
+                    1, 1,
+                    2, 2;
+    EXPECT_TRUE(vertices_res.isApprox(vertices_exp));
+}
+
+TEST(CycleTest, CycleToPolyline_2)
+{
+    // Define the grid
+    Eigen::Array<int, 2, 1> cell_2dcount(2);
+    cell_2dcount << 8, 4;
+    Eigen::Array<int, 2, 1> origin(2);
+    origin << 0, 0;
+    float cell_sides_length = 1;
+    Grid grid(cell_2dcount, origin, cell_sides_length);
+
+    // Define the scalar field
+    const Eigen::Array<double, 32, 1> flattened_scalar_field = Eigen::Map<const Eigen::ArrayXd>(new double[32]{1, 1, 1, 1, 1, 1, 1, 1, 
+                                                                                                               1, -1, -1, 1, 1, -1, -1, 1, 
+                                                                                                               1, -1, -1, 1, 1, -1, -1, 1, 
+                                                                                                               1, 1, 1, 1, 1, 1, 1, 1}, 32);
+
+    Graph res = grid2_contour(flattened_scalar_field, cell_2dcount, grid);
+
+    Eigen::Array<float, 52, 2> list_point = res.getListPoint();
+    Eigen::Array<int, 52, 2> list_adjacency = res.getListAdjacency();
+
+    // create_from_graph
+    Cycle cycle = create_from_graph(res);
+
+    // cycle_to_polyline
+    Polyline polyline = cycle_to_polyline(cycle, 0);
+
+    // Expected result
+    Eigen::Array<float, Eigen::Dynamic, 2> vertices_res = polyline.vertices;
+    Eigen::Array<float, Eigen::Dynamic, 2> vertices_exp = Eigen::Array<float, Eigen::Dynamic, 2>(8, 2);
+    vertices_exp << 1, 1.5,
+                    1.5, 1,
+                    2.5, 1,
+                    3, 1.5,
+                    3, 2.5,
+                    2.5, 3,
+                    1.5, 3,
+                    1, 2.5;
+
+    EXPECT_TRUE(vertices_res.isApprox(vertices_exp));
+}
+
+TEST(CycleTest, CycleToPolyline_3)
+{
+    // Define the grid
+    Eigen::Array<int, 2, 1> cell_2dcount(2);
+    cell_2dcount << 8, 4;
+    Eigen::Array<int, 2, 1> origin(2);
+    origin << 0, 0;
+    float cell_sides_length = 1;
+    Grid grid(cell_2dcount, origin, cell_sides_length);
+
+    // Define the scalar field
+    const Eigen::Array<double, 32, 1> flattened_scalar_field = Eigen::Map<const Eigen::ArrayXd>(new double[32]{1, 1, 1, 1, 1, 1, 1, 1, 
+                                                                                                               1, -1, -1, 1, 1, -1, -1, 1, 
+                                                                                                               1, -1, -1, 1, 1, -1, -1, 1, 
+                                                                                                               1, 1, 1, 1, 1, 1, 1, 1}, 32);
+
+    Graph res = grid2_contour(flattened_scalar_field, cell_2dcount, grid);
+
+    Eigen::Array<float, 52, 2> list_point = res.getListPoint();
+    Eigen::Array<int, 52, 2> list_adjacency = res.getListAdjacency();
+
+    // create_from_graph
+    Cycle cycle = create_from_graph(res);
+
+    // cycle_to_polyline
+    Polyline polyline = cycle_to_polyline(cycle, 1);
+
+    // Expected result
+    Eigen::Array<float, Eigen::Dynamic, 2> vertices_res = polyline.vertices;
+    Eigen::Array<float, Eigen::Dynamic, 2> vertices_exp = Eigen::Array<float, Eigen::Dynamic, 2>(8, 2);
+    vertices_exp << 5, 1.5,
+                    5.5, 1,
+                    6.5, 1,
+                    7, 1.5,
+                    7, 2.5,
+                    6.5, 3,
+                    5.5, 3,
+                    5, 2.5;
+
+    EXPECT_TRUE(vertices_res.isApprox(vertices_exp));
+}

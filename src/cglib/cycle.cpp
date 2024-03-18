@@ -251,3 +251,31 @@ Cycle create_from_graph(Graph graph) {
 
     return cycle;
 }
+
+Polyline cycle_to_polyline(Cycle cycle, int cycle_number) {
+    // This function is used to convert a cycle to a polyline
+
+    // We extract the points and the cycle_points_data from the cycle
+    Eigen::ArrayX2f points = cycle.getListPointAdjacency().getListPoint();
+    Eigen::ArrayX3i cycle_points_data = cycle.getCyclePointsData();
+    Eigen::ArrayX2i cycle_data = cycle.getCycleData();
+
+    // We extract the number of points in the cycle
+    int number_of_points = cycle_data(cycle_number, 1);
+
+    // We create a list of the points that are in the cycle
+    Eigen::ArrayX2f cycle_points = Eigen::ArrayX2f(number_of_points, 2);
+
+    // We iterate over the cycle_points_data to extract the points that are in the cycle in the right order
+    int current_point = cycle_data(cycle_number, 0);
+    for (int i = 0; i < number_of_points; i++) {
+        cycle_points(i, 0) = points(current_point, 0);
+        cycle_points(i, 1) = points(current_point, 1);
+        current_point = cycle_points_data(current_point, 1);
+    }
+
+    // We create a polyline object with the data that we have created
+    Polyline polyline(cycle_points);
+
+    return polyline;
+}

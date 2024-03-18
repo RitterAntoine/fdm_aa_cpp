@@ -6,6 +6,7 @@ set(TEST_SOURCES
     test_cycle.cpp
     test_math_cglib.cpp
     test_point_adjacency.cpp
+    test_polyline.cpp
     test_scalar.cpp
     test_tree_util.cpp
 )

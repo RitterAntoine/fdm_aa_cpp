@@ -5,6 +5,7 @@
 #include <iostream>
 #include <scalar.h>
 #include <point_adjacency.h>
+#include <polyline.h>
 
 class Cycle {
 public:
@@ -45,5 +46,7 @@ void delete_file(const std::string& file);
 Cycle graph_flood_from_point(Cycle cycle, int point);
 
 Cycle create_from_graph(Graph graph);
+
+Polyline cycle_to_polyline(Cycle cycle, int cycle_number);
 
 #endif
