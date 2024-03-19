@@ -402,3 +402,6 @@ Build/
 
 # Exclude VSCode directory
 .vscode/
+
+# Exclude the .venv directory
+.venv/
