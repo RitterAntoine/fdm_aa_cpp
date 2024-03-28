@@ -21,7 +21,7 @@ void Cycle::setCyclePointsData(Eigen::ArrayX3i cycle_points_data) { cycle_points
 void Cycle::setCycleData(Eigen::ArrayX2i cycle_data) { cycle_data_ = cycle_data; }
 void Cycle::setCycleCount(unsigned int cycle_count) { cycle_count_ = cycle_count; }
 
-void save(const std::string& file, const Cycle& cycle) {
+void save_cycle(const std::string& file, const Cycle& cycle) {
     Eigen::ArrayX2f points = cycle.getListPointAdjacency().getListPoint();
     Eigen::ArrayX2i list_adjacency = cycle.getListPointAdjacency().getListAdjacency();
     Eigen::Array<bool, Eigen::Dynamic, 1> visited_points = cycle.getVisitedPoints();
@@ -55,7 +55,7 @@ void save(const std::string& file, const Cycle& cycle) {
     out.close();
 }
 
-Cycle load(const std::string& file) {
+Cycle load_cycle(const std::string& file) {
     std::ifstream in(file);
     std::string line;
     std::string mode;

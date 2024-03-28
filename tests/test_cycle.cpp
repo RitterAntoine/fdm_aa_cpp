@@ -118,10 +118,10 @@ TEST(CycleTest, CycleSaveLoad) {
     Cycle cycle(list_point_adjacency, visited_points, cycle_points_data, cycle_data, cycle_count);
 
     // Save the cycle to a file
-    save("cycle_test.txt", cycle);
+    save_cycle("cycle_test.txt", cycle);
 
     // Load the cycle from the file
-    Cycle cycle_loaded = load("cycle_test.txt");
+    Cycle cycle_loaded = load_cycle("cycle_test.txt");
 
     // Test the getters
     Eigen::ArrayX2f list_point_res = cycle_loaded.getListPointAdjacency().getListPoint();

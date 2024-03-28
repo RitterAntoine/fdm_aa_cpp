@@ -37,9 +37,9 @@ private:
     unsigned int cycle_count_;
 };
 
-void save(const std::string& file, const Cycle& cycle);
+void save_cycle(const std::string& file, const Cycle& cycle);
 
-Cycle load(const std::string& file);
+Cycle load_cycle(const std::string& file);
 
 void delete_file(const std::string& file);
 

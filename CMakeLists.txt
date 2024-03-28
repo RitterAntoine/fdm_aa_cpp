@@ -18,15 +18,15 @@ add_subdirectory(src/cglib EXCLUDE_FROM_ALL)
 
 # Define the executable for this project
 add_executable(FDM_AA_CPP fdm_aa_cpp.cpp)
-add_executable(Testttt tools/test.cpp)
+add_executable(Cycle_Creator tools/cycle_creator.cpp)
 
 # Link Eigen library to the executables
 target_link_libraries(FDM_AA_CPP Eigen3::Eigen)
-target_link_libraries(Testttt Eigen3::Eigen)
+target_link_libraries(Cycle_Creator Eigen3::Eigen)
 
 # Link cglib library to the executables
 target_link_libraries(FDM_AA_CPP cglib)
-target_link_libraries(Testttt cglib)
+target_link_libraries(Cycle_Creator cglib)
 
 # Add include directories for cglib
 # This line should ideally be in the CMakeLists.txt of cglib

@@ -73,24 +73,24 @@ if __name__ == "__main__":
         [(5, 1.5), (5.5, 1), (6.5, 1), (7, 1.5), (7, 2.5), (6.5, 3), (5.5, 3), (5, 2.5)]
     ]
     fig, ax = create_and_display_grid(grid)
-    plt.pause(delay)
-    display_scalar_values(ax, grid)
-    plt.pause(delay)
+    #plt.pause(delay)
+    #display_scalar_values(ax, grid)
+    #plt.pause(delay)
     display_scalar_colors(ax, grid)
-    plt.pause(delay)
-    remove_scalar_values(ax)
-    plt.pause(delay)
+    #plt.pause(delay)
+    #remove_scalar_values(ax)
+    #plt.pause(delay)
     display_edge_grid(ax, grid)
-    plt.pause(delay)
+    #plt.pause(delay)
     for polyline in polylines:
         display_points_from_polyline(ax, polyline)
         plt.pause(delay)
     for polyline in polylines:
         add_polyline(ax, polyline)
         plt.pause(delay)
-    remove_edge_grid(ax)
-    display_scalar_values(ax, grid)
-    for polyline in polylines:
-        display_points_from_polyline(ax, polyline)
-        add_polyline(ax, polyline)
+    #remove_edge_grid(ax)
+    #display_scalar_values(ax, grid)
+    #for polyline in polylines:
+    #    display_points_from_polyline(ax, polyline)
+    #    add_polyline(ax, polyline)
     plt.show()  # Display the figure
