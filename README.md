@@ -18,6 +18,8 @@ The primary goal of this project is to facilitate the use of the algorithm by mi
 
 This project contains a C++ library. This library extracts contours from scalar fields, cycles them and then creates polylines.
 
+There are also multiples executables that can be used individualy.
+
 # Installation
 
 ## Requirements
@@ -39,18 +41,70 @@ This project uses CMake and require the version 3.28.1 minimum.
 
 Here is the oficial website: [here](https://cmake.org/)
 
+If you want to build the project yourself using cmake, enter this command into your terminal
+
+```
+cmake --build . --config Release
+```
+
 ## Eigen
 
 This project require Eigen 3.4.0. Eigen is a C++ numerical analysis library consisting of template headers, developed by Benoît Jacob and Gaël Guennebaud at INRIA. It is open-source software under the MPL2 license and is multi-platform.
 
 # Exemples Usages
 
-## Contour Extraction
+## Tools
+
+### Cycle_Creator
+
+Cycle_Creator is an executable to extract Cycles from a scalar field
+To use it you just need to...
+
+To use this Function, you need to have a proper input. The input is the dimension of your scalar field (rows and colomns) in the first row, then all the values (between -1 and 1).
+
+here is an exemple of InputFile.txt:
+```
+4 4
+1 1 1 1 
+1 -1 -1 1 
+1 -1 -1 1
+1 1 1 1
+```
+
+After the installation run this in you terminal where the executable is located
+
+```
+./Cycle_Creator.exe InputFile.txt OutputFile.txt
+```
+
+This will write in the OutputFile all the information that has been created using your Scalar Field.
+
+## Code
+
+### Contour Extraction
 
 here is an exemple of code for contour extraction
 
 ```
-#include
+#include <cglib/scalar.h>
+
+Eigen::Array<int, 2, 1> cell_2dcount(2);
+cell_2dcount << cols, rows;
+
+Eigen::Array<int, 2, 1> origin(2);
+origin << 0, 0;
+
+float cell_sides_length = 1;
+
+Grid grid(cell_2dcount, origin, cell_sides_length);
+
+Eigen::Array<double, Eigen::Dynamic, 1> flattened_scalar_field = graph.cast<double>().matrix().transpose();
+
+Graph res = grid2_contour(flattened_scalar_field, cell_2dcount, grid);
+
+Eigen::Array<float, Eigen::Dynamic, 2> list_point = res.getListPoint();
+Eigen::Array<int, Eigen::Dynamic, 2> list_adjacency = res.getListAdjacency();
+
 ```
 
 # Folder Organisation
