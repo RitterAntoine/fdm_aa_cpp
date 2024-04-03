@@ -110,7 +110,6 @@ unsigned int get_edge_adjacency_case_111(const GetEdgeAdjacencyParams params)
     return params.same_side_bottom_left_corner_and_center ? get_edge_adjacency_case_001(params) : get_edge_adjacency_case_010(params);
 }
 
-
 PointAdjacency uniform_grid_edge_root_point_and_adjacency(const Edge2D& edge,
                                                           Eigen::ArrayXd flattened_scalar_field,
                                                           Grid grid)
@@ -130,48 +129,16 @@ PointAdjacency uniform_grid_edge_root_point_and_adjacency(const Edge2D& edge,
     MaskedArray visible_neighbors_ndindices = neighboring_2dindices_direct(edge, contour_grid_cell_2dcount, Neighboring2Type::VISIBLE);
 
     // Compute the edge root existence
-    bool edge_root_existence_h1;
-    bool edge_root_existence_h2;
-    bool edge_root_existence_h3;
-    bool edge_root_existence_h4;
-    bool edge_root_existence_v1;
-    bool edge_root_existence_v2;
-    bool edge_root_existence_v3;
-    bool edge_root_existence_v4;
-
-    if (visible_neighbors_ndindices.mask[0]) {edge_root_existence_h1 = false;}
-    else {Edge2D edge_h1 = Edge2D(visible_neighbors_ndindices.array.row(0), 0);edge_root_existence_h1 = grid_edge_root_existence(edge_h1, flattened_scalar_field, grid);}
-
-    if (visible_neighbors_ndindices.mask[1]) {edge_root_existence_h2 = false;}
-    else {Edge2D edge_h2 = Edge2D(visible_neighbors_ndindices.array.row(1), 0);edge_root_existence_h2 = grid_edge_root_existence(edge_h2, flattened_scalar_field, grid);}
-
-    if (visible_neighbors_ndindices.mask[2]) {edge_root_existence_h3 = false;}
-    else {Edge2D edge_h3 = Edge2D(visible_neighbors_ndindices.array.row(2), 0);edge_root_existence_h3 = grid_edge_root_existence(edge_h3, flattened_scalar_field, grid);}
-
-    if (visible_neighbors_ndindices.mask[3]) {edge_root_existence_h4 = false;}
-    else {Edge2D edge_h4 = Edge2D(visible_neighbors_ndindices.array.row(3), 0);edge_root_existence_h4 = grid_edge_root_existence(edge_h4, flattened_scalar_field, grid);}
-
-    if (visible_neighbors_ndindices.mask[4]) {edge_root_existence_v1 = false;}
-    else {Edge2D edge_v1 = Edge2D(visible_neighbors_ndindices.array.row(4), 1);edge_root_existence_v1 = grid_edge_root_existence(edge_v1, flattened_scalar_field, grid);}
-
-    if (visible_neighbors_ndindices.mask[5]) {edge_root_existence_v2 = false;}
-    else {Edge2D edge_v2 = Edge2D(visible_neighbors_ndindices.array.row(5), 1);edge_root_existence_v2 = grid_edge_root_existence(edge_v2, flattened_scalar_field, grid);}
-
-    if (visible_neighbors_ndindices.mask[6]) {edge_root_existence_v3 = false;}
-    else {Edge2D edge_v3 = Edge2D(visible_neighbors_ndindices.array.row(6), 1);edge_root_existence_v3 = grid_edge_root_existence(edge_v3, flattened_scalar_field, grid);}
-
-    if (visible_neighbors_ndindices.mask[7]) {edge_root_existence_v4 = false;}
-    else {Edge2D edge_v4 = Edge2D(visible_neighbors_ndindices.array.row(7), 1);edge_root_existence_v4 = grid_edge_root_existence(edge_v4, flattened_scalar_field, grid);}
-
     Eigen::Array<bool, 8, 1> edge_root_existence;
-    edge_root_existence << edge_root_existence_h1,
-                           edge_root_existence_h2,
-                           edge_root_existence_h3,
-                           edge_root_existence_h4,
-                           edge_root_existence_v1,
-                           edge_root_existence_v2,
-                           edge_root_existence_v3,
-                           edge_root_existence_v4;
+
+    for (int i = 0; i < 8; ++i) {
+        if (visible_neighbors_ndindices.mask[i]) {+++
+            edge_root_existence[i] = false;
+        } else {
+            Edge2D edge_neighbor = Edge2D(visible_neighbors_ndindices.array.row(i), i < 4 ? 0 : 1);
+            edge_root_existence[i] = grid_edge_root_existence(edge_neighbor, flattened_scalar_field, grid);
+        }
+    }
 
     // Reorder the edge root existence
     Eigen::Array<bool, 2, 3> root_exist_config;
@@ -189,26 +156,12 @@ PointAdjacency uniform_grid_edge_root_point_and_adjacency(const Edge2D& edge,
     // Compute the edge adjacent cells ndindices
     Eigen::Array<int, 2, 1> cell_shift = Eigen::Array<int, 2, 1>::Zero();
     Eigen::Array<int, 2, 2> edge_adjacent_cells_2dindices = Eigen::Array<int, 2, 2>::Zero();
-    if (edge.edge_axis == 0) 
-    {
+    if (edge.edge_axis == 0) {
         // First row is for the bottom
-        if (root_exist_config(0, 0) * root_exist_config(0, 1) * root_exist_config(0, 2) == 0)
-        {
-            if (root_exist_config(0, 0))
-            {
-                cell_shift << 0, -1;
-                edge_adjacent_cells_2dindices.row(0) = edge.edge_2dindex + cell_shift;
-            }
-            if (root_exist_config(0, 1))
-            {
-                cell_shift << 0, -1;
-                edge_adjacent_cells_2dindices.row(0) = edge.edge_2dindex + cell_shift;
-            }
-            if (root_exist_config(0, 2))
-            {
-                cell_shift << 1, -1;
-                edge_adjacent_cells_2dindices.row(0) = edge.edge_2dindex + cell_shift;
-            }
+        if (root_exist_config(0, 0) * root_exist_config(0, 1) * root_exist_config(0, 2) == 0) {
+            if (root_exist_config(0, 0)) {cell_shift << 0, -1; edge_adjacent_cells_2dindices.row(0) = edge.edge_2dindex + cell_shift;}
+            if (root_exist_config(0, 1)) {cell_shift << 0, -1; edge_adjacent_cells_2dindices.row(0) = edge.edge_2dindex + cell_shift;}
+            if (root_exist_config(0, 2)) {cell_shift << 1, -1; edge_adjacent_cells_2dindices.row(0) = edge.edge_2dindex + cell_shift;}
         }
         else
         {
@@ -219,21 +172,9 @@ PointAdjacency uniform_grid_edge_root_point_and_adjacency(const Edge2D& edge,
         // Second row is for the top
         if (root_exist_config(1, 0) * root_exist_config(1, 1) * root_exist_config(1, 2) == 0)
         {
-            if (root_exist_config(1, 0))
-            {
-                cell_shift << 0, 1;
-                edge_adjacent_cells_2dindices.row(1) = edge.edge_2dindex + cell_shift;
-            }
-            if (root_exist_config(1, 1))
-            {
-                cell_shift << 0, 0;
-                edge_adjacent_cells_2dindices.row(1) = edge.edge_2dindex + cell_shift;
-            }
-            if (root_exist_config(1, 2))
-            {
-                cell_shift << 1, 0;
-                edge_adjacent_cells_2dindices.row(1) = edge.edge_2dindex + cell_shift;
-            }
+            if (root_exist_config(1, 0)) {cell_shift << 0, 1; edge_adjacent_cells_2dindices.row(1) = edge.edge_2dindex + cell_shift;}
+            if (root_exist_config(1, 1)) {cell_shift << 0, 0; edge_adjacent_cells_2dindices.row(1) = edge.edge_2dindex + cell_shift;}
+            if (root_exist_config(1, 2)) {cell_shift << 1, 0; edge_adjacent_cells_2dindices.row(1) = edge.edge_2dindex + cell_shift;}
         }
         else
         {
