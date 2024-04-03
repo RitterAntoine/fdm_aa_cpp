@@ -532,49 +532,32 @@ PointAdjacency uniform_grid_edge_root_point_and_adjacency(const Edge2D& edge,
     return PointAdjacency(grid_edge_root_point_val, adjacency_array);
 }
 
+void processEdge(int i, int j, int orientation, int& count, Eigen::ArrayX2f& list_point, Eigen::ArrayX2i& list_adjacency, Eigen::ArrayXd& grid_scalars_flattened, Grid& scalar_field_grid) {
+    Eigen::Array<int, 2, 1> edge_2dindex;
+    edge_2dindex << j, i;
+    Edge2D edge = Edge2D(edge_2dindex, orientation);
+    PointAdjacency edge_point_adjacency = uniform_grid_edge_root_point_and_adjacency(edge, grid_scalars_flattened, scalar_field_grid);
+    // Add the new point_adjacency to the list
+    list_point.row(count) = edge_point_adjacency.getPoint().cast<float>();
+    list_adjacency.row(count) = edge_point_adjacency.getAdjacency().cast<int>();
+    count++;
+}
+
 Graph grid2_contour(Eigen::ArrayXd grid_scalars_flattened,
                              Eigen::Array<int, 2, 1> scalar_field_cell_2dcount,
                              Grid scalar_field_grid) 
 {
-    // This function will apply uniform_grid_edge_root_point_and_adjacency for every edge of the grid
-    // and return the result as a PointAdjacency object.
     int count = 0;
     Eigen::Array<int, 2, 2> edge_2dcount = count2_per_axis(scalar_field_cell_2dcount);
     int size = (scalar_field_cell_2dcount[0] -1) * scalar_field_cell_2dcount[1] + (scalar_field_cell_2dcount[1] -1) * scalar_field_cell_2dcount[0];
     Eigen::ArrayX2f list_point(size, 2);
     Eigen::ArrayX2i list_adjacency(size, 2);
 
-    // First all the horizontal edges
-    for (int i = 0; i < scalar_field_cell_2dcount[1]; ++i)
-    {
-        for (int j = 0; j < scalar_field_cell_2dcount[0] -1; ++j)
-        {
-            Eigen::Array<int, 2, 1> edge_2dindex;
-            edge_2dindex << j, i;
-            Edge2D edge_h = Edge2D(edge_2dindex, 0);
-            PointAdjacency edge_point_adjacency = uniform_grid_edge_root_point_and_adjacency(edge_h, grid_scalars_flattened, scalar_field_grid);
-            // Add the new point_adjacency to the list
-            list_point.row(count) = edge_point_adjacency.getPoint().cast<float>();
-            list_adjacency.row(count) = edge_point_adjacency.getAdjacency().cast<int>();
-            count++;
-        }
-    }
-
-    // Then all the vertical edges
-    for (int i = 0; i < scalar_field_cell_2dcount[1] -1; ++i)
-    {
-        for (int j = 0; j < scalar_field_cell_2dcount[0]; ++j)
-        {
-            Eigen::Array<int, 2, 1> edge_2dindex;
-            edge_2dindex << j, i;
-            Edge2D edge_v = Edge2D(edge_2dindex, 1);
-            PointAdjacency edge_point_adjacency = uniform_grid_edge_root_point_and_adjacency(edge_v, grid_scalars_flattened, scalar_field_grid);
-            // Add the new point_adjacency to the list
-            list_point.row(count) = edge_point_adjacency.getPoint().cast<float>();
-            list_adjacency.row(count) = edge_point_adjacency.getAdjacency().cast<int>();
-            count++;
-        }
-    }
+    // Process all the edges
+    for (int orientation = 0; orientation < 2; ++orientation)
+        for (int i = 0; i < (orientation == 0 ? scalar_field_cell_2dcount[1] : scalar_field_cell_2dcount[1] - 1); ++i)
+            for (int j = 0; j < (orientation == 0 ? scalar_field_cell_2dcount[0] - 1 : scalar_field_cell_2dcount[0]); ++j)
+                processEdge(i, j, orientation, count, list_point, list_adjacency, grid_scalars_flattened, scalar_field_grid);
 
     return Graph(list_point, list_adjacency);
 }
