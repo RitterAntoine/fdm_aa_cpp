@@ -2,14 +2,6 @@
 #include <Eigen/Dense>
 #include <cglib/cycle.h>
 
-// This program will extract the cycles from a given graph. The graph will be in the argument list from a file.
-// The program will write the cycles and all the information about the cycles to the standard output(document name second argument).
-// The format of the input file will be only the values in order, as follows:
-// 3 3
-// 1 1 1
-// 0 1 0
-// 1 0 1
-
 int main(int argc, char* argv[])
 {
     // Check if the correct number of arguments was passed (2 arguments are expected)

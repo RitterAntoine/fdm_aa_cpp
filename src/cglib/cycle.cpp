@@ -168,6 +168,7 @@ Cycle process_point(Cycle cycle, int& current_point, int& next_point, int& previ
 }
 
 Cycle graph_flood_from_point(Cycle cycle, int point) {
+    Cycle cycle_copy = cycle;
     int current_point = point;
     int temp_current_point = current_point;
     int next_point = cycle.getListPointAdjacency().getListAdjacency()(current_point, 0);
@@ -183,6 +184,11 @@ Cycle graph_flood_from_point(Cycle cycle, int point) {
         }
         previous_point = temp_current_point;
         temp_current_point = current_point;
+
+        // Check if next_point or previous_point is INT_MAX
+        if (next_point == INT_MAX || previous_point == INT_MAX) {
+            return cycle_copy;
+        }
     }
 
     return cycle;
@@ -233,8 +239,15 @@ Cycle create_from_graph(Graph graph) {
             // We start a new cycle
             cycle.getVisitedPoints()(i) = true;
 
+            Cycle cycle_copy = cycle;
+
             // We visit all the points that are connected to the current point and we store the cycle in the list of cycles
             cycle = graph_flood_from_point(cycle, i);
+
+            // We check if the new cycle object is different from the old one
+            if ((cycle.getVisitedPoints().array() == cycle_copy.getVisitedPoints().array()).all()) {
+                continue;
+            }
 
             // We modify the cycle_data to store the new cycle using number_of_points_in_cycle
             cycle_data = cycle.getCycleData();

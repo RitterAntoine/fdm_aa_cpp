@@ -110,6 +110,51 @@ unsigned int get_edge_adjacency_case_111(const GetEdgeAdjacencyParams params)
     return params.same_side_bottom_left_corner_and_center ? get_edge_adjacency_case_001(params) : get_edge_adjacency_case_010(params);
 }
 
+float get_scalar(const Eigen::ArrayXd& flattened_scalar_field, int index) {
+    if (index < 0 || index >= flattened_scalar_field.size()) {
+        return INT_MAX;
+    } else {
+        return flattened_scalar_field[index];
+    }
+}
+
+void set_edge_adjacency(Edge2D &edge_adj, int case_index, const Eigen::Array<int, Eigen::Dynamic, 2> &edge_adjacent_cells_2dindices, int row, int edge_axis, Eigen::ArrayXd flattened_scalar_field) {
+    if (case_index == 1 || case_index == 2) {
+        edge_adj.edge_2dindex = edge_adjacent_cells_2dindices.row(row);
+        edge_adj.edge_axis = edge_axis;
+    } else if (case_index == 4) {
+        edge_adj.edge_2dindex = edge_adjacent_cells_2dindices.row(row);
+        edge_adj.edge_axis = 1 - edge_axis;
+    } else if (case_index == 0 || case_index == 3 || case_index == 5 || case_index == 6) {
+        edge_adj.edge_2dindex = Eigen::Array<int, 2, 1>::Constant(INT_MAX);
+    } else if (case_index == 7) {
+        // Get the scalar values of 4 corners
+        Eigen::Array<int, 4, 2> grid_corner_vertex_2dindices = corner_vertex_2dindices(edge_adjacent_cells_2dindices.row(row));
+        Eigen::Array<int, 4, 1> grid_corner_1dindices = Eigen::Array<int, 4, 1>::Zero();
+        for (int i = 0; i < 4; ++i) {
+            grid_corner_1dindices[i] = index1_from_2dindex(grid_corner_vertex_2dindices.row(i), Eigen::Array<int, 2, 1>{edge_adjacent_cells_2dindices.row(row)});
+        }
+        Eigen::Array<float, 4, 1> corner_scalars = Eigen::Array<float, 4, 1>::Zero();
+        for (int i = 0; i < 4; ++i) {
+            corner_scalars[i] = get_scalar(flattened_scalar_field, grid_corner_1dindices[i]);
+        }
+        // Compute the average scalar
+        float average_scalar = corner_scalars.mean();
+        // Compute the same side corner and center
+        bool same_side_corner_and_center = average_scalar * flattened_scalar_field[index1_from_2dindex(edge_adjacent_cells_2dindices.row(row), Eigen::Array<int, 2, 1>{edge_adjacent_cells_2dindices.row(row)})] >= 0;
+        // Compute the edge adjacency
+        if (same_side_corner_and_center) {
+            edge_adj.edge_2dindex = edge_adjacent_cells_2dindices.row(row);
+            edge_adj.edge_axis = edge_axis;
+        } else {
+            edge_adj.edge_2dindex = edge_adjacent_cells_2dindices.row(row);
+            edge_adj.edge_axis = 1 - edge_axis;
+        }
+    } else {
+        // Invalid case_index, do nothing
+    }
+}
+
 PointAdjacency uniform_grid_edge_root_point_and_adjacency(const Edge2D& edge,
                                                           Eigen::ArrayXd flattened_scalar_field,
                                                           Grid grid)
@@ -132,7 +177,7 @@ PointAdjacency uniform_grid_edge_root_point_and_adjacency(const Edge2D& edge,
     Eigen::Array<bool, 8, 1> edge_root_existence;
 
     for (int i = 0; i < 8; ++i) {
-        if (visible_neighbors_ndindices.mask[i]) {+++
+        if (visible_neighbors_ndindices.mask[i]) {
             edge_root_existence[i] = false;
         } else {
             Edge2D edge_neighbor = Edge2D(visible_neighbors_ndindices.array.row(i), i < 4 ? 0 : 1);
@@ -279,22 +324,8 @@ PointAdjacency uniform_grid_edge_root_point_and_adjacency(const Edge2D& edge,
     Eigen::Array<float, 4, 1> corner_scalars_bottom = Eigen::Array<float, 4, 1>::Zero();
     for (int i = 0; i < 4; ++i)
     {
-        if (grid_corner_1dindices_top[i] < 0 || grid_corner_1dindices_top[i] >= flattened_scalar_field.size())
-        {
-            corner_scalars_top[i] = INT_MAX;
-        }
-        else
-        {
-            corner_scalars_top[i] = flattened_scalar_field[grid_corner_1dindices_top[i]];
-        }
-        if (grid_corner_1dindices_bottom[i] < 0 || grid_corner_1dindices_bottom[i] >= flattened_scalar_field.size())
-        {
-            corner_scalars_bottom[i] = INT_MAX;
-        }
-        else
-        {
-            corner_scalars_bottom[i] = flattened_scalar_field[grid_corner_1dindices_bottom[i]];
-        }
+        corner_scalars_top[i] = get_scalar(flattened_scalar_field, grid_corner_1dindices_top[i]);
+        corner_scalars_bottom[i] = get_scalar(flattened_scalar_field, grid_corner_1dindices_bottom[i]);
     }
 
     // Compute the average scalar
@@ -367,89 +398,12 @@ PointAdjacency uniform_grid_edge_root_point_and_adjacency(const Edge2D& edge,
     Edge2D edge_adj_2 = Edge2D(Eigen::Array<int, 2, 1>::Constant(INT_MAX), 0);
     Eigen::Array<int, 2, 1> edge_shift;
 
-    if (edge.edge_axis == 0)
-    {
-        if (case_index[0] == 1)
-        {
-            edge_adj_1.edge_2dindex = edge_adjacent_cells_2dindices.row(0);
-            edge_adj_1.edge_axis = 1;
-        }
-        if (case_index[0] == 2)
-        {
-            edge_adj_1.edge_2dindex = edge_adjacent_cells_2dindices.row(0);
-            edge_adj_1.edge_axis = 1;
-        }
-        if (case_index[0] == 4)
-        {
-            edge_adj_1.edge_2dindex = edge_adjacent_cells_2dindices.row(0);
-            edge_adj_1.edge_axis = 0;
-        }
-        if (case_index[0] == 0 || case_index[0] == 3 || case_index[0] == 5 || case_index[0] == 6)
-        {
-            edge_adj_1.edge_2dindex = Eigen::Array<int, 2, 1>::Constant(INT_MAX);
-        }
-
-        if (case_index[1] == 1)
-        {
-            edge_adj_2.edge_2dindex = edge_adjacent_cells_2dindices.row(1);
-            edge_adj_2.edge_axis = 1;
-        }
-        if (case_index[1] == 2)
-        {
-            edge_adj_2.edge_2dindex = edge_adjacent_cells_2dindices.row(1);
-            edge_adj_2.edge_axis = 1;
-        }
-        if (case_index[1] == 4)
-        {
-            edge_adj_2.edge_2dindex = edge_adjacent_cells_2dindices.row(1);
-            edge_adj_2.edge_axis = 0;
-        }
-        if (case_index[1] == 0 || case_index[1] == 3 || case_index[1] == 5 || case_index[1] == 6)
-        {
-            edge_adj_2.edge_2dindex = Eigen::Array<int, 2, 1>::Constant(INT_MAX);
-        }
-    }
-    else
-    {
-        if (case_index[0] == 1)
-        {
-            edge_adj_1.edge_2dindex = edge_adjacent_cells_2dindices.row(0);
-            edge_adj_1.edge_axis = 0;
-        }
-        if (case_index[0] == 2)
-        {
-            edge_adj_1.edge_2dindex = edge_adjacent_cells_2dindices.row(0);
-            edge_adj_1.edge_axis = 0;
-        }
-        if (case_index[0] == 4)
-        {
-            edge_adj_1.edge_2dindex = edge_adjacent_cells_2dindices.row(0);
-            edge_adj_1.edge_axis = 1;
-        }
-        if (case_index[0] == 0 || case_index[0] == 3 || case_index[0] == 5 || case_index[0] == 6)
-        {
-            edge_adj_1.edge_2dindex = Eigen::Array<int, 2, 1>::Constant(INT_MAX);
-        }
-
-        if (case_index[1] == 1)
-        {
-            edge_adj_2.edge_2dindex = edge_adjacent_cells_2dindices.row(1);
-            edge_adj_2.edge_axis = 0;
-        }
-        if (case_index[1] == 2)
-        {
-            edge_adj_2.edge_2dindex = edge_adjacent_cells_2dindices.row(1);
-            edge_adj_2.edge_axis = 0;
-        }
-        if (case_index[1] == 4)
-        {
-            edge_adj_2.edge_2dindex = edge_adjacent_cells_2dindices.row(1);
-            edge_adj_2.edge_axis = 1;
-        }
-        if (case_index[1] == 0 || case_index[1] == 3 || case_index[1] == 5 || case_index[1] == 6)
-        {
-            edge_adj_2.edge_2dindex = Eigen::Array<int, 2, 1>::Constant(INT_MAX);
-        }
+    if (edge.edge_axis == 0) {
+        set_edge_adjacency(edge_adj_1, case_index[0], edge_adjacent_cells_2dindices, 0, 1, flattened_scalar_field);
+        set_edge_adjacency(edge_adj_2, case_index[1], edge_adjacent_cells_2dindices, 1, 1, flattened_scalar_field);
+    } else {
+        set_edge_adjacency(edge_adj_1, case_index[0], edge_adjacent_cells_2dindices, 0, 0, flattened_scalar_field);
+        set_edge_adjacency(edge_adj_2, case_index[1], edge_adjacent_cells_2dindices, 1, 0, flattened_scalar_field);
     }
 
     if ((edge_adj_1.edge_2dindex[0] != INT_MAX) && (edge_adj_1.edge_2dindex[1] != INT_MAX))

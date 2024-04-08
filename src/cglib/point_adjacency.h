@@ -22,7 +22,7 @@ class Graph {
 public:
     // Constructor
     Graph(Eigen::ArrayX2f list_point,
-                       Eigen::ArrayX2i list_adjacency);
+          Eigen::ArrayX2i list_adjacency);
 
     // Getters
     Eigen::ArrayX2f getListPoint() const;

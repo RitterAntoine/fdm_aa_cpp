@@ -1,9 +1,13 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.patches as mpatches
 import time
+import ast
+import tkinter as tk
+from tkinter import filedialog
 
 # Function to create a grid and display it
-def create_and_display_grid(grid):
+def create_and_display_grid(grid): # viridice
     plt.style.use('_mpl-gallery-nogrid')  # Use a style without grid
     fig, ax = plt.subplots(figsize=(10, 7))  # Create a figure and a set of subplots
     ax.set_xlim(0, len(grid[0]))  # Set the x-limits of the current axes
@@ -13,6 +17,7 @@ def create_and_display_grid(grid):
     ax.set_xticks(np.arange(0, len(grid[0]), 1), minor=True)  # Set the x-ticks of the current tick locations and labels
     ax.set_yticks(np.arange(0, len(grid), 1))  # Set the y-ticks of the current tick locations and labels
     ax.set_yticks(np.arange(0, len(grid), 1), minor=True)  # Set the y-ticks of the current tick locations and labels
+    ax.axis('off')  # Hide the axes
     return fig, ax
 
 # Function to display the scalar values of each cell in the grid
@@ -27,7 +32,7 @@ def remove_scalar_values(ax):
         text.set_visible(False)
 
 # Function to display colors based on the scalar values
-def display_scalar_colors(ax, grid, cmap='Wistia'):
+def display_scalar_colors(ax, grid, cmap='viridis'):
     ax.imshow(np.flipud(grid), cmap=cmap, interpolation='none', extent=[0, len(grid[0]), 0, len(grid)])
 
 # Function to display another grid on top of the existing grid with all the center of each cell
@@ -64,33 +69,52 @@ def add_polyline(ax, polyline, color='k', linewidth=2):
         add_line(ax, [polyline[i][0], polyline[i+1][0]], [polyline[i][1], polyline[i+1][1]], color, linewidth)
     add_line(ax, [polyline[-1][0], polyline[0][0]], [polyline[-1][1], polyline[0][1]], color, linewidth)
 
+def read_grid_from_file():
+    root = tk.Tk()
+    root.withdraw()  # Hide the main window
+    file_path = filedialog.askopenfilename()  # Open the file dialog
+    grid = []
+    with open(file_path, 'r') as f:
+        for line in f:
+            # Remove newline character, split by comma, convert to double and add to grid
+            grid.append(tuple(float(x) for x in line.strip().split(',')))
+    return grid
+
+def read_polylines_from_file():
+    root = tk.Tk()
+    root.withdraw()  # Hide the main window
+    file_path = filedialog.askopenfilename()  # Open the file dialog
+    polylines = []
+    with open(file_path, 'r') as f:
+        for line in f:
+            # Remove newline character, split by comma, convert to tuple of int and add to polylines
+            polyline = [tuple(map(float, point.split(','))) for point in line.strip().split(' ')]
+            polylines.append(polyline)
+    return polylines
+
 # Main function to execute the code
 if __name__ == "__main__":
-    delay = .5 # seconds
-    grid = [(1, 1, 1, 1, 1, 1, 1, 1), (1, -1, -1, 1, 1, -1, -1, 1), (1, -1, -1, 1, 1, -1, -1, 1), (1, 1, 1, 1, 1, 1, 1, 1)]
-    polylines = [
-        [(1, 1.5), (1.5, 1), (2.5, 1), (3, 1.5), (3, 2.5), (2.5, 3), (1.5, 3), (1, 2.5)],
-        [(5, 1.5), (5.5, 1), (6.5, 1), (7, 1.5), (7, 2.5), (6.5, 3), (5.5, 3), (5, 2.5)]
-    ]
+    delay = 1 # seconds
+    grid = read_grid_from_file()
+    polylines = read_polylines_from_file()
     fig, ax = create_and_display_grid(grid)
     #plt.pause(delay)
-    #display_scalar_values(ax, grid)
+    display_scalar_values(ax, grid)
     #plt.pause(delay)
     display_scalar_colors(ax, grid)
     #plt.pause(delay)
-    #remove_scalar_values(ax)
+    remove_scalar_values(ax)
     #plt.pause(delay)
     display_edge_grid(ax, grid)
     #plt.pause(delay)
     for polyline in polylines:
         display_points_from_polyline(ax, polyline)
-        plt.pause(delay)
+        #plt.pause(delay)
     for polyline in polylines:
         add_polyline(ax, polyline)
-        plt.pause(delay)
-    #remove_edge_grid(ax)
-    #display_scalar_values(ax, grid)
-    #for polyline in polylines:
-    #    display_points_from_polyline(ax, polyline)
-    #    add_polyline(ax, polyline)
+        #plt.pause(delay)
+    # remove_edge_grid(ax)
+    for polyline in polylines:
+        display_points_from_polyline(ax, polyline)
+        add_polyline(ax, polyline)
     plt.show()  # Display the figure

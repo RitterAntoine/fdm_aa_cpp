@@ -3,6 +3,7 @@
 This README provides an overview of the implementation of certain parts of the project "Orientable Dense Cyclic Infill for Anisotropic Appearance Fabrication" in C++. The project, initially presented by Chermain Xavier at the SIGGRAPH 2023 conference, serves as the foundation for the work described [here](https://github.com/mfx-inria/anisotropic_appearance_fabrication).
 
 ## Project Objective
+
 The primary goal of this project is to facilitate the use of the algorithm by migrating its code from Python to C++. This transition is crucial for the team due to two key reasons: some members conduct experiments in C++ rather than Python, and the team's software, IceSL, is developed in C++. The ultimate aim is to translate the algorithm into C++ to make it directly usable within the IceSL environment, thus meeting the team's specific needs and ensuring better integration into their workflow.
 
 

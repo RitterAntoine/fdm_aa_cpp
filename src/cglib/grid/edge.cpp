@@ -70,87 +70,49 @@ MaskedArray neighboring_2dindices_direct(const Edge2D& edge,
     Eigen::Array<int, 8, 2> neighboring_2dindices;
     Eigen::Array<bool, 8, 1> mask;
 
+    int x = edge.edge_2dindex[0];
+    int y = edge.edge_2dindex[1];
+    int axis = edge.edge_axis;
+
     if (neighboring_type == Neighboring2Type::VISIBLE)
     {
-        if (edge.edge_axis == 0)
+        if (axis == 0)
         {
-            neighboring_2dindices << 0 + edge.edge_2dindex[0], -1 + edge.edge_2dindex[1],
-                                     0 + edge.edge_2dindex[0], 1 + edge.edge_2dindex[1],
-                                     INT_MAX, INT_MAX,
-                                     INT_MAX, INT_MAX,
-                                     0 + edge.edge_2dindex[0], -1 + edge.edge_2dindex[1],
-                                     1 + edge.edge_2dindex[0], -1 + edge.edge_2dindex[1],
-                                     0 + edge.edge_2dindex[0], 0 + edge.edge_2dindex[1],
-                                     1 + edge.edge_2dindex[0],0 + edge.edge_2dindex[1];
-            
+            neighboring_2dindices << x, y-1, x, y+1, INT_MAX, INT_MAX, INT_MAX, INT_MAX, x, y-1, x+1, y-1, x, y, x+1, y;
             mask << false, false, true, true, false, false, false, false;
         }
-
         else
         {
-            neighboring_2dindices << -1 + edge.edge_2dindex[0], 0 + edge.edge_2dindex[1],
-                                     -1 + edge.edge_2dindex[0], 1 + edge.edge_2dindex[1],
-                                     0 + edge.edge_2dindex[0], 0 + edge.edge_2dindex[1],
-                                     0 + edge.edge_2dindex[0], 1 + edge.edge_2dindex[1],
-                                     -1 + edge.edge_2dindex[0], 0 + edge.edge_2dindex[1],
-                                     1 + edge.edge_2dindex[0], 0 + edge.edge_2dindex[1],
-                                     INT_MAX, INT_MAX,
-                                     INT_MAX, INT_MAX;
-
+            neighboring_2dindices << x-1, y, x-1, y+1, x, y, x, y+1, x-1, y, x+1, y, INT_MAX, INT_MAX, INT_MAX, INT_MAX;
             mask << false, false, false, false, false, false, true, true;
         }
     }
     else
     {
-        if (edge.edge_axis == 0)
+        if (axis == 0)
         {
-            neighboring_2dindices << -1 + edge.edge_2dindex[0], 0 + edge.edge_2dindex[1],
-                                     1 + edge.edge_2dindex[0], 0 + edge.edge_2dindex[1],
-                                     INT_MAX, INT_MAX,
-                                     INT_MAX, INT_MAX,
-                                     0 + edge.edge_2dindex[0], -1 + edge.edge_2dindex[1],
-                                     1 + edge.edge_2dindex[0], -1 + edge.edge_2dindex[1],
-                                     0 + edge.edge_2dindex[0], 0 + edge.edge_2dindex[1],
-                                     1 + edge.edge_2dindex[0], 0 + edge.edge_2dindex[1];
-
+            neighboring_2dindices << x-1, y, x+1, y, INT_MAX, INT_MAX, INT_MAX, INT_MAX, x, y-1, x+1, y-1, x, y, x+1, y;
             mask << false, false, true, true, false, false, false, false;
         }
-
         else
         {
-            neighboring_2dindices << 0 + edge.edge_2dindex[0], -1 + edge.edge_2dindex[1],
-                                     1 + edge.edge_2dindex[0], -1 + edge.edge_2dindex[1],
-                                     0 + edge.edge_2dindex[0], 0 + edge.edge_2dindex[1],
-                                     1 + edge.edge_2dindex[0], 0 + edge.edge_2dindex[1],
-                                     -1 + edge.edge_2dindex[0], 0 + edge.edge_2dindex[1],
-                                     1 + edge.edge_2dindex[0], 0 + edge.edge_2dindex[1],
-                                     INT_MAX, INT_MAX,
-                                     INT_MAX, INT_MAX;
-
+            neighboring_2dindices << x, y-1, x+1, y-1, x, y, x+1, y, x-1, y, x+1, y, INT_MAX, INT_MAX, INT_MAX, INT_MAX;
             mask << false, false, false, false, false, false, true, true;
         }
     }
 
     Eigen::Array<int, 2, 2> grid_edge_2dcount = count2_per_axis(grid_cell_2dcount);
 
-    // Check if the neighboring_2dindices is within the grid, if not, make them masked.
     for (int i = 0; i < neighboring_2dindices.rows(); i++)
     {
-        if (i < 4)
+        int row = neighboring_2dindices(i, 0);
+        int col = neighboring_2dindices(i, 1);
+        int grid_row = grid_edge_2dcount(i < 4 ? 0 : 1, 0);
+        int grid_col = grid_edge_2dcount(i < 4 ? 0 : 1, 1);
+
+        if (row < 0 || row > grid_row - 1 || col < 0 || col > grid_col - 1)
         {
-            if (neighboring_2dindices(i, 0) < 0 || neighboring_2dindices(i, 0) > grid_edge_2dcount(0, 0) -1||
-                neighboring_2dindices(i, 1) < 0 || neighboring_2dindices(i, 1) > grid_edge_2dcount(0, 1) -1)
-            {
-                mask[i] = true;
-            }
-        }
-        else
-        {
-            if (neighboring_2dindices(i, 0) < 0 || neighboring_2dindices(i, 0) > grid_edge_2dcount(1, 0) -1||
-                neighboring_2dindices(i, 1) < 0 || neighboring_2dindices(i, 1) > grid_edge_2dcount(1, 1) -1)
-            {
-                mask[i] = true;
-            }
+            mask[i] = true;
         }
     }
 
