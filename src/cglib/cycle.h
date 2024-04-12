@@ -43,10 +43,10 @@ Cycle load_cycle(const std::string& file);
 
 void delete_file(const std::string& file);
 
-Cycle graph_flood_from_point(Cycle cycle, int point);
+void graph_flood_from_point(const Cycle& cycle, int point);
 
-Cycle create_from_graph(Graph graph);
+Cycle create_from_graph(const Graph& graph);
 
-Polyline cycle_to_polyline(Cycle cycle, int cycle_number);
+Polyline cycle_to_polyline(const Cycle& cycle, int cycle_number);
 
 #endif

@@ -72,7 +72,7 @@ int main(int argc, char* argv[])
 
         // Fake values for testing
         argc = 4;
-        argv[1] = "4";
+        argv[1] = "8";
         argv[2] = "8";
         argv[3] = "demos/grid_output.txt";
         argv[4] = "demos/polylines_output.txt";
@@ -96,6 +96,9 @@ int main(int argc, char* argv[])
     
     // Generate a scalar field with random values
     Eigen::Array<double, Eigen::Dynamic, 1> scalar_field = Scalar_Field_Generator(cols, rows);
+    // FOR DEMO :
+    // Eigen::Array<double, Eigen::Dynamic, 1> scalar_field(32);
+    // scalar_field << 1, 1, 1, 1, 1, 1, 1, 1, 1, -1, -1, 1, 1, -1, -1, 1, 1, -1, -1, 1, 1, -1, -1, 1, 1, 1, 1, 1, 1, 1, 1, 1;
 
     // Stop the clock and calculate the time for the scalar field generation
     auto stop = std::chrono::high_resolution_clock::now();
@@ -113,11 +116,22 @@ int main(int argc, char* argv[])
     float cell_sides_length = 1;
     Grid grid(cell_2dcount, origin, cell_sides_length);
 
+    // print the scalar field
+    for (int i = 0; i < scalar_field.size(); i++) {
+        std::cout << "Scalar field " << i << ": " << scalar_field[i] << std::endl;
+    }
+
     // Start the clock for the grid2_contour function
     start = std::chrono::high_resolution_clock::now();
 
     // Convert the scalar field to a Graph object
     Graph res = grid2_contour(scalar_field, cell_2dcount, grid);
+
+    // print the points and their adjacencies
+    for (int i = 0; i < res.getListPoint().rows(); i++) {
+        std::cout << "Point " << i << ": " << res.getListPoint()(i, 0) << ", " << res.getListPoint()(i, 1) << std::endl;
+        std::cout << "Adjacency " << i << ": " << res.getListAdjacency()(i, 0) << ", " << res.getListAdjacency()(i, 1) << std::endl;
+    }
 
     // Stop the clock and calculate the time for the grid2_contour function
     stop = std::chrono::high_resolution_clock::now();

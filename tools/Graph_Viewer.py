@@ -21,7 +21,7 @@ def create_and_display_grid(grid): # viridice
     return fig, ax
 
 # Function to display the scalar values of each cell in the grid
-def display_scalar_values(ax, grid, fontsize=12, color='k'):
+def display_scalar_values(ax, grid, fontsize=24, color='k'):
     for i in range(len(grid)):
         for j in range(len(grid[0])):
             ax.text(j+0.5, i+0.5, str(grid[i][j]), ha='center', va='center', fontsize=fontsize, color=color)
@@ -33,10 +33,21 @@ def remove_scalar_values(ax):
 
 # Function to display colors based on the scalar values
 def display_scalar_colors(ax, grid, cmap='viridis'):
-    ax.imshow(np.flipud(grid), cmap=cmap, interpolation='none', extent=[0, len(grid[0]), 0, len(grid)])
+    im = ax.imshow(np.flipud(grid), cmap=cmap, interpolation='none', extent=[0, len(grid[0]), 0, len(grid)])
+    return im
+
+# Function to display grid
+def display_grid(ax, grid, color='black', linewidth=1):
+    for i in range(len(grid)):
+        for j in range(len(grid[0])):
+            ax.plot([j + 1, j + 1], [i, i + 1], color, linewidth=linewidth)
+            ax.plot([j, j + 1], [i + 1, i + 1], color, linewidth=linewidth)
+            ax.plot([j, j], [i, i + 1], color, linewidth=linewidth)
+            ax.plot([j, j + 1], [i, i], color, linewidth=linewidth)
+
 
 # Function to display another grid on top of the existing grid with all the center of each cell
-def display_edge_grid(ax, grid, color='blue', linewidth=1):
+def display_edge_grid(ax, grid, color='red', linewidth=2):
     shift = 0.5
     for i in range(len(grid) - 1):
         for j in range(len(grid[0]) - 1):
@@ -50,24 +61,28 @@ def remove_edge_grid(ax):
     for line in ax.lines:
         line.set_visible(False)
 
-# Function to add a line to the grid
-def add_line(ax, x, y, color='k', linewidth=1):
-    ax.plot(x, y, color, linewidth=linewidth)
+# Function to add a line to the grid with a contour
+def add_line(ax, point1, point2, color='teal', linewidth=12, contour_color='black', contour_width=14):
+    # Draw the contour line (bigger width)
+    ax.plot([point1[0], point2[0]], [point1[1], point2[1]], contour_color, linewidth=contour_width)
+    # Draw the actual line (smaller width)
+    ax.plot([point1[0], point2[0]], [point1[1], point2[1]], color, linewidth=linewidth)
 
 # Function to display a point on the grid
-def display_point(ax, points, color='k', marker='o', markersize=5):
-    ax.plot(points[0], points[1], color, marker=marker, markersize=markersize)
+def display_point(ax, points, color='teal', edgecolor='black', marker='o', markersize=1000):
+    scatter = ax.scatter(points[0], points[1], color=color, edgecolor=edgecolor, marker=marker, s=markersize)
+    scatter.set_zorder(5)
 
 # Function to display points from a polyline on the grid
-def display_points_from_polyline(ax, polyline, color='k', marker='o', markersize=5):
+def display_points_from_polyline(ax, polyline):
     for point in polyline:
-        display_point(ax, point, color, marker, markersize)
+        display_point(ax, point, color='teal', edgecolor='black', marker='o', markersize=300)
 
 # Function to add a polyline to the grid
-def add_polyline(ax, polyline, color='k', linewidth=2):
+def add_polyline(ax, polyline, color='teal', linewidth=8, contour_color='black', contour_width=10):
     for i in range(len(polyline) - 1):
-        add_line(ax, [polyline[i][0], polyline[i+1][0]], [polyline[i][1], polyline[i+1][1]], color, linewidth)
-    add_line(ax, [polyline[-1][0], polyline[0][0]], [polyline[-1][1], polyline[0][1]], color, linewidth)
+        add_line(ax, polyline[i], polyline[i+1], color, linewidth, contour_color, contour_width)
+    add_line(ax, polyline[-1], polyline[0], color, linewidth, contour_color, contour_width)
 
 def read_grid_from_file():
     root = tk.Tk()
@@ -92,29 +107,68 @@ def read_polylines_from_file():
             polylines.append(polyline)
     return polylines
 
-# Main function to execute the code
-if __name__ == "__main__":
-    delay = 1 # seconds
+def demo(grid, scalar_values, scalar_colors, edge_grid, single_point, polylines, polylines_step):
+    Grid = [(1, 1, 1, 1),
+            (1, -1, -1, 1),
+            (1, -1, -1, 1),
+            (1, 1, 1, 1)]
+    Polylines = [[(1, 1.5), (1.5, 1), (2.5, 1), (3, 1.5), (3, 2.5), (2.5, 3), (1.5, 3), (1, 2.5)]]
+    fig, ax = create_and_display_grid(Grid)
+    if grid == True:
+        display_grid(ax, Grid)
+    if scalar_values == True:
+        display_scalar_values(ax, Grid)
+    if scalar_colors == True:
+        im = display_scalar_colors(ax, Grid)
+        cbar = plt.colorbar(im, ax=ax, orientation='vertical')
+        cbar.ax.tick_params(labelsize=14)
+    if edge_grid == True:
+        display_edge_grid(ax, Grid)
+    if single_point == True:
+        display_point(ax, (1, 1.5))
+    if all_points == True:
+        for i in range(len(Polylines[0])):
+            display_point(ax, Polylines[0][i])
+    if single_point_adjacency_1 == True:
+        add_line(ax, [1, 1.5], [1, 2.5])
+    if single_point_adjacency_2 == True:
+        add_line(ax, [1, 1.5], [1.5, 1])
+    if polylines == True:
+        for polyline in Polylines:
+            add_polyline(ax, polyline)
+    if polylines_step != 0:
+        for i in range(0, polylines_step):
+            add_line(ax, Polylines[0][i], Polylines[0][i+1])
+    plt.show()
+
+def main():
     grid = read_grid_from_file()
     polylines = read_polylines_from_file()
     fig, ax = create_and_display_grid(grid)
-    #plt.pause(delay)
-    display_scalar_values(ax, grid)
-    #plt.pause(delay)
-    display_scalar_colors(ax, grid)
-    #plt.pause(delay)
-    remove_scalar_values(ax)
-    #plt.pause(delay)
+    display_grid(ax, grid)
+    im = display_scalar_colors(ax, grid)
+    cbar = plt.colorbar(im, ax=ax, orientation='vertical')
+    cbar.ax.tick_params(labelsize=14)
     display_edge_grid(ax, grid)
-    #plt.pause(delay)
     for polyline in polylines:
         display_points_from_polyline(ax, polyline)
-        #plt.pause(delay)
     for polyline in polylines:
         add_polyline(ax, polyline)
-        #plt.pause(delay)
-    # remove_edge_grid(ax)
-    for polyline in polylines:
-        display_points_from_polyline(ax, polyline)
-        add_polyline(ax, polyline)
-    plt.show()  # Display the figure
+    plt.show()
+
+
+# Main function to execute the code
+if __name__ == "__main__":
+    grid = True
+    scalar_values = False
+    scalar_colors = True
+    edge_grid = True
+    single_point = False
+    all_points = True
+    single_point_adjacency_1 = False
+    single_point_adjacency_2 = False
+    polylines = True
+    polylines_step = 0
+    demo(grid, scalar_values, scalar_colors, edge_grid, single_point, polylines, polylines_step)
+
+    #main()
