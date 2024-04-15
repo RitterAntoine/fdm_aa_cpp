@@ -143,33 +143,35 @@ Cycle load_cycle(const std::string& file) {
 void delete_file(const std::string& file) {
     std::remove(file.c_str());
 }
+
 int number_of_points_in_cycle_points_data(const Eigen::ArrayX3i& cycle_points_data) {
     return (cycle_points_data.col(0) != INT_MAX).count();
 }
 
-void process_point(Cycle& cycle, int& current_point, int& next_point, int& previous_point, int cycle_count) {
-    Eigen::Array<bool, Eigen::Dynamic, 1> visited_points = cycle.getVisitedPoints();
-    Eigen::ArrayX3i cycle_points_data = cycle.getCyclePointsData();
-
+void process_point(Eigen::Array<bool, Eigen::Dynamic, 1>& visited_points, Eigen::ArrayX3i& cycle_points_data, int& current_point, int& next_point, int& previous_point, int cycle_count) {
     visited_points(current_point) = true;
-    cycle.setVisitedPoints(visited_points);
     cycle_points_data(current_point, 0) = current_point;
     cycle_points_data(current_point, 1) = next_point;
     cycle_points_data(current_point, 2) = cycle_count;
-    cycle.setCyclePointsData(cycle_points_data);
 }
 
-void graph_flood_from_point(Cycle& cycle, int point) {
-    Cycle cycle_copy = cycle;
+void graph_flood_from_point(Cycle& cycle, Eigen::ArrayX2i& listAdjacency, unsigned int& cycle_count, int point, bool& cycle_found) {
+    // Enregistrez l'état initial de cycle
+    Eigen::Array<bool, Eigen::Dynamic, 1> initial_visited_points = cycle.getVisitedPoints();
+    Eigen::ArrayX3i initial_cycle_points_data = cycle.getCyclePointsData();
+
     int current_point = point;
     int temp_current_point = current_point;
-    auto listAdjacency = cycle.getListPointAdjacency().getListAdjacency();
     int next_point = listAdjacency(current_point, 0);
     int previous_point = listAdjacency(current_point, 1);
-    int cycle_count = cycle.getCycleCount();
 
-    while (!cycle.getVisitedPoints()(current_point)) {
-        process_point(cycle, current_point, next_point, previous_point, cycle_count);
+    Eigen::Array<bool, Eigen::Dynamic, 1> visited_points = initial_visited_points;
+    Eigen::ArrayX3i cycle_points_data = initial_cycle_points_data;
+
+    cycle_found = true;
+
+    while (!visited_points(current_point)) {
+        process_point(visited_points, cycle_points_data, current_point, next_point, previous_point, cycle_count);
         current_point = next_point;
         next_point = listAdjacency(current_point, 0);
         if (next_point == temp_current_point) {
@@ -180,13 +182,21 @@ void graph_flood_from_point(Cycle& cycle, int point) {
 
         // Check if next_point or previous_point is INT_MAX
         if (next_point == INT_MAX || previous_point == INT_MAX) {
-            cycle = cycle_copy;
+            // Restaurez l'état initial de cycle
+            cycle.setVisitedPoints(initial_visited_points);
+            cycle.setCyclePointsData(initial_cycle_points_data);
+            cycle_found = false;
             break;
         }
     }
+
+    if (cycle_found) {
+        cycle.setVisitedPoints(visited_points);
+        cycle.setCyclePointsData(cycle_points_data);
+    }
 }
 
-int number_of_points_in_cycle(const Cycle& cycle, int cycle_number) {
+int number_of_points_in_cycle(const Cycle& cycle, const int& cycle_number) {
     return (cycle.getCyclePointsData().col(2) == cycle_number).count();
 }
 
@@ -208,35 +218,38 @@ Cycle create_from_graph(const Graph& graph) {
 
     Cycle cycle(graph, visited_points, cycle_points_data, cycle_data, cycle_count);
 
-    auto listAdjacency = graph.getListAdjacency();
-    auto cycleVisitedPoints = cycle.getVisitedPoints();
-    auto cycleData = cycle.getCycleData();
+    Eigen::ArrayX2i listAdjacency = graph.getListAdjacency();
+    Eigen::Array<bool, Eigen::Dynamic, 1> cycleVisitedPoints = cycle.getVisitedPoints();
+    Eigen::ArrayX2i cycleData = cycle.getCycleData();
 
-    for (int i = 0; i < number_of_points; i++) {
-        if (listAdjacency(i, 0) == INT_MAX || listAdjacency(i, 1) == INT_MAX) {
+    bool cycle_found = false;
+
+    for (int point = 0; point < number_of_points; point++) {
+        if (listAdjacency(point, 0) == INT_MAX || listAdjacency(point, 1) == INT_MAX) {
             continue;
         }
 
-        int next_point = listAdjacency(i, 0);
-        int previous_point = listAdjacency(i, 1);
+        int next_point = listAdjacency(point, 0);
+        int previous_point = listAdjacency(point, 1);
 
-        if (!cycleVisitedPoints(i) && next_point != INT_MAX && previous_point != INT_MAX) {
-            cycleVisitedPoints(i) = true;
+        if (!cycleVisitedPoints(point) && next_point != INT_MAX && previous_point != INT_MAX) {
+            cycleVisitedPoints(point) = true;
 
-            Cycle cycle_copy = cycle;
-            graph_flood_from_point(cycle, i);
+            int visited_points_count_before = cycle.getVisitedPoints().count();
 
-            if ((cycle.getVisitedPoints().array() == cycle_copy.getVisitedPoints().array()).all()) {
-                continue;
+            graph_flood_from_point(cycle, listAdjacency, cycle_count, point, cycle_found);
+
+            int visited_points_count_after = cycle.getVisitedPoints().count();
+
+            if (visited_points_count_before != visited_points_count_after) {
+                cycleData = cycle.getCycleData();
+                cycleData(cycle_count, 0) = point;
+                cycleData(cycle_count, 1) = number_of_points_in_cycle(cycle, cycle_count);
+                cycle.setCycleData(cycleData);
+
+                cycle_count++;
+                cycle.setCycleCount(cycle_count);
             }
-
-            cycleData = cycle.getCycleData();
-            cycleData(cycle_count, 0) = i;
-            cycleData(cycle_count, 1) = number_of_points_in_cycle(cycle, cycle_count);
-            cycle.setCycleData(cycleData);
-
-            cycle_count++;
-            cycle.setCycleCount(cycle_count);
         }
     }
 
