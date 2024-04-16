@@ -33,7 +33,7 @@ TEST(CycleTest, CycleConstructor) {
                   INT_MAX, INT_MAX,
                   INT_MAX, INT_MAX;
     // Cycle count
-    unsigned int cycle_count = 1;
+    int cycle_count = 1;
 
     // Create the cycle
     Cycle cycle(list_point_adjacency, visited_points, cycle_points_data, cycle_data, cycle_count);
@@ -74,8 +74,8 @@ TEST(CycleTest, CycleConstructor) {
                       INT_MAX, INT_MAX;
     EXPECT_TRUE(cycle_data_res.isApprox(cycle_data_exp));
 
-    unsigned int cycle_count_res = cycle.getCycleCount();
-    unsigned int cycle_count_exp = 1;
+    int cycle_count_res = cycle.getCycleCount();
+    int cycle_count_exp = 1;
     EXPECT_EQ(cycle_count_res, cycle_count_exp);
 }
 
@@ -112,7 +112,7 @@ TEST(CycleTest, CycleSaveLoad) {
                   INT_MAX, INT_MAX;
 
     // Cycle count
-    unsigned int cycle_count = 1;
+    int cycle_count = 1;
 
     // Create the cycle
     Cycle cycle(list_point_adjacency, visited_points, cycle_points_data, cycle_data, cycle_count);
@@ -157,8 +157,8 @@ TEST(CycleTest, CycleSaveLoad) {
                       INT_MAX, INT_MAX;
     EXPECT_TRUE(cycle_data_res.isApprox(cycle_data_exp));
 
-    unsigned int cycle_count_res = cycle_loaded.getCycleCount();
-    unsigned int cycle_count_exp = 1;
+    int cycle_count_res = cycle_loaded.getCycleCount();
+    int cycle_count_exp = 1;
     EXPECT_EQ(cycle_count_res, cycle_count_exp);
 
     // Delete the file
@@ -328,8 +328,8 @@ TEST(CycleTest, CycleCreateFromGraph_1) {
                       INT_MAX, INT_MAX;
     EXPECT_TRUE(cycle_data_res.isApprox(cycle_data_exp));
 
-    unsigned int cycle_count_res = cycle.getCycleCount();
-    unsigned int cycle_count_exp = 1;
+    int cycle_count_res = cycle.getCycleCount();
+    int cycle_count_exp = 1;
     EXPECT_EQ(cycle_count_res, cycle_count_exp);
 }
 
@@ -583,8 +583,8 @@ TEST(CycleTest, CycleCreateFromGraph_2) {
     EXPECT_TRUE(cycle_data_res.isApprox(cycle_data_exp));
 
 
-    unsigned int cycle_count_res = cycle.getCycleCount();
-    unsigned int cycle_count_exp = 2;
+    int cycle_count_res = cycle.getCycleCount();
+    int cycle_count_exp = 2;
     EXPECT_EQ(cycle_count_res, cycle_count_exp);
 }
 
@@ -621,7 +621,7 @@ TEST(CycleTest, CycleToPolyline_1)
                   INT_MAX, INT_MAX,
                   INT_MAX, INT_MAX;
     // Cycle count
-    unsigned int cycle_count = 1;
+    int cycle_count = 1;
 
     // Create the cycle
     Cycle cycle(list_point_adjacency, visited_points, cycle_points_data, cycle_data, cycle_count);

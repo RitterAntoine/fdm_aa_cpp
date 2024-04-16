@@ -429,8 +429,8 @@ TEST(ScalarTest, GetEdgeAdjacencyNoExtractionCase)
 
     GetEdgeAdjacencyParams params(edge2D, edge_side, edge_2dcount, same_side_bottom_left_corner_and_center);
 
-    unsigned int res = get_edge_adjacency_no_extraction_case(params);
-    unsigned int exp_res = INT_MAX;
+    int res = get_edge_adjacency_no_extraction_case(params);
+    int exp_res = INT_MAX;
     ASSERT_EQ(res, exp_res);
 }
 
@@ -457,8 +457,8 @@ TEST(ScalarTest, ConvertEdgeShiftToAdjacency_1)
     shift << 1, 0;
     int adjacent_edge_axis = 0;
 
-    unsigned int res = convert_edge_shift_to_adjacency(shift, params, adjacent_edge_axis);
-    unsigned int exp_res = 1;
+    int res = convert_edge_shift_to_adjacency(shift, params, adjacent_edge_axis);
+    int exp_res = 1;
     ASSERT_EQ(res, exp_res);
 }
 
@@ -483,8 +483,8 @@ TEST(ScalarTest, ConvertEdgeShiftToAdjacency_2)
     shift << 1, 0;
     int adjacent_edge_axis = 0;
 
-    unsigned int res = convert_edge_shift_to_adjacency(shift, params, adjacent_edge_axis);
-    unsigned int exp_res = 4;
+    int res = convert_edge_shift_to_adjacency(shift, params, adjacent_edge_axis);
+    int exp_res = 4;
     ASSERT_EQ(res, exp_res);
 }
 
@@ -505,8 +505,8 @@ TEST(ScalarTest, GetEdgeAdjacencyCase001_1)
 
     GetEdgeAdjacencyParams params(edge2D, edge_side, edge_2dcount, same_side_bottom_left_corner_and_center);
 
-    unsigned int res = get_edge_adjacency_case_001(params);
-    unsigned int exp_res = 1;
+    int res = get_edge_adjacency_case_001(params);
+    int exp_res = 1;
     ASSERT_EQ(res, exp_res);
 }
 
@@ -527,8 +527,8 @@ TEST(ScalarTest, GetEdgeAdjacencyCase001_2)
 
     GetEdgeAdjacencyParams params(edge2D, edge_side, edge_2dcount, same_side_bottom_left_corner_and_center);
 
-    unsigned int res = get_edge_adjacency_case_001(params);
-    unsigned int exp_res = 13;
+    int res = get_edge_adjacency_case_001(params);
+    int exp_res = 13;
     ASSERT_EQ(res, exp_res);
 }
 
@@ -549,8 +549,8 @@ TEST(ScalarTest, GetEdgeAdjacencyCase010_1)
 
     GetEdgeAdjacencyParams params(edge2D, edge_side, edge_2dcount, same_side_bottom_left_corner_and_center);
 
-    unsigned int res = get_edge_adjacency_case_010(params);
-    unsigned int exp_res = 1;
+    int res = get_edge_adjacency_case_010(params);
+    int exp_res = 1;
     ASSERT_EQ(res, exp_res);
 }
 
@@ -571,8 +571,8 @@ TEST(ScalarTest, GetEdgeAdjacencyCase010_2)
 
     GetEdgeAdjacencyParams params(edge2D, edge_side, edge_2dcount, same_side_bottom_left_corner_and_center);
 
-    unsigned int res = get_edge_adjacency_case_010(params);
-    unsigned int exp_res = 13;
+    int res = get_edge_adjacency_case_010(params);
+    int exp_res = 13;
     ASSERT_EQ(res, exp_res);
 }
 
@@ -593,8 +593,8 @@ TEST(ScalarTest, GetEdgeAdjacencyCase100_1)
 
     GetEdgeAdjacencyParams params(edge2D, edge_side, edge_2dcount, same_side_bottom_left_corner_and_center);
 
-    unsigned int res = get_edge_adjacency_case_100(params);
-    unsigned int exp_res = 1;
+    int res = get_edge_adjacency_case_100(params);
+    int exp_res = 1;
     ASSERT_EQ(res, exp_res);
 }
 
@@ -615,8 +615,8 @@ TEST(ScalarTest, GetEdgeAdjacencyCase100_2)
 
     GetEdgeAdjacencyParams params(edge2D, edge_side, edge_2dcount, same_side_bottom_left_corner_and_center);
 
-    unsigned int res = get_edge_adjacency_case_100(params);
-    unsigned int exp_res = 19;
+    int res = get_edge_adjacency_case_100(params);
+    int exp_res = 19;
     ASSERT_EQ(res, exp_res);
 }
 
@@ -637,8 +637,8 @@ TEST(ScalarTest, GetEdgeAdjacencyCase111_1)
 
     GetEdgeAdjacencyParams params(edge2D, edge_side, edge_2dcount, same_side_bottom_left_corner_and_center);
 
-    unsigned int res = get_edge_adjacency_case_111(params);
-    unsigned int exp_res = 1;
+    int res = get_edge_adjacency_case_111(params);
+    int exp_res = 1;
     ASSERT_EQ(res, exp_res);
 }
 
@@ -659,8 +659,8 @@ TEST(ScalarTest, GetEdgeAdjacencyCase111_2)
 
     GetEdgeAdjacencyParams params(edge2D, edge_side, edge_2dcount, same_side_bottom_left_corner_and_center);
 
-    unsigned int res = get_edge_adjacency_case_111(params);
-    unsigned int exp_res = 16;
+    int res = get_edge_adjacency_case_111(params);
+    int exp_res = 16;
     ASSERT_EQ(res, exp_res);
 }
 
@@ -718,12 +718,12 @@ TEST(ScalarTest, UniformGridEdgeRootPointAndAdjacency_1_1)
 
     PointAdjacency res = uniform_grid_edge_root_point_and_adjacency(edge2D, flattened_scalar_field, grid);
     Eigen::Array<float, 2, 1> res_point = res.getPoint();
-    Eigen::Array<unsigned int, 2, 1> res_adjacency = res.getAdjacency();
+    Eigen::Array<int, 2, 1> res_adjacency = res.getAdjacency();
 
     Eigen::Array<float, 2, 1> exp_point(2);
     exp_point << 1.5, 1;
 
-    Eigen::Array<unsigned int, 2, 1> exp_adjacency(2);
+    Eigen::Array<int, 2, 1> exp_adjacency(2);
     exp_adjacency << 0, 3;
 
     ASSERT_TRUE((res_point.isApprox(exp_point)));
@@ -783,12 +783,12 @@ TEST(ScalarTest, UniformGridEdgeRootPointAndAdjacency_1_2)
 
     PointAdjacency res = uniform_grid_edge_root_point_and_adjacency(edge2D, flattened_scalar_field, grid);
     Eigen::Array<float, 2, 1> res_point = res.getPoint();
-    Eigen::Array<unsigned int, 2, 1> res_adjacency = res.getAdjacency();  
+    Eigen::Array<int, 2, 1> res_adjacency = res.getAdjacency();  
 
     Eigen::Array<float, 2, 1> exp_point(2);
     exp_point << 1.83333, 1.5;
 
-    Eigen::Array<unsigned int, 2, 1> exp_adjacency(2);
+    Eigen::Array<int, 2, 1> exp_adjacency(2);
     exp_adjacency << 7, 10;
 
     ASSERT_TRUE((res_point.isApprox(exp_point)));
@@ -848,12 +848,12 @@ TEST(ScalarTest, UniformGridEdgeRootPointAndAdjacency_1_3)
 
     PointAdjacency res = uniform_grid_edge_root_point_and_adjacency(edge2D, flattened_scalar_field, grid);  
     Eigen::Array<float, 2, 1> res_point = res.getPoint();
-    Eigen::Array<unsigned int, 2, 1> res_adjacency = res.getAdjacency();  
+    Eigen::Array<int, 2, 1> res_adjacency = res.getAdjacency();  
 
     Eigen::Array<float, 2, 1> exp_point(2);
     exp_point << 1.5, 1.83333;
 
-    Eigen::Array<unsigned int, 2, 1> exp_adjacency(2);
+    Eigen::Array<int, 2, 1> exp_adjacency(2);
     exp_adjacency << 9, 3;
 
     ASSERT_TRUE((res_point.isApprox(exp_point)));
@@ -946,12 +946,12 @@ TEST(ScalarTest, UniformGridEdgeRootPointAndAdjacency_2_1)
 
     PointAdjacency res = uniform_grid_edge_root_point_and_adjacency(edge2D, flattened_scalar_field, grid);
     Eigen::Array<float, 2, 1> res_point = res.getPoint();
-    Eigen::Array<unsigned int, 2, 1> res_adjacency = res.getAdjacency();
+    Eigen::Array<int, 2, 1> res_adjacency = res.getAdjacency();
 
     Eigen::Array<float, 2, 1> exp_point(2);
     exp_point << 3, 2.5;
 
-    Eigen::Array<unsigned int, 2, 1> exp_adjacency(2);
+    Eigen::Array<int, 2, 1> exp_adjacency(2);
     exp_adjacency << 7, 17;
 
     ASSERT_TRUE((res_point.isApprox(exp_point)));
@@ -1044,12 +1044,12 @@ TEST(ScalarTest, UniformGridEdgeRootPointAndAdjacency_2_2)
 
     PointAdjacency res = uniform_grid_edge_root_point_and_adjacency(edge2D, flattened_scalar_field, grid);
     Eigen::Array<float, 2, 1> res_point = res.getPoint();
-    Eigen::Array<unsigned int, 2, 1> res_adjacency = res.getAdjacency();
+    Eigen::Array<int, 2, 1> res_adjacency = res.getAdjacency();
 
     Eigen::Array<float, 2, 1> exp_point(2);
     exp_point << 3.16667, 3.5;
 
-    Eigen::Array<unsigned int, 2, 1> exp_adjacency(2);
+    Eigen::Array<int, 2, 1> exp_adjacency(2);
     exp_adjacency << 12, 22;
 
     ASSERT_TRUE((res_point.isApprox(exp_point)));
@@ -1142,12 +1142,12 @@ TEST(ScalarTest, UniformGridEdgeRootPointAndAdjacency_2_3)
 
     PointAdjacency res = uniform_grid_edge_root_point_and_adjacency(edge2D, flattened_scalar_field, grid);
     Eigen::Array<float, 2, 1> res_point = res.getPoint();
-    Eigen::Array<unsigned int, 2, 1> res_adjacency = res.getAdjacency();
+    Eigen::Array<int, 2, 1> res_adjacency = res.getAdjacency();
 
     Eigen::Array<float, 2, 1> exp_point(2);
     exp_point << 3, 4.5;
 
-    Eigen::Array<unsigned int, 2, 1> exp_adjacency(2);
+    Eigen::Array<int, 2, 1> exp_adjacency(2);
     exp_adjacency << 17, 57;
 
     ASSERT_TRUE((res_point.isApprox(exp_point)));

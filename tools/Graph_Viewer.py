@@ -135,7 +135,7 @@ def demo(grid, scalar_values, scalar_colors, edge_grid, single_point, polylines,
         add_line(ax, [1, 1.5], [1.5, 1])
     if polylines == True:
         for polyline in Polylines:
-            add_polyline(ax, polyline)
+            add_polyline(ax, polyline, color='blue', linewidth=2, contour_color='black', contour_width=3)
     if polylines_step != 0:
         for i in range(0, polylines_step):
             add_line(ax, Polylines[0][i], Polylines[0][i+1])
@@ -149,11 +149,11 @@ def main():
     im = display_scalar_colors(ax, grid)
     cbar = plt.colorbar(im, ax=ax, orientation='vertical')
     cbar.ax.tick_params(labelsize=14)
-    display_edge_grid(ax, grid)
+    # display_edge_grid(ax, grid)
+    # for polyline in polylines:
+    #     display_points_from_polyline(ax, polyline)
     for polyline in polylines:
-        display_points_from_polyline(ax, polyline)
-    for polyline in polylines:
-        add_polyline(ax, polyline)
+        add_polyline(ax, polyline, color='red', linewidth=1, contour_color='black', contour_width=2)
     plt.show()
 
 
@@ -169,6 +169,6 @@ if __name__ == "__main__":
     single_point_adjacency_2 = False
     polylines = True
     polylines_step = 0
-    demo(grid, scalar_values, scalar_colors, edge_grid, single_point, polylines, polylines_step)
+    # demo(grid, scalar_values, scalar_colors, edge_grid, single_point, polylines, polylines_step)
 
-    #main()
+    main()

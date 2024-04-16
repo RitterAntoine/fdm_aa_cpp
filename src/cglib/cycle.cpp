@@ -5,7 +5,7 @@ Cycle::Cycle(Graph list_point_adjacency,
              Eigen::Array<bool, Eigen::Dynamic, 1> visited_points,
              Eigen::ArrayX3i cycle_points_data,
              Eigen::ArrayX2i cycle_data,
-             unsigned int cycle_count)
+            int cycle_count)
     : list_point_adjacency_(list_point_adjacency), visited_points_(visited_points), cycle_points_data_(cycle_points_data), cycle_data_(cycle_data), cycle_count_(cycle_count) {}
 
 // Getters
@@ -13,13 +13,13 @@ Graph Cycle::getListPointAdjacency() const { return list_point_adjacency_; }
 Eigen::Array<bool, Eigen::Dynamic, 1> Cycle::getVisitedPoints() const { return visited_points_; }
 Eigen::ArrayX3i Cycle::getCyclePointsData() const { return cycle_points_data_; }
 Eigen::ArrayX2i Cycle::getCycleData() const { return cycle_data_; }
-unsigned int Cycle::getCycleCount() const { return cycle_count_; }
+int Cycle::getCycleCount() const { return cycle_count_; }
 
 // Setters
 void Cycle::setVisitedPoints(Eigen::Array<bool, Eigen::Dynamic, 1> visited_points) { visited_points_ = visited_points; }
 void Cycle::setCyclePointsData(Eigen::ArrayX3i cycle_points_data) { cycle_points_data_ = cycle_points_data; }
 void Cycle::setCycleData(Eigen::ArrayX2i cycle_data) { cycle_data_ = cycle_data; }
-void Cycle::setCycleCount(unsigned int cycle_count) { cycle_count_ = cycle_count; }
+void Cycle::setCycleCount(int cycle_count) { cycle_count_ = cycle_count; }
 
 void save_cycle(const std::string& file, const Cycle& cycle) {
     Eigen::ArrayX2f points = cycle.getListPointAdjacency().getListPoint();
@@ -27,7 +27,7 @@ void save_cycle(const std::string& file, const Cycle& cycle) {
     Eigen::Array<bool, Eigen::Dynamic, 1> visited_points = cycle.getVisitedPoints();
     Eigen::ArrayX3i cycle_points_data = cycle.getCyclePointsData();
     Eigen::ArrayX2i cycle_data = cycle.getCycleData();
-    unsigned int cycle_count = cycle.getCycleCount();
+    int cycle_count = cycle.getCycleCount();
 
     std::ofstream out(file);
     out << "points" << std::endl;
@@ -64,7 +64,7 @@ Cycle load_cycle(const std::string& file) {
     Eigen::Array<bool, Eigen::Dynamic, 1> visited_points;
     Eigen::ArrayX3i cycle_points_data;
     Eigen::ArrayX2i cycle_data;
-    unsigned int cycle_count;
+    int cycle_count;
     while (std::getline(in, line)) {
         if (line == "points") {
             mode = "points";
@@ -155,7 +155,7 @@ void process_point(Eigen::Array<bool, Eigen::Dynamic, 1>& visited_points, Eigen:
     cycle_points_data(current_point, 2) = cycle_count;
 }
 
-void graph_flood_from_point(Cycle& cycle, Eigen::ArrayX2i& listAdjacency, unsigned int& cycle_count, int point, bool& cycle_found) {
+void graph_flood_from_point(Cycle& cycle, Eigen::ArrayX2i& listAdjacency, int& cycle_count, int point, bool& cycle_found) {
     // Enregistrez l'état initial de cycle
     Eigen::Array<bool, Eigen::Dynamic, 1> initial_visited_points = cycle.getVisitedPoints();
     Eigen::ArrayX3i initial_cycle_points_data = cycle.getCyclePointsData();
@@ -214,7 +214,7 @@ Cycle create_from_graph(const Graph& graph) {
     Eigen::ArrayX2i cycle_data = Eigen::ArrayX2i(number_of_points, 2);
     cycle_data.fill(INT_MAX);
 
-    unsigned int cycle_count = 0;
+    int cycle_count = 0;
 
     Cycle cycle(graph, visited_points, cycle_points_data, cycle_data, cycle_count);
 

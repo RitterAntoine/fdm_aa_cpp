@@ -14,27 +14,27 @@ public:
           Eigen::Array<bool, Eigen::Dynamic, 1> visited_points,
           Eigen::ArrayX3i cycle_points_data,
           Eigen::ArrayX2i cycle_data,
-          unsigned int cycle_count);
+          int cycle_count);
 
     // Getters
     Graph getListPointAdjacency() const;
     Eigen::Array<bool, Eigen::Dynamic, 1> getVisitedPoints() const;
     Eigen::ArrayX3i getCyclePointsData() const;
     Eigen::ArrayX2i getCycleData() const;
-    unsigned int getCycleCount() const;
+    int getCycleCount() const;
 
     // Setters
     void setVisitedPoints(Eigen::Array<bool, Eigen::Dynamic, 1> visited_points);
     void setCyclePointsData(Eigen::ArrayX3i cycle_points_data);
     void setCycleData(Eigen::ArrayX2i cycle_data);
-    void setCycleCount(unsigned int cycle_count);
+    void setCycleCount(int cycle_count);
 
 private:
     Graph list_point_adjacency_;
     Eigen::Array<bool, Eigen::Dynamic, 1> visited_points_;
     Eigen::ArrayX3i cycle_points_data_;
     Eigen::ArrayX2i cycle_data_;
-    unsigned int cycle_count_;
+    int cycle_count_;
 };
 
 void save_cycle(const std::string& file, const Cycle& cycle);

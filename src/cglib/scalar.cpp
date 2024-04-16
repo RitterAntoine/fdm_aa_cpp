@@ -61,12 +61,12 @@ Eigen::Array<float, 2, 1> grid_edge_root_point(const Edge2D& edge,
     return mask ? Eigen::ArrayXf::Constant(root_point.size(), INT_MAX) : root_point;
 }
 
-unsigned int get_edge_adjacency_no_extraction_case(const GetEdgeAdjacencyParams params)
+int get_edge_adjacency_no_extraction_case(const GetEdgeAdjacencyParams params)
 {
     return INT_MAX;
 }
 
-unsigned int convert_edge_shift_to_adjacency(Eigen::Array<int, 2, 1> shift,
+int convert_edge_shift_to_adjacency(Eigen::Array<int, 2, 1> shift,
                                              const GetEdgeAdjacencyParams params,
                                              int adjacent_edge_axis)
 {
@@ -81,7 +81,7 @@ unsigned int convert_edge_shift_to_adjacency(Eigen::Array<int, 2, 1> shift,
 }
 
 
-unsigned int get_edge_adjacency_case_001(const GetEdgeAdjacencyParams params)
+int get_edge_adjacency_case_001(const GetEdgeAdjacencyParams params)
 {
     Eigen::Array<int, 2, 1> shift;
     shift << 1, -1 + params.edge_side;
@@ -89,7 +89,7 @@ unsigned int get_edge_adjacency_case_001(const GetEdgeAdjacencyParams params)
     return convert_edge_shift_to_adjacency(shift, params, adjacent_edge_axis);
 }
 
-unsigned int get_edge_adjacency_case_010(const GetEdgeAdjacencyParams params)
+int get_edge_adjacency_case_010(const GetEdgeAdjacencyParams params)
 {
     Eigen::Array<int, 2, 1> shift;
     shift << 0, -1 + params.edge_side;
@@ -97,7 +97,7 @@ unsigned int get_edge_adjacency_case_010(const GetEdgeAdjacencyParams params)
     return convert_edge_shift_to_adjacency(shift, params, adjacent_edge_axis);
 }
 
-unsigned int get_edge_adjacency_case_100(const GetEdgeAdjacencyParams params)
+int get_edge_adjacency_case_100(const GetEdgeAdjacencyParams params)
 {
     Eigen::Array<int, 2, 1> shift;
     shift << 0, -1 + 2 * params.edge_side;
@@ -105,7 +105,7 @@ unsigned int get_edge_adjacency_case_100(const GetEdgeAdjacencyParams params)
     return convert_edge_shift_to_adjacency(shift, params, adjacent_edge_axis);
 }
 
-unsigned int get_edge_adjacency_case_111(const GetEdgeAdjacencyParams params)
+int get_edge_adjacency_case_111(const GetEdgeAdjacencyParams params)
 {
     return params.same_side_bottom_left_corner_and_center ? get_edge_adjacency_case_001(params) : get_edge_adjacency_case_010(params);
 }
@@ -385,7 +385,7 @@ PointAdjacency uniform_grid_edge_root_point_and_adjacency(const Edge2D& edge,
 
 
     // Compute the edge adjacency
-    Eigen::Array<unsigned int, 2, 1> case_index = Eigen::Array<unsigned int, 2, 1>::Zero();
+    Eigen::Array<int, 2, 1> case_index = Eigen::Array<int, 2, 1>::Zero();
 
     int case_index_val_top = 0;
     int case_index_val_bottom = 0;
@@ -393,7 +393,7 @@ PointAdjacency uniform_grid_edge_root_point_and_adjacency(const Edge2D& edge,
     case_index_val_bottom = root_exist_config(0, 0) * 4 + root_exist_config(0, 1) * 2 + root_exist_config(0, 2);
     case_index << case_index_val_bottom, case_index_val_top;
 
-    Eigen::Array<unsigned int, 2, 1> adjacency_array = Eigen::Array<unsigned int, 2, 1>::Constant(INT_MAX);
+    Eigen::Array<int, 2, 1> adjacency_array = Eigen::Array<int, 2, 1>::Constant(INT_MAX);
     Edge2D edge_adj_1 = Edge2D(Eigen::Array<int, 2, 1>::Constant(INT_MAX), 0);
     Edge2D edge_adj_2 = Edge2D(Eigen::Array<int, 2, 1>::Constant(INT_MAX), 0);
     Eigen::Array<int, 2, 1> edge_shift;
@@ -427,13 +427,22 @@ PointAdjacency uniform_grid_edge_root_point_and_adjacency(const Edge2D& edge,
     return PointAdjacency(grid_edge_root_point_val, adjacency_array);
 }
 
+Eigen::Array<float, 2, 1> process_edge_point(const Edge2D& edge,
+                                             const Eigen::ArrayXd& flattened_scalar_field,
+                                             const Grid& grid)
+{
+    Eigen::Array<float, 2, 1> edge_point = grid_edge_root_point(edge, flattened_scalar_field, grid);
+    return edge_point + grid.cell_sides_length * 0.5;
+}
+
+
 void processEdge(int i, int j, int orientation, int& count, Eigen::ArrayX2f& list_point, Eigen::ArrayX2i& list_adjacency, const Eigen::ArrayXd& grid_scalars_flattened, const Grid& scalar_field_grid) {
     Eigen::Array<int, 2, 1> edge_2dindex;
     edge_2dindex << j, i;
     Edge2D edge = Edge2D(edge_2dindex, orientation);
     PointAdjacency edge_point_adjacency = uniform_grid_edge_root_point_and_adjacency(edge, grid_scalars_flattened, scalar_field_grid);
     // Add the new point_adjacency to the list
-    list_point.row(count) = edge_point_adjacency.getPoint().cast<float>();
+    list_point.row(count) = process_edge_point(edge, grid_scalars_flattened, scalar_field_grid);
     list_adjacency.row(count) = edge_point_adjacency.getAdjacency().cast<int>();
     count++;
 }
