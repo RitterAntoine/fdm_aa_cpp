@@ -430,9 +430,9 @@ Eigen::Array<int, 2, 1> process_edge_adjacency(const Edge2D& edge,
     return adjacency_array;
 }
 
-void processEdge(int i, int j, int orientation, int& count, Eigen::ArrayX2f& list_point, Eigen::ArrayX2i& list_adjacency, const Eigen::ArrayXd& grid_scalars_flattened, const Grid& scalar_field_grid) {
+void processEdge(int row, int col, int orientation, int& count, Eigen::ArrayX2f& list_point, Eigen::ArrayX2i& list_adjacency, const Eigen::ArrayXd& grid_scalars_flattened, const Grid& scalar_field_grid) {
     Eigen::Array<int, 2, 1> edge_2dindex;
-    edge_2dindex << j, i;
+    edge_2dindex << col, row;
     Edge2D edge = Edge2D(edge_2dindex, orientation);
     list_point.row(count) = process_edge_point(edge, grid_scalars_flattened, scalar_field_grid);
     list_adjacency.row(count) = process_edge_adjacency(edge, grid_scalars_flattened, scalar_field_grid);
@@ -451,9 +451,9 @@ Graph grid2_contour(const Eigen::ArrayXd& grid_scalars_flattened,
 
     // Process all the edges
     for (int orientation = 0; orientation < 2; ++orientation)
-        for (int i = 0; i < (orientation == 0 ? scalar_field_cell_2dcount[1] : scalar_field_cell_2dcount[1] - 1); ++i)
-            for (int j = 0; j < (orientation == 0 ? scalar_field_cell_2dcount[0] - 1 : scalar_field_cell_2dcount[0]); ++j)
-                processEdge(i, j, orientation, count, list_point, list_adjacency, grid_scalars_flattened, scalar_field_grid);
+        for (int row = 0; row < (orientation == 0 ? scalar_field_cell_2dcount[1] : scalar_field_cell_2dcount[1] - 1); ++row)
+            for (int col = 0; col < (orientation == 0 ? scalar_field_cell_2dcount[0] - 1 : scalar_field_cell_2dcount[0]); ++col)
+                processEdge(row, col, orientation, count, list_point, list_adjacency, grid_scalars_flattened, scalar_field_grid);
 
     return Graph(list_point, list_adjacency);
 }
