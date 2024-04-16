@@ -716,9 +716,8 @@ TEST(ScalarTest, UniformGridEdgeRootPointAndAdjacency_1_1)
     int edge_axis = 1;
     Edge2D edge2D(edge_2dindex, edge_axis);
 
-    PointAdjacency res = uniform_grid_edge_root_point_and_adjacency(edge2D, flattened_scalar_field, grid);
-    Eigen::Array<float, 2, 1> res_point = res.getPoint();
-    Eigen::Array<int, 2, 1> res_adjacency = res.getAdjacency();
+    Eigen::Array<float, 2, 1> res_point = process_edge_point(edge2D, flattened_scalar_field, grid);
+    Eigen::Array<int, 2, 1> res_adjacency = process_edge_adjacency(edge2D, flattened_scalar_field, grid);
 
     Eigen::Array<float, 2, 1> exp_point(2);
     exp_point << 1.5, 1;
@@ -781,9 +780,8 @@ TEST(ScalarTest, UniformGridEdgeRootPointAndAdjacency_1_2)
     int edge_axis = 0;
     Edge2D edge2D(edge_2dindex, edge_axis);
 
-    PointAdjacency res = uniform_grid_edge_root_point_and_adjacency(edge2D, flattened_scalar_field, grid);
-    Eigen::Array<float, 2, 1> res_point = res.getPoint();
-    Eigen::Array<int, 2, 1> res_adjacency = res.getAdjacency();  
+    Eigen::Array<float, 2, 1> res_point = process_edge_point(edge2D, flattened_scalar_field, grid);
+    Eigen::Array<int, 2, 1> res_adjacency = process_edge_adjacency(edge2D, flattened_scalar_field, grid); 
 
     Eigen::Array<float, 2, 1> exp_point(2);
     exp_point << 1.83333, 1.5;
@@ -846,9 +844,8 @@ TEST(ScalarTest, UniformGridEdgeRootPointAndAdjacency_1_3)
     int edge_axis = 1;
     Edge2D edge2D(edge_2dindex, edge_axis);
 
-    PointAdjacency res = uniform_grid_edge_root_point_and_adjacency(edge2D, flattened_scalar_field, grid);  
-    Eigen::Array<float, 2, 1> res_point = res.getPoint();
-    Eigen::Array<int, 2, 1> res_adjacency = res.getAdjacency();  
+    Eigen::Array<float, 2, 1> res_point = process_edge_point(edge2D, flattened_scalar_field, grid);
+    Eigen::Array<int, 2, 1> res_adjacency = process_edge_adjacency(edge2D, flattened_scalar_field, grid); 
 
     Eigen::Array<float, 2, 1> exp_point(2);
     exp_point << 1.5, 1.83333;
@@ -944,9 +941,8 @@ TEST(ScalarTest, UniformGridEdgeRootPointAndAdjacency_2_1)
     int edge_axis = 0;
     Edge2D edge2D(edge_2dindex, edge_axis);
 
-    PointAdjacency res = uniform_grid_edge_root_point_and_adjacency(edge2D, flattened_scalar_field, grid);
-    Eigen::Array<float, 2, 1> res_point = res.getPoint();
-    Eigen::Array<int, 2, 1> res_adjacency = res.getAdjacency();
+    Eigen::Array<float, 2, 1> res_point = process_edge_point(edge2D, flattened_scalar_field, grid);
+    Eigen::Array<int, 2, 1> res_adjacency = process_edge_adjacency(edge2D, flattened_scalar_field, grid);
 
     Eigen::Array<float, 2, 1> exp_point(2);
     exp_point << 3, 2.5;
@@ -1042,9 +1038,8 @@ TEST(ScalarTest, UniformGridEdgeRootPointAndAdjacency_2_2)
     int edge_axis = 0;
     Edge2D edge2D(edge_2dindex, edge_axis);
 
-    PointAdjacency res = uniform_grid_edge_root_point_and_adjacency(edge2D, flattened_scalar_field, grid);
-    Eigen::Array<float, 2, 1> res_point = res.getPoint();
-    Eigen::Array<int, 2, 1> res_adjacency = res.getAdjacency();
+    Eigen::Array<float, 2, 1> res_point = process_edge_point(edge2D, flattened_scalar_field, grid);
+    Eigen::Array<int, 2, 1> res_adjacency = process_edge_adjacency(edge2D, flattened_scalar_field, grid);
 
     Eigen::Array<float, 2, 1> exp_point(2);
     exp_point << 3.16667, 3.5;
@@ -1140,9 +1135,8 @@ TEST(ScalarTest, UniformGridEdgeRootPointAndAdjacency_2_3)
     int edge_axis = 0;
     Edge2D edge2D(edge_2dindex, edge_axis);
 
-    PointAdjacency res = uniform_grid_edge_root_point_and_adjacency(edge2D, flattened_scalar_field, grid);
-    Eigen::Array<float, 2, 1> res_point = res.getPoint();
-    Eigen::Array<int, 2, 1> res_adjacency = res.getAdjacency();
+    Eigen::Array<float, 2, 1> res_point = process_edge_point(edge2D, flattened_scalar_field, grid);
+    Eigen::Array<int, 2, 1> res_adjacency = process_edge_adjacency(edge2D, flattened_scalar_field, grid);
 
     Eigen::Array<float, 2, 1> exp_point(2);
     exp_point << 3, 4.5;

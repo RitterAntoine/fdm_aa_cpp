@@ -45,9 +45,13 @@ int get_edge_adjacency_case_100(const GetEdgeAdjacencyParams params);
 
 int get_edge_adjacency_case_111(const GetEdgeAdjacencyParams params);
 
-PointAdjacency uniform_grid_edge_root_point_and_adjacency(const Edge2D& edge,
-                                                          const Eigen::ArrayXd& flattened_scalar_field,
-                                                          const Grid& grid);
+Eigen::Array<float, 2, 1> process_edge_point(const Edge2D& edge,
+                                             const Eigen::ArrayXd& flattened_scalar_field,
+                                             const Grid& grid);
+
+Eigen::Array<int, 2, 1> process_edge_adjacency(const Edge2D& edge,
+                                               const Eigen::ArrayXd& flattened_scalar_field,
+                                               const Grid& grid);
 
 Graph grid2_contour(const Eigen::ArrayXd& grid_scalars_flattened,
                     const Eigen::Array<int, 2, 1>& scalar_field_cell_2dcount,
