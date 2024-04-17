@@ -15,8 +15,8 @@ Eigen::Array<int, 4, 2> corner_vertex_2dindices(const Eigen::Array<int, 2, 1> ce
     return corner_vertex_2dindex;
 }
 
-int index1_from_2dindex(const Eigen::Array<int, 2, 1> cell_2dindex,
-                        const Eigen::Array<int, 2, 1> cell_2dcount)
+int index1_from_2dindex_cell(const Eigen::Array<int, 2, 1> cell_2dindex,
+                             const Eigen::Array<int, 2, 1> cell_2dcount)
 {
     int size = cell_2dcount.size();
     int cell_1dindex = cell_2dindex[0];

@@ -33,7 +33,7 @@ TEST(CellTest, Index1From2dindex)
     cell_2dcount << 4, 5;
     Eigen::Array<int, 2, 1> edge_2dindex(2);
     edge_2dindex << 2, 1;
-    int res = index1_from_2dindex(edge_2dindex, cell_2dcount);
+    int res = index1_from_2dindex_cell(edge_2dindex, cell_2dcount);
     EXPECT_EQ(res, 6);
 }
 
@@ -43,7 +43,7 @@ TEST(CellTest, Index2DFrom1DIndex)
     cell_2dcount << 4, 5;
     Eigen::Array<int, 2, 1> edge_2dindex(2);
     edge_2dindex << 2, 1;
-    int cell_1dindex = index1_from_2dindex(edge_2dindex, cell_2dcount);
+    int cell_1dindex = index1_from_2dindex_cell(edge_2dindex, cell_2dcount);
     Eigen::Array<int, 2, 1> res = index2d_from_1dindex(cell_1dindex, cell_2dcount);
     EXPECT_TRUE((res == edge_2dindex).all());
 }

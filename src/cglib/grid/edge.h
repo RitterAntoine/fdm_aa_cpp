@@ -31,7 +31,7 @@ enum class Neighboring2Type
 
 Eigen::Array<int, 2, 2> count2_per_axis(const Eigen::Array<int, 2, 1> grid_cell_2dcount);
 
-int index1_from_2dindex(const Edge2D& edge,
+int index1_from_2dindex_edge(const Edge2D& edge,
                         const Eigen::Array<int, 2, 2>& edge_2dcount);
 
 Eigen::VectorXi indices1_from_2dgrid(const Eigen::Array<int, 2 ,1> grid_cell_2dcount);

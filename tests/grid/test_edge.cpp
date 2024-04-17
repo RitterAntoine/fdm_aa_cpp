@@ -84,7 +84,7 @@ TEST(EdgeTest, Index1From2DInde_1)
     Edge2D edge(edge_2dindex, edge_axis);
     Eigen::Array<int, 2, 2> edge_2dcount(2, 2);
     edge_2dcount << 3, 4, 4, 3;
-    int edge_1dindex = index1_from_2dindex(edge, edge_2dcount);
+    int edge_1dindex = index1_from_2dindex_edge(edge, edge_2dcount);
     int exp_edge_1dindex = 7;
     ASSERT_EQ(edge_1dindex, exp_edge_1dindex);
 }
@@ -97,7 +97,7 @@ TEST(EdgeTest, Index1From2DInde_2)
     Edge2D edge(edge_2dindex, edge_axis);
     Eigen::Array<int, 2, 2> edge_2dcount(2, 2);
     edge_2dcount << 3, 4, 4, 3;
-    int edge_1dindex = index1_from_2dindex(edge, edge_2dcount);
+    int edge_1dindex = index1_from_2dindex_edge(edge, edge_2dcount);
     int exp_edge_1dindex = 18;
     ASSERT_EQ(edge_1dindex, exp_edge_1dindex);
 }
@@ -110,7 +110,7 @@ TEST(EdgeTest, Index1From2DInde_3)
     Edge2D edge(edge_2dindex, edge_axis);
     Eigen::Array<int, 2, 2> edge_2dcount(2, 2);
     edge_2dcount << 3, 4, 4, 3;
-    int edge_1dindex = index1_from_2dindex(edge, edge_2dcount);
+    int edge_1dindex = index1_from_2dindex_edge(edge, edge_2dcount);
     int exp_edge_1dindex = 0;
     ASSERT_EQ(edge_1dindex, exp_edge_1dindex);
 }
@@ -123,7 +123,7 @@ TEST(EdgeTest, Index1From2DInde_4)
     Edge2D edge(edge_2dindex, edge_axis);
     Eigen::Array<int, 2, 2> edge_2dcount(2, 2);
     edge_2dcount << 3, 4, 4, 3;
-    int edge_1dindex = index1_from_2dindex(edge, edge_2dcount);
+    int edge_1dindex = index1_from_2dindex_edge(edge, edge_2dcount);
     int exp_edge_1dindex = 9;
     ASSERT_EQ(edge_1dindex, exp_edge_1dindex);
 }

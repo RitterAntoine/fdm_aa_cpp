@@ -72,8 +72,8 @@ int main(int argc, char* argv[])
 
         // Fake values for testing
         argc = 4;
-        argv[1] = "32";
-        argv[2] = "32";
+        argv[1] = "9";
+        argv[2] = "9";
         argv[3] = "demos/grid_output.txt";
         argv[4] = "demos/polylines_output.txt";
     }
@@ -96,6 +96,7 @@ int main(int argc, char* argv[])
     
     // Generate a scalar field with random values
     Eigen::Array<double, Eigen::Dynamic, 1> scalar_field = Scalar_Field_Generator(cols, rows);
+
     // FOR DEMO :
     // Eigen::Array<double, Eigen::Dynamic, 1> scalar_field(32);
     // scalar_field << 1, 1, 1, 1, 1, 1, 1, 1, 1, -1, -1, 1, 1, -1, -1, 1, 1, -1, -1, 1, 1, -1, -1, 1, 1, 1, 1, 1, 1, 1, 1, 1;
@@ -121,6 +122,16 @@ int main(int argc, char* argv[])
 
     // Convert the scalar field to a Graph object
     Graph res = grid2_contour(scalar_field, cell_2dcount, grid);
+
+    Eigen::ArrayX2f list_points = res.getListPoint();
+    Eigen::ArrayX2i list_adjacency = res.getListAdjacency();
+
+    // Print the points and adjacency list
+    
+    std::cout << "Adjacency list: " << std::endl;
+    for (int i = 0; i < list_adjacency.rows(); i++) {
+        std::cout << i << ": " << list_adjacency(i, 0) << ", " << list_adjacency(i, 1) << std::endl;
+    }
 
     // Stop the clock and calculate the time for the grid2_contour function
     stop = std::chrono::high_resolution_clock::now();

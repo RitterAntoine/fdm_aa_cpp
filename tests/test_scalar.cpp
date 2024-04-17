@@ -407,264 +407,7 @@ TEST(ScalarTest, GridEdgeRootPoint_3)
     ASSERT_TRUE((res.isApprox(exp_res)));
 }
 
-// This test checks the functionality of the 'get_edge_adjacency_no_extraction_case' function.
-// The 'get_edge_adjacency_no_extraction_case' function is expected to return the adjacency case of the edge given its parameters.
-// The parameters are the edge 2D index, axis, side, and cell count.
-// The expected result is INT_MAX.
-
-TEST(ScalarTest, GetEdgeAdjacencyNoExtractionCase)
-{
-    // Define the grid
-    Eigen::Array<int, 2, 1> cell_2dcount(2);
-    cell_2dcount << 2, 3;
-
-    Eigen::Array<int, 2, 1> edge_2dindex(2);
-    edge_2dindex << 1, 0;
-    int edge_axis = 1;
-    Edge2D edge2D(edge_2dindex, edge_axis);
-
-    int edge_side = 0;
-    Eigen::Array<int, 2, 2> edge_2dcount = count2_per_axis(cell_2dcount);
-    bool same_side_bottom_left_corner_and_center = false;
-
-    GetEdgeAdjacencyParams params(edge2D, edge_side, edge_2dcount, same_side_bottom_left_corner_and_center);
-
-    int res = get_edge_adjacency_no_extraction_case(params);
-    int exp_res = INT_MAX;
-    ASSERT_EQ(res, exp_res);
-}
-
-// This test checks the functionality of the 'convert_edge_shift_to_adjacency' function.
-
-TEST(ScalarTest, ConvertEdgeShiftToAdjacency_1)
-{
-    // Define the grid
-    Eigen::Array<int, 2, 1> cell_2dcount(2);
-    cell_2dcount << 2, 3;
-
-    Eigen::Array<int, 2, 1> edge_2dindex(2);
-    edge_2dindex << 1, 0;
-    int edge_axis = 1;
-    Edge2D edge2D(edge_2dindex, edge_axis);
-
-    int edge_side = 0;
-    Eigen::Array<int, 2, 2> edge_2dcount = count2_per_axis(cell_2dcount);
-    bool same_side_bottom_left_corner_and_center = false;
-
-    GetEdgeAdjacencyParams params(edge2D, edge_side, edge_2dcount, same_side_bottom_left_corner_and_center);
-
-    Eigen::Array<int, 2, 1> shift(2);
-    shift << 1, 0;
-    int adjacent_edge_axis = 0;
-
-    int res = convert_edge_shift_to_adjacency(shift, params, adjacent_edge_axis);
-    int exp_res = 1;
-    ASSERT_EQ(res, exp_res);
-}
-
-TEST(ScalarTest, ConvertEdgeShiftToAdjacency_2)
-{
-    // Define the grid
-    Eigen::Array<int, 2, 1> cell_2dcount(2);
-    cell_2dcount << 2, 3;
-
-    Eigen::Array<int, 2, 1> edge_2dindex(2);
-    edge_2dindex << 2, 1;
-    int edge_axis = 1;
-    Edge2D edge2D(edge_2dindex, edge_axis);
-
-    int edge_side = 0;
-    Eigen::Array<int, 2, 2> edge_2dcount = count2_per_axis(cell_2dcount);
-    bool same_side_bottom_left_corner_and_center = false;
-
-    GetEdgeAdjacencyParams params(edge2D, edge_side, edge_2dcount, same_side_bottom_left_corner_and_center);
-
-    Eigen::Array<int, 2, 1> shift(2);
-    shift << 1, 0;
-    int adjacent_edge_axis = 0;
-
-    int res = convert_edge_shift_to_adjacency(shift, params, adjacent_edge_axis);
-    int exp_res = 4;
-    ASSERT_EQ(res, exp_res);
-}
-
-TEST(ScalarTest, GetEdgeAdjacencyCase001_1)
-{
-    // Define the grid
-    Eigen::Array<int, 2, 1> cell_2dcount(2);
-    cell_2dcount << 2, 3;
-
-    Eigen::Array<int, 2, 1> edge_2dindex(2);
-    edge_2dindex << 2, 1;
-    int edge_axis = 1;
-    Edge2D edge2D(edge_2dindex, edge_axis);
-
-    int edge_side = 0;
-    Eigen::Array<int, 2, 2> edge_2dcount = count2_per_axis(cell_2dcount);
-    bool same_side_bottom_left_corner_and_center = false;
-
-    GetEdgeAdjacencyParams params(edge2D, edge_side, edge_2dcount, same_side_bottom_left_corner_and_center);
-
-    int res = get_edge_adjacency_case_001(params);
-    int exp_res = 1;
-    ASSERT_EQ(res, exp_res);
-}
-
-TEST(ScalarTest, GetEdgeAdjacencyCase001_2)
-{
-    // Define the grid
-    Eigen::Array<int, 2, 1> cell_2dcount(2);
-    cell_2dcount << 2, 3;
-
-    Eigen::Array<int, 2, 1> edge_2dindex(2);
-    edge_2dindex << 1, 2;
-    int edge_axis = 0;
-    Edge2D edge2D(edge_2dindex, edge_axis);
-
-    int edge_side = 0;
-    Eigen::Array<int, 2, 2> edge_2dcount = count2_per_axis(cell_2dcount);
-    bool same_side_bottom_left_corner_and_center = false;
-
-    GetEdgeAdjacencyParams params(edge2D, edge_side, edge_2dcount, same_side_bottom_left_corner_and_center);
-
-    int res = get_edge_adjacency_case_001(params);
-    int exp_res = 13;
-    ASSERT_EQ(res, exp_res);
-}
-
-TEST(ScalarTest, GetEdgeAdjacencyCase010_1)
-{
-    // Define the grid
-    Eigen::Array<int, 2, 1> cell_2dcount(2);
-    cell_2dcount << 2, 3;
-
-    Eigen::Array<int, 2, 1> edge_2dindex(2);
-    edge_2dindex << 2, 1;
-    int edge_axis = 1;
-    Edge2D edge2D(edge_2dindex, edge_axis);
-
-    int edge_side = 0;
-    Eigen::Array<int, 2, 2> edge_2dcount = count2_per_axis(cell_2dcount);
-    bool same_side_bottom_left_corner_and_center = false;
-
-    GetEdgeAdjacencyParams params(edge2D, edge_side, edge_2dcount, same_side_bottom_left_corner_and_center);
-
-    int res = get_edge_adjacency_case_010(params);
-    int exp_res = 1;
-    ASSERT_EQ(res, exp_res);
-}
-
-TEST(ScalarTest, GetEdgeAdjacencyCase010_2)
-{
-    // Define the grid
-    Eigen::Array<int, 2, 1> cell_2dcount(2);
-    cell_2dcount << 2, 3;
-
-    Eigen::Array<int, 2, 1> edge_2dindex(2);
-    edge_2dindex << 2, 2;
-    int edge_axis = 0;
-    Edge2D edge2D(edge_2dindex, edge_axis);
-
-    int edge_side = 0;
-    Eigen::Array<int, 2, 2> edge_2dcount = count2_per_axis(cell_2dcount);
-    bool same_side_bottom_left_corner_and_center = false;
-
-    GetEdgeAdjacencyParams params(edge2D, edge_side, edge_2dcount, same_side_bottom_left_corner_and_center);
-
-    int res = get_edge_adjacency_case_010(params);
-    int exp_res = 13;
-    ASSERT_EQ(res, exp_res);
-}
-
-TEST(ScalarTest, GetEdgeAdjacencyCase100_1)
-{
-    // Define the grid
-    Eigen::Array<int, 2, 1> cell_2dcount(2);
-    cell_2dcount << 2, 3;
-
-    Eigen::Array<int, 2, 1> edge_2dindex(2);
-    edge_2dindex << 2, 1;
-    int edge_axis = 1;
-    Edge2D edge2D(edge_2dindex, edge_axis);
-
-    int edge_side = 0;
-    Eigen::Array<int, 2, 2> edge_2dcount = count2_per_axis(cell_2dcount);
-    bool same_side_bottom_left_corner_and_center = false;
-
-    GetEdgeAdjacencyParams params(edge2D, edge_side, edge_2dcount, same_side_bottom_left_corner_and_center);
-
-    int res = get_edge_adjacency_case_100(params);
-    int exp_res = 1;
-    ASSERT_EQ(res, exp_res);
-}
-
-TEST(ScalarTest, GetEdgeAdjacencyCase100_2)
-{
-    // Define the grid
-    Eigen::Array<int, 2, 1> cell_2dcount(2);
-    cell_2dcount << 2, 3;
-
-    Eigen::Array<int, 2, 1> edge_2dindex(2);
-    edge_2dindex << 2, 2;
-    int edge_axis = 0;
-    Edge2D edge2D(edge_2dindex, edge_axis);
-
-    int edge_side = 1;
-    Eigen::Array<int, 2, 2> edge_2dcount = count2_per_axis(cell_2dcount);
-    bool same_side_bottom_left_corner_and_center = false;
-
-    GetEdgeAdjacencyParams params(edge2D, edge_side, edge_2dcount, same_side_bottom_left_corner_and_center);
-
-    int res = get_edge_adjacency_case_100(params);
-    int exp_res = 19;
-    ASSERT_EQ(res, exp_res);
-}
-
-TEST(ScalarTest, GetEdgeAdjacencyCase111_1)
-{
-    // Define the grid
-    Eigen::Array<int, 2, 1> cell_2dcount(2);
-    cell_2dcount << 2, 3;
-
-    Eigen::Array<int, 2, 1> edge_2dindex(2);
-    edge_2dindex << 2, 1;
-    int edge_axis = 1;
-    Edge2D edge2D(edge_2dindex, edge_axis);
-
-    int edge_side = 0;
-    Eigen::Array<int, 2, 2> edge_2dcount = count2_per_axis(cell_2dcount);
-    bool same_side_bottom_left_corner_and_center = true;
-
-    GetEdgeAdjacencyParams params(edge2D, edge_side, edge_2dcount, same_side_bottom_left_corner_and_center);
-
-    int res = get_edge_adjacency_case_111(params);
-    int exp_res = 1;
-    ASSERT_EQ(res, exp_res);
-}
-
-TEST(ScalarTest, GetEdgeAdjacencyCase111_2)
-{
-    // Define the grid
-    Eigen::Array<int, 2, 1> cell_2dcount(2);
-    cell_2dcount << 2, 3;
-
-    Eigen::Array<int, 2, 1> edge_2dindex(2);
-    edge_2dindex << 2, 2;
-    int edge_axis = 0;
-    Edge2D edge2D(edge_2dindex, edge_axis);
-
-    int edge_side = 1;
-    Eigen::Array<int, 2, 2> edge_2dcount = count2_per_axis(cell_2dcount);
-    bool same_side_bottom_left_corner_and_center = false;
-
-    GetEdgeAdjacencyParams params(edge2D, edge_side, edge_2dcount, same_side_bottom_left_corner_and_center);
-
-    int res = get_edge_adjacency_case_111(params);
-    int exp_res = 16;
-    ASSERT_EQ(res, exp_res);
-}
-
-TEST(ScalarTest, UniformGridEdgeRootPointAndAdjacency_1_1)
+TEST(ScalarTest, ProcessEdgePointAndAdjacency_1_1)
 {
     // The scalar field is defined as follows:
     //  ________ ________ ________
@@ -729,7 +472,7 @@ TEST(ScalarTest, UniformGridEdgeRootPointAndAdjacency_1_1)
     ASSERT_TRUE((res_adjacency.isApprox(exp_adjacency)));
 }
 
-TEST(ScalarTest, UniformGridEdgeRootPointAndAdjacency_1_2)
+TEST(ScalarTest, ProcessEdgePointAndAdjacency_1_2)
 {
         // The scalar field is defined as follows:
     //  ________ ________ ________
@@ -793,7 +536,7 @@ TEST(ScalarTest, UniformGridEdgeRootPointAndAdjacency_1_2)
     ASSERT_TRUE((res_adjacency.isApprox(exp_adjacency)));
 }
 
-TEST(ScalarTest, UniformGridEdgeRootPointAndAdjacency_1_3)
+TEST(ScalarTest, ProcessEdgePointAndAdjacency_1_3)
 {
     // The scalar field is defined as follows:
     //  ________ ________ ________
@@ -857,7 +600,176 @@ TEST(ScalarTest, UniformGridEdgeRootPointAndAdjacency_1_3)
     ASSERT_TRUE((res_adjacency.isApprox(exp_adjacency)));
 }
 
-TEST(ScalarTest, UniformGridEdgeRootPointAndAdjacency_2_1)
+TEST(ScalarTest, ProcessEdgePointAndAdjacency_2_1)
+{
+    // The scalar field is defined as follows:
+    //  ________ ________ ________ ________
+    // |        |        |        |        |
+    // |   1    |   1    |   1    |   1    |
+    // |________|________|________|________|
+    // |        |        |        |        |
+    // |   1    |   1    |   -1   |   1    |
+    // |________|________|________|________|
+    // |        |        |        |        |
+    // |   1    |   -1   |   1    |   1    |
+    // |________|________|________|________|
+    // |        |        |        |        |
+    // |   1    |   1    |   1    |   1    |
+    // |________|________|________|________|
+    //
+    // The edge grid 2D indexing is as follows:
+    //  ________ ________ ________
+    // | (0, 3) | (1, 3) | (2, 3) |
+    // |(0, 2)  |(1, 2)  |(2, 2)  |(3, 2)
+    // |________|________|________|
+    // | (0, 2) | (1, 2) | (2, 2) |
+    // |(0, 1)  |(1, 1)  |(2, 1)  |(3, 1)
+    // |________|________|________|
+    // | (0, 1) | (1, 1) | (2, 1) |
+    // |(0, 0)  |(1, 0)  |(2, 0)  |(3, 0)
+    // |________|________|________|
+    //   (0, 0)   (1, 0)   (2, 0)
+    // 
+    // The edge grid 1D indexing is as follows:
+    //  ________ ________ ________
+    // |   9    |   10   |   11   |
+    // |20      |21      |22      |23
+    // |________|________|________|
+    // |   6    |   7    |   8    |
+    // |16      |17      |18      |19
+    // |________|________|________|
+    // |   3    |   4    |   5    |
+    // |12      |13      |14      |15
+    // |________|________|________|
+    //     0        1        2
+
+    // Define the grid
+    Eigen::Array<int, 2, 1> cell_2dcount(2);
+    cell_2dcount << 4, 4;
+    Eigen::Array<int, 2, 1> origin(2);
+    origin << 0, 0;
+    float cell_sides_length = 1;
+    Grid grid(cell_2dcount, origin, cell_sides_length);
+
+    // Define the scalar field
+    const Eigen::Array<double, 16, 1> flattened_scalar_field = Eigen::Map<const Eigen::ArrayXd>(new double[16]{1, 1, 1, 1, 1, -1, 1, 1, 1, 1, -1, 1, 1, 1, 1, 1}, 16);
+
+    // Define the edge
+    Eigen::Array<int, 2, 1> edge_2dindex(2);
+    edge_2dindex << 1, 1;
+    int edge_axis = 0;
+    Edge2D edge2D(edge_2dindex, edge_axis);
+
+    Eigen::Array<float, 2, 1> res_point = process_edge_point(edge2D, flattened_scalar_field, grid);
+    Eigen::Array<int, 2, 1> res_adjacency = process_edge_adjacency(edge2D, flattened_scalar_field, grid); 
+
+    Eigen::Array<float, 2, 1> exp_point(2);
+    exp_point << 2, 1.5;
+
+    Eigen::Array<int, 2, 1> exp_adjacency(2);
+    exp_adjacency << 13, 17;
+
+    ASSERT_TRUE((res_point.isApprox(exp_point)));
+    ASSERT_TRUE((res_adjacency.isApprox(exp_adjacency)));
+}
+
+TEST(ScalarTest, ProcessEdgePointAndAdjacency_2_2)
+{
+    // Define the grid
+    Eigen::Array<int, 2, 1> cell_2dcount(2);
+    cell_2dcount << 4, 4;
+    Eigen::Array<int, 2, 1> origin(2);
+    origin << 0, 0;
+    float cell_sides_length = 1;
+    Grid grid(cell_2dcount, origin, cell_sides_length);
+
+    // Define the scalar field
+    const Eigen::Array<double, 16, 1> flattened_scalar_field = Eigen::Map<const Eigen::ArrayXd>(new double[16]{1, 1, 1, 1, 1, -1, 1, 1, 1, 1, -1, 1, 1, 1, 1, 1}, 16);
+
+    // Define the edge
+    Eigen::Array<int, 2, 1> edge_2dindex(2);
+    edge_2dindex << 1, 2;
+    int edge_axis = 0;
+    Edge2D edge2D(edge_2dindex, edge_axis);
+
+    Eigen::Array<float, 2, 1> res_point = process_edge_point(edge2D, flattened_scalar_field, grid);
+    Eigen::Array<int, 2, 1> res_adjacency = process_edge_adjacency(edge2D, flattened_scalar_field, grid); 
+
+    Eigen::Array<float, 2, 1> exp_point(2);
+    exp_point << 2, 2.5;
+
+    Eigen::Array<int, 2, 1> exp_adjacency(2);
+    exp_adjacency << 18, 22;
+
+    ASSERT_TRUE((res_point.isApprox(exp_point)));
+    ASSERT_TRUE((res_adjacency.isApprox(exp_adjacency)));
+}
+
+TEST(ScalarTest, ProcessEdgePointAndAdjacency_2_3)
+{
+    // Define the grid
+    Eigen::Array<int, 2, 1> cell_2dcount(2);
+    cell_2dcount << 4, 4;
+    Eigen::Array<int, 2, 1> origin(2);
+    origin << 0, 0;
+    float cell_sides_length = 1;
+    Grid grid(cell_2dcount, origin, cell_sides_length);
+
+    // Define the scalar field
+    const Eigen::Array<double, 16, 1> flattened_scalar_field = Eigen::Map<const Eigen::ArrayXd>(new double[16]{1, 1, 1, 1, 1, -1, 1, 1, 1, 1, -1, 1, 1, 1, 1, 1}, 16);
+
+    // Define the edge
+    Eigen::Array<int, 2, 1> edge_2dindex(2);
+    edge_2dindex << 1, 1;
+    int edge_axis = 1;
+    Edge2D edge2D(edge_2dindex, edge_axis);
+
+    Eigen::Array<float, 2, 1> res_point = process_edge_point(edge2D, flattened_scalar_field, grid);
+    Eigen::Array<int, 2, 1> res_adjacency = process_edge_adjacency(edge2D, flattened_scalar_field, grid); 
+
+    Eigen::Array<float, 2, 1> exp_point(2);
+    exp_point << 1.5, 2;
+
+    Eigen::Array<int, 2, 1> exp_adjacency(2);
+    exp_adjacency << 3, 4;
+
+    ASSERT_TRUE((res_point.isApprox(exp_point)));
+    ASSERT_TRUE((res_adjacency.isApprox(exp_adjacency)));
+}
+
+TEST(ScalarTest, ProcessEdgePointAndAdjacency_2_4)
+{
+    // Define the grid
+    Eigen::Array<int, 2, 1> cell_2dcount(2);
+    cell_2dcount << 4, 4;
+    Eigen::Array<int, 2, 1> origin(2);
+    origin << 0, 0;
+    float cell_sides_length = 1;
+    Grid grid(cell_2dcount, origin, cell_sides_length);
+
+    // Define the scalar field
+    const Eigen::Array<double, 16, 1> flattened_scalar_field = Eigen::Map<const Eigen::ArrayXd>(new double[16]{1, 1, 1, 1, 1, -1, 1, 1, 1, 1, -1, 1, 1, 1, 1, 1}, 16);
+
+    // Define the edge
+    Eigen::Array<int, 2, 1> edge_2dindex(2);
+    edge_2dindex << 2, 1;
+    int edge_axis = 1;
+    Edge2D edge2D(edge_2dindex, edge_axis);
+
+    Eigen::Array<float, 2, 1> res_point = process_edge_point(edge2D, flattened_scalar_field, grid);
+    Eigen::Array<int, 2, 1> res_adjacency = process_edge_adjacency(edge2D, flattened_scalar_field, grid); 
+
+    Eigen::Array<float, 2, 1> exp_point(2);
+    exp_point << 2.5, 2;
+
+    Eigen::Array<int, 2, 1> exp_adjacency(2);
+    exp_adjacency << 7, 8;
+
+    ASSERT_TRUE((res_point.isApprox(exp_point)));
+    ASSERT_TRUE((res_adjacency.isApprox(exp_adjacency)));
+}
+
+TEST(ScalarTest, ProcessEdgePointAndAdjacency_3_1)
 {
         // The scalar field is defined as follows:
     //  ________ ________ ________ ________ ________ ________
@@ -954,7 +866,7 @@ TEST(ScalarTest, UniformGridEdgeRootPointAndAdjacency_2_1)
     ASSERT_TRUE((res_adjacency.isApprox(exp_adjacency)));
 }
 
-TEST(ScalarTest, UniformGridEdgeRootPointAndAdjacency_2_2)
+TEST(ScalarTest, ProcessEdgePointAndAdjacency_3_2)
 {
         // The scalar field is defined as follows:
     //  ________ ________ ________ ________ ________ ________
@@ -1051,7 +963,7 @@ TEST(ScalarTest, UniformGridEdgeRootPointAndAdjacency_2_2)
     ASSERT_TRUE((res_adjacency.isApprox(exp_adjacency)));
 }
 
-TEST(ScalarTest, UniformGridEdgeRootPointAndAdjacency_2_3)
+TEST(ScalarTest, ProcessEdgePointAndAdjacency_3_3)
 {
         // The scalar field is defined as follows:
     //  ________ ________ ________ ________ ________ ________
@@ -1403,6 +1315,8 @@ TEST(ScalarTest, Grid2Contour_1)
                           108, 47,
                           INT_MAX, INT_MAX,
                           INT_MAX, INT_MAX;
+
+    // print the adjacency list
 
     ASSERT_TRUE((res_list_point.isApprox(exp_list_point)));
     ASSERT_TRUE((res_list_adjacency.isApprox(exp_list_adjacency)));
