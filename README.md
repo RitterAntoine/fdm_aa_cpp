@@ -9,9 +9,9 @@ The primary goal of this project is to facilitate the use of the algorithm by mi
 # Outline
 
 - [Features](#features)
+- [Folder Organisation](#folder-organisation)
 - [Installation](#installation)
 - [Exemple Usage](#exemple-usage)
-- [Folder Organisation](#folder-organisation)
 - [Unit Tests](#unit-tests)
 
 # Features
@@ -19,6 +19,12 @@ The primary goal of this project is to facilitate the use of the algorithm by mi
 This project contains a C++ library. This library extracts contours from scalar fields, cycles them and then creates polylines.
 
 There are also multiples executables that can be used individualy.
+
+# Folder Organisation
+
+- [`tools`](tools/): Contain tools
+- [`src`](src/): Contain the source code
+- [`tests`](tests/): Contain the tests of the library
 
 # Installation
 
@@ -158,12 +164,6 @@ Graph res = grid2_contour(flattened_scalar_field, cell_2dcount, grid);
 // Extract the cycles
 Cycle cycle = create_from_graph(res);
 ```
-
-# Folder Organisation
-
-- [`tools`](tools/): Contain tools
-- [`src`](src/): Contain the source code
-- [`tests`](tests/): Contain the tests of the library
 
 # Unit Tests
 
