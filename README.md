@@ -1,3 +1,10 @@
+![Handwritten Digit](https://raw.githubusercontent.com/RitterAntoine/fdm_aa_cpp/main/assets/demo.png)
+
+<meta property="og:image" content="https://raw.githubusercontent.com/RitterAntoine/fdm_aa_cpp/main/assets/demo.png">
+<meta property="og:title" content="Orientable Dense Cyclic Infill for Anisotropic Appearance Fabrication - C++ Code">
+<meta property="og:description" content="This project provides a C++ implementation for the algorithm introduced in 'Orientable Dense Cyclic Infill for Anisotropic Appearance Fabrication,' originally developed by Inria researchers. It includes tools for extracting contours and creating polylines from scalar fields.">
+
+
 # Orientable Dense Cyclic Infill for Anisotropic Appearance Fabrication - C++ Code
 
 This README provides an overview of the implementation of certain parts of the project "Orientable Dense Cyclic Infill for Anisotropic Appearance Fabrication" in C++. The project, initially introduced by researchers affiliated with Inria and showcased at the SIGGRAPH 2023 conference, this project forms the basis for the content discussed [here](https://github.com/mfx-inria/anisotropic_appearance_fabrication).
